@@ -1,0 +1,262 @@
+/* Searchable competitor picker and tournament-history theme refinements. */
+.mat-competitor-picker{margin-top:18px;padding:18px;border:1px solid #d9e5ee;border-radius:14px;background:#f8fbfd}
+.mat-competitor-search-row{display:flex;align-items:center;gap:14px}
+.mat-competitor-search{display:flex;align-items:center;gap:10px;flex:1;min-width:0;padding:0 14px;color:#587596;border:1px solid #cbdce8;border-radius:11px;background:#fff}
+.mat-competitor-search:focus-within{border-color:#1598dc;box-shadow:0 0 0 3px rgba(21,152,220,.14)}
+.mat-competitor-search input{width:100%;min-width:0;height:48px;padding:0;color:#0f2f55;background:transparent;border:0;outline:0;font:inherit}
+.mat-competitor-search input::placeholder{color:#7991a5}
+.mat-competitor-search-clear{display:grid;place-items:center;width:32px;height:32px;flex:0 0 32px;padding:0;color:#587596;border:0;border-radius:8px;background:transparent}
+.mat-competitor-search-clear:hover{color:#0b86d1;background:#eaf5fb}
+.mat-competitor-search-count{flex:0 0 auto;color:#587596;font-size:13px;font-weight:800}
+.mat-competitor-search-help{margin:10px 0 0;color:#6a8297;font-size:13px}
+.mat-competitor-results{display:grid;gap:9px;max-height:380px;margin-top:14px;padding-right:4px;overflow-y:auto}
+.mat-competitor-result{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:13px;padding:12px 14px;border:1px solid #dce7ef;border-radius:12px;background:#fff}
+.mat-competitor-result-copy{display:flex;flex-direction:column;min-width:0}
+.mat-competitor-result-copy strong{color:#0f2f55;font-size:15px}
+.mat-competitor-result-copy span{margin-top:3px;color:#657f94;font-size:13px}
+.mat-competitor-add-button{display:flex;align-items:center;justify-content:center;gap:7px;min-height:40px;padding:9px 13px;color:#fff;border:0;border-radius:9px;background:#087bc7;font-weight:800}
+.mat-competitor-add-button:hover:not(:disabled){background:#0669ac}
+.mat-competitor-add-button:disabled{cursor:wait;opacity:.65}
+.mat-competitor-empty{margin-top:14px;padding:24px;color:#657f94;text-align:center;border:1px dashed #cbdce8;border-radius:11px;background:#fff}
+
+:root[data-theme='dark'] .mat-tournament-detail-hero{color:#e7f1f7!important;border-color:#3f6074!important;background:linear-gradient(135deg,#163044,#1c3b50)!important}
+:root[data-theme='dark'] .mat-tournament-detail-hero :is(h1,h2,h3,.mat-tournament-detail-title-row){color:#fff!important}
+:root[data-theme='dark'] .mat-tournament-detail-hero :is(p,span,.mat-tournament-detail-meta){color:#bdd0dc!important}
+:root[data-theme='dark'] .mat-tournament-close-detail{color:#b8cbd8!important}
+:root[data-theme='dark'] .mat-tournament-detail-stats{border-color:#3f6074!important;background:#132938!important}
+:root[data-theme='dark'] .mat-tournament-detail-stat{border-color:#3f6074!important;background:#132938!important}
+:root[data-theme='dark'] .mat-tournament-detail-stat :is(strong,.mat-tournament-detail-label){color:#e7f1f7!important}
+:root[data-theme='dark'] .mat-tournament-section{color:#e7f1f7!important;border-color:#3f6074!important;background:#132938!important}
+:root[data-theme='dark'] .mat-tournament-section-heading :is(h2,h3,strong){color:#fff!important}
+:root[data-theme='dark'] .mat-tournament-section-heading p{color:#b8cbd8!important}
+:root[data-theme='dark'] :is(.mat-history-athlete-card,.mat-tournament-athlete-card,.mat-history-expanded-content,.mat-history-event-editor,.mat-history-inline-result){color:#e7f1f7!important;border-color:#3f6074!important;background:#193444!important}
+:root[data-theme='dark'] :is(.mat-history-athlete-card,.mat-tournament-athlete-card,.mat-history-expanded-content) :is(h2,h3,h4,strong){color:#fff!important}
+:root[data-theme='dark'] :is(.mat-history-athlete-card,.mat-tournament-athlete-card,.mat-history-expanded-content) :is(p,span,.mat-muted){color:#b8cbd8!important}
+:root[data-theme='dark'] :is(.mat-history-expand-button,.mat-tournament-remove){border-color:#4d6d80!important;background:#203e51!important}
+
+:root[data-theme='dark'] .mat-competitor-picker{border-color:#3f6074;background:#102532}
+:root[data-theme='dark'] .mat-competitor-search{color:#b8cbd8;border-color:#46677a;background:#0c202d}
+:root[data-theme='dark'] .mat-competitor-search input{color:#fff!important;background:transparent!important}
+:root[data-theme='dark'] .mat-competitor-search input::placeholder{color:#93adbd!important}
+:root[data-theme='dark'] .mat-competitor-search-clear{color:#b8cbd8}
+:root[data-theme='dark'] .mat-competitor-search-clear:hover{color:#fff;background:#23465b}
+:root[data-theme='dark'] :is(.mat-competitor-search-count,.mat-competitor-search-help){color:#b8cbd8}
+:root[data-theme='dark'] .mat-competitor-result{border-color:#3f6074;background:#193444}
+:root[data-theme='dark'] .mat-competitor-result-copy strong{color:#fff}
+:root[data-theme='dark'] .mat-competitor-result-copy span{color:#b8cbd8}
+:root[data-theme='dark'] .mat-competitor-empty{color:#b8cbd8;border-color:#46677a;background:#193444}
+
+@media(max-width:700px){.mat-competitor-search-row{align-items:stretch;flex-direction:column}.mat-competitor-search-count{align-self:flex-start}.mat-competitor-result{grid-template-columns:auto minmax(0,1fr)}.mat-competitor-add-button{grid-column:1/-1;width:100%}}
+
+/* Active/inactive competitor filter */
+.mat-competitor-filter-row{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:12px;color:#657f94;font-size:13px}
+.mat-competitor-inactive-toggle{display:inline-flex;align-items:center;gap:9px;cursor:pointer;font-weight:700;user-select:none}
+.mat-competitor-inactive-toggle input{position:absolute;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none}
+.mat-competitor-toggle-track{position:relative;width:40px;height:22px;flex:0 0 40px;border:1px solid #b9cbd8;border-radius:999px;background:#dce7ee;transition:.18s ease}
+.mat-competitor-toggle-thumb{position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.22);transition:.18s ease}
+.mat-competitor-inactive-toggle input:checked + .mat-competitor-toggle-track{border-color:#087bc7;background:#087bc7}
+.mat-competitor-inactive-toggle input:checked + .mat-competitor-toggle-track .mat-competitor-toggle-thumb{transform:translateX(18px)}
+.mat-competitor-inactive-toggle input:focus-visible + .mat-competitor-toggle-track{outline:3px solid rgba(21,152,220,.24);outline-offset:2px}
+:root[data-theme='dark'] .mat-competitor-filter-row{color:#b8cbd8}
+:root[data-theme='dark'] .mat-competitor-toggle-track{border-color:#55768a;background:#29485a}
+:root[data-theme='dark'] .mat-competitor-inactive-toggle input:checked + .mat-competitor-toggle-track{border-color:#1598dc;background:#1598dc}
+@media(max-width:700px){.mat-competitor-filter-row{align-items:flex-start;flex-direction:column}.mat-competitor-inactive-toggle{width:100%}}
+
+/* Tournament counts: force high-contrast values and labels in dark mode. */
+:root[data-theme='dark'] .mat-tournament-tile-stats {
+  border-color: #4b6a7d !important;
+}
+
+:root[data-theme='dark'] .mat-tournament-tile-stats > div {
+  color: #eaf4fa !important;
+}
+
+:root[data-theme='dark'] .mat-tournament-tile-stats strong {
+  color: #ffffff !important;
+  opacity: 1 !important;
+  text-shadow: none !important;
+}
+
+:root[data-theme='dark'] .mat-tournament-tile-stats span {
+  color: #bfd1dc !important;
+  opacity: 1 !important;
+}
+
+:root[data-theme='dark'] .mat-tournament-detail-stats {
+  border-color: #4b6a7d !important;
+  background: #102735 !important;
+}
+
+:root[data-theme='dark'] .mat-tournament-detail-stat {
+  color: #eaf4fa !important;
+  border-color: #4b6a7d !important;
+  background: #132f40 !important;
+}
+
+:root[data-theme='dark'] .mat-tournament-detail-stat strong,
+:root[data-theme='dark'] .mat-tournament-detail-stat > div:not(.mat-tournament-detail-label) {
+  color: #ffffff !important;
+  opacity: 1 !important;
+  text-shadow: none !important;
+}
+
+:root[data-theme='dark'] .mat-tournament-detail-stat .mat-tournament-detail-label,
+:root[data-theme='dark'] .mat-tournament-detail-stat span {
+  color: #bfd1dc !important;
+  opacity: 1 !important;
+}
+
+/* Preserve medal identity while keeping the numeric values readable. */
+:root[data-theme='dark'] .mat-tournament-detail-stat:nth-child(2) svg {
+  color: #f2bd17 !important;
+}
+
+:root[data-theme='dark'] .mat-tournament-detail-stat:nth-child(3) svg {
+  color: #b8c7d1 !important;
+}
+
+:root[data-theme='dark'] .mat-tournament-detail-stat:nth-child(4) svg {
+  color: #d47b38 !important;
+}
+
+/* Selected tournament detail scroll target */
+.mat-tournament-detail {
+  scroll-margin-top: 112px;
+}
+
+/* Historical summary counters use direct-child selectors because archived
+   markup differs from upcoming-tournament statistic markup. */
+:root[data-theme='dark'] .mat-tournament-detail-stats > div {
+  color: #eaf4fa !important;
+  border-color: #4b6a7d !important;
+  background: #132f40 !important;
+}
+
+:root[data-theme='dark'] .mat-tournament-detail-stats > div > strong {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  opacity: 1 !important;
+  filter: none !important;
+}
+
+:root[data-theme='dark'] .mat-tournament-detail-stats > div > span {
+  color: #c7d8e2 !important;
+  -webkit-text-fill-color: #c7d8e2 !important;
+  opacity: 1 !important;
+}
+
+:root[data-theme='dark'] .mat-tournament-detail-stats > div:first-child svg {
+  color: #19a7ea !important;
+  stroke: #19a7ea !important;
+}
+
+:root[data-theme='dark'] .mat-tournament-detail-stats > .gold svg {
+  color: #f2bd17 !important;
+  stroke: #f2bd17 !important;
+}
+
+:root[data-theme='dark'] .mat-tournament-detail-stats > .silver svg {
+  color: #b8c7d1 !important;
+  stroke: #b8c7d1 !important;
+}
+
+:root[data-theme='dark'] .mat-tournament-detail-stats > .bronze svg {
+  color: #d47b38 !important;
+  stroke: #d47b38 !important;
+}
+
+@media (max-width: 1180px) {
+  .mat-tournament-detail {
+    scroll-margin-top: 88px;
+  }
+}
+
+/* Final contrast override for archived summary values.
+   High specificity is intentional because legacy index.css rules also use !important. */
+html[data-theme='dark'] body #root .mat-page .mat-tournament-detail .mat-tournament-detail-stats > div > strong,
+html[data-theme='dark'] body #root .mat-page .mat-tournament-detail .mat-tournament-detail-stats > div strong {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  opacity: 1 !important;
+  filter: none !important;
+  text-shadow: 0 0 1px rgba(255, 255, 255, .2) !important;
+}
+
+html[data-theme='dark'] body #root .mat-page .mat-tournament-detail .mat-tournament-detail-stats > div > span,
+html[data-theme='dark'] body #root .mat-page .mat-tournament-detail .mat-tournament-detail-stats > div span {
+  color: #d5e3eb !important;
+  -webkit-text-fill-color: #d5e3eb !important;
+  opacity: 1 !important;
+  filter: none !important;
+}
+
+html[data-theme='dark'] body #root .mat-page .mat-tournament-detail .mat-tournament-detail-stats > div {
+  color: #ffffff !important;
+  background-color: #163548 !important;
+  border-color: #58778a !important;
+}
+
+/* Archived summary values use dedicated elements rather than <strong>, avoiding
+   legacy global strong-color declarations in index.css. */
+.mat-historical-stat-value {
+  margin-top: 5px;
+  color: #10294f;
+  font-size: 25px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.mat-historical-stat-label {
+  margin-top: 7px;
+  color: #6b7e94;
+  font-size: 12px;
+}
+
+:root[data-theme='dark'] .mat-historical-stat-value {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+
+:root[data-theme='dark'] .mat-historical-stat-label {
+  color: #d5e3eb !important;
+  -webkit-text-fill-color: #d5e3eb !important;
+  opacity: 1 !important;
+}
+
+/* Archive card/list view toggle */
+.mat-archive-view-toolbar{display:flex;align-items:center;justify-content:flex-end;gap:10px;margin:14px 0 18px;color:#617b91;font-size:13px;font-weight:800}
+.mat-archive-view-toggle{display:inline-flex;padding:4px;border:1px solid #d3e0e9;border-radius:11px;background:#f0f5f8}
+.mat-archive-view-toggle button{display:flex;align-items:center;gap:7px;min-height:36px;padding:7px 12px;color:#536f85;border:0;border-radius:8px;background:transparent;font-weight:800}
+.mat-archive-view-toggle button.active{color:#fff;background:#087bc7;box-shadow:0 3px 9px rgba(8,123,199,.22)}
+.mat-archive-grid-hidden{display:none!important}
+.mat-archive-list-wrap{margin-bottom:28px;overflow-x:auto;border:1px solid #d7e3eb;border-radius:14px;background:#fff;box-shadow:0 10px 24px rgba(16,41,79,.07)}
+.mat-archive-list{width:100%;min-width:1060px;border-collapse:collapse;color:#173957;text-align:left}
+.mat-archive-list th{padding:14px 16px;color:#607a90;background:#f2f7fa;border-bottom:1px solid #d7e3eb;font-size:11px;letter-spacing:.045em;text-transform:uppercase;white-space:nowrap}
+.mat-archive-list td{padding:15px 16px;border-bottom:1px solid #e2eaf0;font-size:14px}
+.mat-archive-list tbody tr{cursor:pointer;transition:background .15s ease}
+.mat-archive-list tbody tr:last-child td{border-bottom:0}
+.mat-archive-list tbody tr:hover{background:#f0f8fc}
+.mat-archive-list tbody tr.selected{background:#e4f4fd;box-shadow:inset 4px 0 #087bc7}
+.mat-archive-list td strong{color:#10294f}
+.mat-archive-list .numeric{text-align:center;font-variant-numeric:tabular-nums;font-weight:850}
+.mat-archive-list .total-medals{color:#087bc7}
+.mat-archive-list .gold{color:#9b7100}.mat-archive-list .silver{color:#647887}.mat-archive-list .bronze{color:#a95820}
+.mat-archive-list .action-column{width:1%;text-align:right;white-space:nowrap}
+.mat-archive-open-button{display:inline-flex;align-items:center;gap:5px;padding:8px 10px;color:#087bc7;border:1px solid #bdd8e9;border-radius:8px;background:#f4fbff;font-weight:800}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+:root[data-theme='dark'] .mat-archive-view-toolbar{color:#b8cbd8}
+:root[data-theme='dark'] .mat-archive-view-toggle{border-color:#496a7d;background:#102735}
+:root[data-theme='dark'] .mat-archive-view-toggle button{color:#bfd1dc}
+:root[data-theme='dark'] .mat-archive-view-toggle button.active{color:#fff;background:#087bc7}
+:root[data-theme='dark'] .mat-archive-list-wrap{border-color:#426276;background:#132f40;box-shadow:0 12px 28px rgba(0,0,0,.2)}
+:root[data-theme='dark'] .mat-archive-list{color:#e7f1f7}
+:root[data-theme='dark'] .mat-archive-list th{color:#c4d5df;background:#102735;border-color:#426276}
+:root[data-theme='dark'] .mat-archive-list td{color:#dce9f1;border-color:#345466;background:transparent}
+:root[data-theme='dark'] .mat-archive-list td strong{color:#fff!important}
+:root[data-theme='dark'] .mat-archive-list tbody tr:hover{background:#1a3b4f}
+:root[data-theme='dark'] .mat-archive-list tbody tr.selected{background:#174a68;box-shadow:inset 4px 0 #39b5f4}
+:root[data-theme='dark'] .mat-archive-list .total-medals{color:#72cdfa}
+:root[data-theme='dark'] .mat-archive-list .gold{color:#ffd45a}.mat-archive-list .silver{color:#cfdae1}.mat-archive-list .bronze{color:#efa36b}
+:root[data-theme='dark'] .mat-archive-open-button{color:#8bd6fb;border-color:#4c7389;background:#173b50}
+@media(max-width:850px){.mat-archive-view-toolbar{justify-content:space-between}.mat-archive-list .medal-column{display:none}}

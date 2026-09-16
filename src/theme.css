@@ -1,0 +1,490 @@
+/* Application theme overrides. Loaded after index.css. */
+:root {
+  --theme-bg: #eef5fa;
+  --theme-surface: #ffffff;
+  --theme-surface-alt: #f4f8fb;
+  --theme-text: #0f2f55;
+  --theme-heading: #0b2e5f;
+  --theme-muted: #587596;
+  --theme-border: #d8e4ed;
+  --theme-input: #ffffff;
+  --theme-accent: #0b86d1;
+}
+
+:root[data-theme='dark'] {
+  --theme-bg: #081722;
+  --theme-surface: #132938;
+  --theme-surface-alt: #193444;
+  --theme-text: #e7f1f7;
+  --theme-heading: #ffffff;
+  --theme-muted: #b8cbd8;
+  --theme-border: #3f6074;
+  --theme-input: #0f2533;
+  --theme-accent: #65c3f5;
+}
+
+:root[data-theme='dark'] body,
+:root[data-theme='dark'] #root,
+:root[data-theme='dark'] .mat-app,
+:root[data-theme='dark'] .mat-page,
+:root[data-theme='dark'] .mat-content {
+  color: var(--theme-text);
+  background-color: var(--theme-bg);
+}
+
+/* Shared page headings */
+:root[data-theme='dark'] .mat-page-title {
+  color: var(--theme-heading) !important;
+}
+
+:root[data-theme='dark'] .mat-eyebrow {
+  color: var(--theme-accent) !important;
+}
+
+:root[data-theme='dark'] .mat-page-description,
+:root[data-theme='dark'] .mat-muted {
+  color: var(--theme-muted) !important;
+}
+
+/* Roster summary and content surfaces */
+:root[data-theme='dark'] .mat-stats-card,
+:root[data-theme='dark'] .mat-panel,
+:root[data-theme='dark'] .mat-table-container {
+  color: var(--theme-text) !important;
+  border-color: var(--theme-border) !important;
+  background: var(--theme-surface) !important;
+}
+
+:root[data-theme='dark'] .mat-stat {
+  border-color: var(--theme-border) !important;
+}
+
+:root[data-theme='dark'] .mat-stat-number,
+:root[data-theme='dark'] .mat-stat-label {
+  color: var(--theme-heading) !important;
+}
+
+:root[data-theme='dark'] .mat-toolbar {
+  border-color: var(--theme-border) !important;
+  background: var(--theme-surface) !important;
+}
+
+:root[data-theme='dark'] .mat-search,
+:root[data-theme='dark'] .mat-search input,
+:root[data-theme='dark'] .mat-select {
+  color: var(--theme-text) !important;
+  border-color: var(--theme-border) !important;
+  background: var(--theme-input) !important;
+}
+
+:root[data-theme='dark'] .mat-search input::placeholder {
+  color: #9fb8c8 !important;
+  opacity: 1;
+}
+
+/* Roster table */
+:root[data-theme='dark'] .mat-table {
+  color: var(--theme-text) !important;
+  border-color: var(--theme-border) !important;
+  background: var(--theme-surface) !important;
+}
+
+:root[data-theme='dark'] .mat-table thead,
+:root[data-theme='dark'] .mat-table th {
+  color: var(--theme-heading) !important;
+  border-color: var(--theme-border) !important;
+  background: var(--theme-surface-alt) !important;
+}
+
+:root[data-theme='dark'] .mat-table td {
+  color: var(--theme-text) !important;
+  border-color: var(--theme-border) !important;
+  background: var(--theme-surface) !important;
+}
+
+:root[data-theme='dark'] .mat-table tbody tr:nth-child(even) td,
+:root[data-theme='dark'] .mat-table tbody tr:hover td {
+  background: var(--theme-surface-alt) !important;
+}
+
+:root[data-theme='dark'] .mat-athlete-profile-link {
+  color: var(--theme-heading) !important;
+}
+
+:root[data-theme='dark'] .mat-athlete-profile-hint {
+  color: var(--theme-muted) !important;
+}
+
+:root[data-theme='dark'] .mat-edit-button,
+:root[data-theme='dark'] .mat-secondary-button {
+  color: var(--theme-heading) !important;
+  border-color: var(--theme-border) !important;
+  background: var(--theme-surface-alt) !important;
+}
+
+/* Shared forms and modals */
+:root[data-theme='dark'] .mat-modal,
+:root[data-theme='dark'] .mat-form {
+  color: var(--theme-text) !important;
+  border-color: var(--theme-border) !important;
+  background: var(--theme-surface) !important;
+}
+
+:root[data-theme='dark'] .mat-modal-title,
+:root[data-theme='dark'] .mat-form-label {
+  color: var(--theme-heading) !important;
+}
+
+:root[data-theme='dark'] .mat-form-help {
+  color: var(--theme-muted) !important;
+}
+
+:root[data-theme='dark'] .mat-input,
+:root[data-theme='dark'] .mat-textarea,
+:root[data-theme='dark'] input,
+:root[data-theme='dark'] select,
+:root[data-theme='dark'] textarea {
+  color: var(--theme-text) !important;
+  border-color: var(--theme-border) !important;
+  background: var(--theme-input) !important;
+}
+
+/* Legacy pages with inline white cards */
+:root[data-theme='dark'] [style*="background: rgb(255, 255, 255)"],
+:root[data-theme='dark'] [style*="background: #ffffff"],
+:root[data-theme='dark'] [style*="background:#ffffff"] {
+  color: var(--theme-text) !important;
+  border-color: var(--theme-border) !important;
+  background: var(--theme-surface) !important;
+}
+
+:root[data-theme='dark'] [style*="background: rgb(255, 255, 255)"] :is(h1, h2, h3, h4, strong),
+:root[data-theme='dark'] [style*="background: #ffffff"] :is(h1, h2, h3, h4, strong),
+:root[data-theme='dark'] [style*="background:#ffffff"] :is(h1, h2, h3, h4, strong) {
+  color: var(--theme-heading) !important;
+}
+
+:root[data-theme='dark'] [style*="background: rgb(255, 255, 255)"] :is(p, span, .mat-muted),
+:root[data-theme='dark'] [style*="background: #ffffff"] :is(p, span, .mat-muted),
+:root[data-theme='dark'] [style*="background:#ffffff"] :is(p, span, .mat-muted) {
+  color: var(--theme-muted) !important;
+}
+
+/* Preserve semantic pills */
+:root[data-theme='dark'] .mat-pill {
+  filter: saturate(0.95) brightness(0.96);
+}
+
+/* Financials */
+:root[data-theme='dark'] .mat-section-title { color: var(--theme-heading) !important; }
+:root[data-theme='dark'] .mat-section-description { color: var(--theme-muted) !important; }
+:root[data-theme='dark'] :is(.mat-financial-kpi,.mat-financial-chart-card,.mat-financial-card,.mat-financial-ledger,.mat-financial-modal) {
+  color: var(--theme-text) !important;
+  border-color: var(--theme-border) !important;
+  background: var(--theme-surface) !important;
+}
+:root[data-theme='dark'] .mat-financial-kpi :is(strong,h2,h3),
+:root[data-theme='dark'] .mat-financial-card-heading :is(h2,h3,strong),
+:root[data-theme='dark'] .mat-financial-ledger :is(h2,h3,strong) { color: var(--theme-heading) !important; }
+:root[data-theme='dark'] .mat-financial-kpi :is(span,p),
+:root[data-theme='dark'] .mat-financial-card-heading p,
+:root[data-theme='dark'] .mat-financial-empty { color: var(--theme-muted) !important; }
+:root[data-theme='dark'] :is(.mat-financial-category-row,.mat-financial-note) {
+  color: var(--theme-text) !important;
+  border-color: var(--theme-border) !important;
+  background: var(--theme-surface-alt) !important;
+}
+:root[data-theme='dark'] .mat-financial-category-top :is(strong,span),
+:root[data-theme='dark'] .mat-financial-note :is(strong,h3) { color: var(--theme-heading) !important; }
+:root[data-theme='dark'] .mat-financial-chart-card .recharts-text { fill: var(--theme-muted) !important; }
+:root[data-theme='dark'] .mat-financial-chart-card .recharts-cartesian-grid line { stroke: var(--theme-border) !important; }
+:root[data-theme='dark'] .mat-financial-modal-header { border-color: var(--theme-border) !important; }
+:root[data-theme='dark'] .mat-financial-type-select button:not(.active) {
+  color: var(--theme-text) !important;
+  border-color: var(--theme-border) !important;
+  background: var(--theme-surface-alt) !important;
+}
+
+/* Tournaments */
+:root[data-theme='dark'] :is(.mat-tournament-tabs,.mat-tournament-tile,.mat-tournament-detail,.mat-tournament-athlete-card,.mat-history-athlete-card,.mat-history-inline-result,.mat-history-event-editor,.mat-tournament-add-athlete,.mat-archive-summary){color:var(--theme-text)!important;border-color:var(--theme-border)!important;background:var(--theme-surface)!important}
+:root[data-theme='dark'] :is(.mat-tournament-name,.mat-tournament-detail-title-row h2,.mat-tournament-section-heading h2,.mat-tournament-athlete-name-area strong,.mat-history-editor-heading h3){color:var(--theme-heading)!important}
+:root[data-theme='dark'] :is(.mat-tournament-meta,.mat-tournament-detail-meta,.mat-tournament-detail-label,.mat-tournament-payment-label,.mat-tournament-events-label,.mat-tournament-empty){color:var(--theme-muted)!important}
+:root[data-theme='dark'] :is(.mat-tournament-event-option,.mat-history-event-block,.mat-tournament-detail-stat){color:var(--theme-text)!important;border-color:var(--theme-border)!important;background:var(--theme-surface-alt)!important}
+:root[data-theme='dark'] .mat-tournament-tabs button:not(.active){color:var(--theme-text)!important;background:var(--theme-surface-alt)!important}
+
+/* Calendar */
+:root[data-theme='dark'] :is(.mat-calendar-panel,.mat-calendar-side-card,.mat-calendar-toolbar){color:var(--theme-text)!important;border-color:var(--theme-border)!important;background:var(--theme-surface)!important}
+:root[data-theme='dark'] .mat-calendar-weekdays{color:var(--theme-muted)!important;border-color:var(--theme-border)!important;background:var(--theme-surface-alt)!important}
+:root[data-theme='dark'] .mat-calendar-day{color:var(--theme-text)!important;border-color:var(--theme-border)!important;background:var(--theme-surface)!important}
+:root[data-theme='dark'] .mat-calendar-day:hover,:root[data-theme='dark'] .mat-calendar-day.is-today{background:var(--theme-surface-alt)!important}
+:root[data-theme='dark'] .mat-calendar-day-number{color:var(--theme-heading)!important}
+:root[data-theme='dark'] :is(.mat-calendar-upcoming,.mat-calendar-event-card){color:var(--theme-text)!important;border-color:var(--theme-border)!important;background:var(--theme-surface-alt)!important}
+:root[data-theme='dark'] .mat-calendar-side-header :is(h2,h3,strong),:root[data-theme='dark'] .mat-calendar-upcoming :is(h3,strong){color:var(--theme-heading)!important}
+
+/* Announcements */
+:root[data-theme='dark'] .mat-announcement-tabs{color:var(--theme-text)!important;border-color:var(--theme-border)!important;background:var(--theme-surface)!important}
+:root[data-theme='dark'] .mat-announcement-tabs button:not(.active){color:var(--theme-text)!important;background:var(--theme-surface-alt)!important}
+:root[data-theme='dark'] .mat-announcement-card{color:var(--theme-text)!important;border-color:var(--theme-border)!important;background:var(--theme-surface)!important}
+:root[data-theme='dark'] .mat-announcement-card :is(h2,h3,strong){color:var(--theme-heading)!important}
+:root[data-theme='dark'] .mat-announcement-card :is(p,.mat-announcement-dates){color:var(--theme-muted)!important}
+:root[data-theme='dark'] .mat-announcement-card-actions button{color:var(--theme-text)!important;border-color:var(--theme-border)!important;background:var(--theme-surface-alt)!important}
+:root[data-theme='dark'] .mat-empty-state{color:var(--theme-text)!important;border-color:var(--theme-border)!important;background:var(--theme-surface)!important}
+
+/* Home page: true dark-mode surfaces and readable contrast */
+:root[data-theme='dark'] .mat-hub-welcome {
+  color: var(--theme-text) !important;
+  border-color: var(--theme-border) !important;
+  background: linear-gradient(135deg, #132938 0%, #183447 100%) !important;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, .24) !important;
+}
+
+:root[data-theme='dark'] .mat-hub-welcome h1 {
+  color: var(--theme-heading) !important;
+}
+
+:root[data-theme='dark'] .mat-hub-welcome p {
+  color: var(--theme-muted) !important;
+}
+
+:root[data-theme='dark'] .mat-hub-eyebrow {
+  color: #65c3f5 !important;
+}
+
+:root[data-theme='dark'] .mat-hub-tile {
+  color: var(--theme-text) !important;
+  border-color: var(--theme-border) !important;
+  background: #132938 !important;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, .2) !important;
+}
+
+:root[data-theme='dark'] .mat-hub-tile:hover {
+  border-color: #5aa9d2 !important;
+  background: #183447 !important;
+}
+
+:root[data-theme='dark'] .mat-hub-tile-icon {
+  color: #65c3f5 !important;
+  background: #173f57 !important;
+}
+
+:root[data-theme='dark'] .mat-hub-tile-label {
+  color: #9fc9df !important;
+}
+
+:root[data-theme='dark'] .mat-hub-tile-body strong {
+  color: #ffffff !important;
+}
+
+:root[data-theme='dark'] .mat-hub-tile-body p,
+:root[data-theme='dark'] .mat-hub-tile-detail {
+  color: #bdd0dc !important;
+}
+
+:root[data-theme='dark'] .mat-hub-tile-action {
+  color: #70c9fa !important;
+  border-color: var(--theme-border) !important;
+}
+
+:root[data-theme='dark'] .mat-hub-start-card {
+  color: var(--theme-text) !important;
+  border-color: var(--theme-border) !important;
+  background: #132938 !important;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, .18) !important;
+}
+
+:root[data-theme='dark'] .mat-hub-start-icon {
+  color: #65c3f5 !important;
+  background: #173f57 !important;
+}
+
+:root[data-theme='dark'] .mat-hub-start-kicker {
+  color: #9fc9df !important;
+}
+
+:root[data-theme='dark'] .mat-hub-start-content strong {
+  color: #ffffff !important;
+}
+
+:root[data-theme='dark'] .mat-hub-start-content p {
+  color: #bdd0dc !important;
+}
+
+:root[data-theme='dark'] .mat-hub-start-action {
+  color: #70c9fa !important;
+}
+
+:root[data-theme='dark'] .mat-hub-upcoming {
+  color: var(--theme-text) !important;
+  border-color: var(--theme-border) !important;
+  background: #132938 !important;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, .18) !important;
+}
+
+:root[data-theme='dark'] .mat-hub-section-header,
+:root[data-theme='dark'] .mat-hub-upcoming-header {
+  border-color: var(--theme-border) !important;
+}
+
+:root[data-theme='dark'] .mat-hub-section-header h2,
+:root[data-theme='dark'] .mat-hub-upcoming-header h2 {
+  color: #ffffff !important;
+}
+
+:root[data-theme='dark'] .mat-hub-section-kicker {
+  color: #9fc9df !important;
+}
+
+:root[data-theme='dark'] .mat-hub-section-action {
+  color: #70c9fa !important;
+}
+
+:root[data-theme='dark'] .mat-hub-upcoming-item {
+  color: var(--theme-text) !important;
+  border-color: var(--theme-border) !important;
+  background: #193444 !important;
+}
+
+:root[data-theme='dark'] .mat-hub-upcoming-item:hover {
+  border-color: #5aa9d2 !important;
+  background: #203e51 !important;
+}
+
+:root[data-theme='dark'] .mat-hub-upcoming-content strong {
+  color: #ffffff !important;
+}
+
+:root[data-theme='dark'] .mat-hub-upcoming-content span {
+  color: #bdd0dc !important;
+}
+
+/* Top navigation: dark mode uses dark tabs instead of bright white tiles */
+:root[data-theme='dark'] .mat-navbar {
+  background: #0e2636 !important;
+  border-color: #36566a !important;
+}
+
+:root[data-theme='dark'] .mat-nav-button {
+  color: #dceaf3 !important;
+  background: #132f41 !important;
+  border-right-color: #36566a !important;
+}
+
+:root[data-theme='dark'] .mat-nav-button .mat-nav-icon {
+  color: currentColor !important;
+}
+
+:root[data-theme='dark'] .mat-nav-button:hover {
+  color: #ffffff !important;
+  background: #1b4359 !important;
+}
+
+:root[data-theme='dark'] .mat-nav-button.active {
+  color: #ffffff !important;
+  background: linear-gradient(135deg, #1598dc, #0875c7) !important;
+}
+
+:root[data-theme='dark'] .mat-brand,
+:root[data-theme='dark'] .mat-navbar-actions {
+  background: #0e2636 !important;
+}
+
+/* New Member Guide */
+:root[data-theme='dark'] .mat-guide {
+  color: var(--theme-text) !important;
+}
+
+:root[data-theme='dark'] .mat-guide-hero,
+:root[data-theme='dark'] .mat-guide-section,
+:root[data-theme='dark'] .mat-guide-info-box,
+:root[data-theme='dark'] .mat-guide-weight-result {
+  color: var(--theme-text) !important;
+  border-color: var(--theme-border) !important;
+  background: var(--theme-surface) !important;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, .18) !important;
+}
+
+:root[data-theme='dark'] .mat-guide-hero :is(h1, h2, h3, strong),
+:root[data-theme='dark'] .mat-guide-section-heading :is(h2, h3, strong),
+:root[data-theme='dark'] .mat-guide-weight-heading :is(h2, h3, strong),
+:root[data-theme='dark'] .mat-guide-rule-card-heading :is(h2, h3, strong) {
+  color: var(--theme-heading) !important;
+}
+
+:root[data-theme='dark'] .mat-guide-hero :is(p, span),
+:root[data-theme='dark'] .mat-guide-section :is(p, small),
+:root[data-theme='dark'] .mat-guide-version {
+  color: var(--theme-muted) !important;
+}
+
+:root[data-theme='dark'] .mat-guide-hero-icon,
+:root[data-theme='dark'] .mat-guide-section-icon,
+:root[data-theme='dark'] .mat-guide-step-number {
+  color: #65c3f5 !important;
+  background: #173f57 !important;
+}
+
+:root[data-theme='dark'] .mat-guide-jump-card,
+:root[data-theme='dark'] .mat-guide-rule-card,
+:root[data-theme='dark'] .mat-guide-check-item,
+:root[data-theme='dark'] .mat-guide-step,
+:root[data-theme='dark'] .mat-guide-term {
+  color: var(--theme-text) !important;
+  border-color: var(--theme-border) !important;
+  background: var(--theme-surface-alt) !important;
+}
+
+:root[data-theme='dark'] .mat-guide-jump-card:hover,
+:root[data-theme='dark'] .mat-guide-step-link:hover {
+  border-color: #5aa9d2 !important;
+  background: #203e51 !important;
+}
+
+:root[data-theme='dark'] .mat-guide-jump-card :is(h2, h3, strong),
+:root[data-theme='dark'] .mat-guide-rule-card :is(h2, h3, strong),
+:root[data-theme='dark'] .mat-guide-check-item strong,
+:root[data-theme='dark'] .mat-guide-step strong,
+:root[data-theme='dark'] .mat-guide-term strong,
+:root[data-theme='dark'] .mat-guide-weight-result strong {
+  color: var(--theme-heading) !important;
+}
+
+:root[data-theme='dark'] .mat-guide-jump-card :is(p, span),
+:root[data-theme='dark'] .mat-guide-rule-card p,
+:root[data-theme='dark'] .mat-guide-check-item span,
+:root[data-theme='dark'] .mat-guide-step p,
+:root[data-theme='dark'] .mat-guide-term p,
+:root[data-theme='dark'] .mat-guide-weight-result :is(p, span) {
+  color: var(--theme-muted) !important;
+}
+
+:root[data-theme='dark'] .mat-guide-back,
+:root[data-theme='dark'] .mat-guide-step-link {
+  color: #70c9fa !important;
+}
+
+:root[data-theme='dark'] .mat-guide-weight-chip,
+:root[data-theme='dark'] .mat-guide-form-chips button,
+:root[data-theme='dark'] .mat-guide-rule-controls button {
+  color: var(--theme-text) !important;
+  border-color: var(--theme-border) !important;
+  background: var(--theme-surface-alt) !important;
+}
+
+:root[data-theme='dark'] .mat-guide-weight-chip:hover,
+:root[data-theme='dark'] .mat-guide-weight-chip.active,
+:root[data-theme='dark'] .mat-guide-form-chips button.active,
+:root[data-theme='dark'] .mat-guide-rule-controls button.active {
+  color: #ffffff !important;
+  border-color: #1598dc !important;
+  background: #0875c7 !important;
+}
+
+:root[data-theme='dark'] .mat-footer {
+  color: var(--theme-text) !important;
+  border-color: var(--theme-border) !important;
+  background: #0e2636 !important;
+}
+
+:root[data-theme='dark'] .mat-footer-values {
+  color: #bdd0dc !important;
+}

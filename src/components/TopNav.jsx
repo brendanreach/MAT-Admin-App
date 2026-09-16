@@ -7,723 +7,228 @@ import {
   Home,
   LogOut,
   Megaphone,
+  Menu,
+  Moon,
   ShieldCheck,
+  Sun,
   Trophy,
   UserCircle2,
   UserRound,
   Users,
+  X,
 } from 'lucide-react'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import './TopNav.css'
 
-import {
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
-
-function normalizeRoles(roles) {
-  if (!Array.isArray(roles)) {
-    return []
-  }
-
-  return roles
-    .filter(Boolean)
-    .map((role) =>
-      String(role)
-        .trim()
-        .toLowerCase()
-    )
+const NAV_ITEMS = {
+  admin: [
+    ['home', 'Home', Home],
+    ['roster', 'Roster', Users],
+    ['coaches', 'Coaches', UserRound],
+    ['tournaments', 'Tournaments', Trophy],
+    ['calendar', 'Calendar', CalendarDays],
+    ['announcements', 'Announcements', Megaphone],
+    ['financials', 'Financials', BarChart3],
+  ],
+  coach: [
+    ['home', 'Home', Home],
+    ['lesson-requests', 'Lesson Requests', ClipboardList],
+    ['calendar', 'Calendar', CalendarDays],
+    ['announcements', 'Announcements', Megaphone],
+  ],
+  athlete: [
+    ['home', 'Home', Home],
+    ['coaches', 'Coaches', UserRound],
+    ['tournaments', 'Tournaments', Trophy],
+    ['calendar', 'Calendar', CalendarDays],
+    ['announcements', 'Announcements', Megaphone],
+    ['my-profile', 'My Profile', Award],
+    ['new-member-guide', 'Team Guide', ShieldCheck],
+  ],
 }
 
-function TopNav({
+function normalizeRoles(roles) {
+  return Array.isArray(roles)
+    ? roles.filter(Boolean).map((role) => String(role).trim().toLowerCase())
+    : []
+}
+
+function initialTheme() {
+  const saved = localStorage.getItem('mat-theme')
+  if (saved === 'light' || saved === 'dark') return saved
+  return window.matchMedia?.('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+}
+
+export default function TopNav({
   activeTab,
   onChangeTab,
   accountName,
   roles = [],
-  viewMode,
+  viewMode = 'athlete',
   onChangeViewMode,
   onLogout,
 }) {
-  const [
-    accountMenuOpen,
-    setAccountMenuOpen,
-  ] = useState(false)
+  const [accountOpen, setAccountOpen] = useState(false)
+  const [mobileOpen, setMobileOpen] = useState(false)
+  const [theme, setTheme] = useState(initialTheme)
+  const accountRef = useRef(null)
 
-  const accountRef =
-    useRef(null)
-
-  const normalizedRoles =
-    useMemo(
-      () =>
-        normalizeRoles(
-          roles
-        ),
-      [roles]
-    )
-
-  const isAdmin =
-    normalizedRoles.includes(
-      'admin'
-    )
-
-  const isAthlete =
-    normalizedRoles.includes(
-      'athlete'
-    )
-
-  const isCoach =
-    normalizedRoles.includes(
-      'coach'
-    )
-
-  const availableViews =
-    useMemo(() => {
-      const views = []
-
-      if (isAdmin) {
-        views.push('admin')
-      }
-
-      if (isCoach) {
-        views.push('coach')
-      }
-
-      if (isAthlete) {
-        views.push('athlete')
-      }
-
-      return views
-    }, [
-      isAdmin,
-      isCoach,
-      isAthlete,
-    ])
+  const normalizedRoles = useMemo(() => normalizeRoles(roles), [roles])
+  const views = useMemo(
+    () => ['admin', 'coach', 'athlete'].filter((role) => normalizedRoles.includes(role)),
+    [normalizedRoles],
+  )
+  const items = NAV_ITEMS[viewMode] || NAV_ITEMS.athlete
 
   useEffect(() => {
-    function handleOutsideClick(
-      event
-    ) {
-      if (
-        accountRef.current &&
-        !accountRef.current.contains(
-          event.target
-        )
-      ) {
-        setAccountMenuOpen(false)
+    document.documentElement.dataset.theme = theme
+    document.documentElement.style.colorScheme = theme
+    localStorage.setItem('mat-theme', theme)
+  }, [theme])
+
+  useEffect(() => {
+    const closeOutside = (event) => {
+      if (accountRef.current && !accountRef.current.contains(event.target)) {
+        setAccountOpen(false)
       }
     }
-
-    document.addEventListener(
-      'mousedown',
-      handleOutsideClick
-    )
-
+    const closeOnEscape = (event) => {
+      if (event.key === 'Escape') {
+        setAccountOpen(false)
+        setMobileOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', closeOutside)
+    document.addEventListener('keydown', closeOnEscape)
     return () => {
-      document.removeEventListener(
-        'mousedown',
-        handleOutsideClick
-      )
+      document.removeEventListener('mousedown', closeOutside)
+      document.removeEventListener('keydown', closeOnEscape)
     }
   }, [])
 
-  function getRoleLabel() {
-    const labels = []
+  useEffect(() => {
+    setMobileOpen(false)
+    setAccountOpen(false)
+  }, [activeTab, viewMode])
 
-    if (isAdmin) {
-      labels.push('Admin')
-    }
-
-    if (isCoach) {
-      labels.push('Coach')
-    }
-
-    if (isAthlete) {
-      labels.push('Athlete')
-    }
-
-    if (labels.length === 0) {
-      return 'Account'
-    }
-
-    return labels.join(' + ')
+  const goTo = (tab) => {
+    onChangeTab(tab)
+    setMobileOpen(false)
   }
 
-  function changeView(
-    nextMode
-  ) {
-    onChangeViewMode(
-      nextMode
-    )
-
-    setAccountMenuOpen(
-      false
-    )
+  const switchView = (view) => {
+    onChangeViewMode?.(view)
+    setAccountOpen(false)
+    setMobileOpen(false)
   }
+
+  const roleLabel = views.length
+    ? views.map((view) => view[0].toUpperCase() + view.slice(1)).join(' + ')
+    : 'Account'
+
+  const renderItem = ([id, label, Icon], mobile = false) => (
+    <button
+      key={id}
+      type="button"
+      className={`${mobile ? 'mat-mobile-nav-button' : 'mat-nav-button'}${activeTab === id ? ' active' : ''}`}
+      aria-current={activeTab === id ? 'page' : undefined}
+      onClick={() => goTo(id)}
+    >
+      <Icon className={mobile ? 'mat-mobile-nav-icon' : 'mat-nav-icon'} />
+      <span>{label}</span>
+    </button>
+  )
 
   return (
     <header className="mat-navbar">
-
       <div className="mat-navbar-inner">
+        <button type="button" className="mat-brand" onClick={() => goTo('home')}>
+          <img className="mat-logo" src="/mat-logo.jpg" alt="Michigan Academy of Taekwondo" />
+        </button>
 
-        <div className="mat-brand">
-
-          <img
-            src="/mat-logo.jpg"
-            alt="Michigan Academy of Taekwondo"
-            className="mat-logo"
-          />
-
-        </div>
-
-        <nav className="mat-nav-links">
-
-          <button
-            type="button"
-            className={`mat-nav-button ${
-              activeTab === 'home'
-                ? 'active'
-                : ''
-            }`}
-            onClick={() =>
-              onChangeTab(
-                'home'
-              )
-            }
-          >
-            <Home className="mat-nav-icon" />
-
-            <span>
-              Home
-            </span>
-          </button>
-
-          {viewMode ===
-            'admin' && (
-            <>
-              <button
-                type="button"
-                className={`mat-nav-button ${
-                  activeTab ===
-                  'roster'
-                    ? 'active'
-                    : ''
-                }`}
-                onClick={() =>
-                  onChangeTab(
-                    'roster'
-                  )
-                }
-              >
-                <Users className="mat-nav-icon" />
-
-                <span>
-                  Roster
-                </span>
-              </button>
-
-              <button
-                type="button"
-                className={`mat-nav-button ${
-                  activeTab ===
-                  'coaches'
-                    ? 'active'
-                    : ''
-                }`}
-                onClick={() =>
-                  onChangeTab(
-                    'coaches'
-                  )
-                }
-              >
-                <UserRound className="mat-nav-icon" />
-
-                <span>
-                  Coaches
-                </span>
-              </button>
-
-              <button
-                type="button"
-                className={`mat-nav-button ${
-                  activeTab ===
-                  'tournaments'
-                    ? 'active'
-                    : ''
-                }`}
-                onClick={() =>
-                  onChangeTab(
-                    'tournaments'
-                  )
-                }
-              >
-                <Trophy className="mat-nav-icon" />
-
-                <span>
-                  Tournaments
-                </span>
-              </button>
-
-              <button
-                type="button"
-                className={`mat-nav-button ${
-                  activeTab ===
-                  'calendar'
-                    ? 'active'
-                    : ''
-                }`}
-                onClick={() =>
-                  onChangeTab(
-                    'calendar'
-                  )
-                }
-              >
-                <CalendarDays className="mat-nav-icon" />
-
-                <span>
-                  Calendar
-                </span>
-              </button>
-
-              <button
-                type="button"
-                className={`mat-nav-button ${
-                  activeTab ===
-                  'announcements'
-                    ? 'active'
-                    : ''
-                }`}
-                onClick={() =>
-                  onChangeTab(
-                    'announcements'
-                  )
-                }
-              >
-                <Megaphone className="mat-nav-icon" />
-
-                <span>
-                  Announcements
-                </span>
-              </button>
-
-              <button
-                type="button"
-                className={`mat-nav-button ${
-                  activeTab ===
-                  'financials'
-                    ? 'active'
-                    : ''
-                }`}
-                onClick={() =>
-                  onChangeTab(
-                    'financials'
-                  )
-                }
-              >
-                <BarChart3 className="mat-nav-icon" />
-
-                <span>
-                  Financials
-                </span>
-              </button>
-            </>
-          )}
-
-          {viewMode ===
-            'coach' && (
-            <>
-              <button
-                type="button"
-                className={`mat-nav-button ${
-                  activeTab ===
-                  'lesson-requests'
-                    ? 'active'
-                    : ''
-                }`}
-                onClick={() =>
-                  onChangeTab(
-                    'lesson-requests'
-                  )
-                }
-              >
-                <ClipboardList className="mat-nav-icon" />
-
-                <span>
-                  Lesson Requests
-                </span>
-              </button>
-
-              <button
-                type="button"
-                className={`mat-nav-button ${
-                  activeTab ===
-                  'calendar'
-                    ? 'active'
-                    : ''
-                }`}
-                onClick={() =>
-                  onChangeTab(
-                    'calendar'
-                  )
-                }
-              >
-                <CalendarDays className="mat-nav-icon" />
-
-                <span>
-                  Calendar
-                </span>
-              </button>
-
-              <button
-                type="button"
-                className={`mat-nav-button ${
-                  activeTab ===
-                  'announcements'
-                    ? 'active'
-                    : ''
-                }`}
-                onClick={() =>
-                  onChangeTab(
-                    'announcements'
-                  )
-                }
-              >
-                <Megaphone className="mat-nav-icon" />
-
-                <span>
-                  Announcements
-                </span>
-              </button>
-            </>
-          )}
-
-          {viewMode ===
-            'athlete' && (
-            <>
-              <button
-                type="button"
-                className={`mat-nav-button ${
-                  activeTab ===
-                  'coaches'
-                    ? 'active'
-                    : ''
-                }`}
-                onClick={() =>
-                  onChangeTab(
-                    'coaches'
-                  )
-                }
-              >
-                <UserRound className="mat-nav-icon" />
-
-                <span>
-                  Coaches
-                </span>
-              </button>
-
-              <button
-                type="button"
-                className={`mat-nav-button ${
-                  activeTab ===
-                  'tournaments'
-                    ? 'active'
-                    : ''
-                }`}
-                onClick={() =>
-                  onChangeTab(
-                    'tournaments'
-                  )
-                }
-              >
-                <Trophy className="mat-nav-icon" />
-
-                <span>
-                  Tournaments
-                </span>
-              </button>
-
-              <button
-                type="button"
-                className={`mat-nav-button ${
-                  activeTab ===
-                  'calendar'
-                    ? 'active'
-                    : ''
-                }`}
-                onClick={() =>
-                  onChangeTab(
-                    'calendar'
-                  )
-                }
-              >
-                <CalendarDays className="mat-nav-icon" />
-
-                <span>
-                  Calendar
-                </span>
-              </button>
-
-              <button
-                type="button"
-                className={`mat-nav-button ${
-                  activeTab ===
-                  'announcements'
-                    ? 'active'
-                    : ''
-                }`}
-                onClick={() =>
-                  onChangeTab(
-                    'announcements'
-                  )
-                }
-              >
-                <Megaphone className="mat-nav-icon" />
-
-                <span>
-                  Announcements
-                </span>
-              </button>
-
-              <button
-                type="button"
-                className={`mat-nav-button ${
-                  activeTab ===
-                  'my-profile'
-                    ? 'active'
-                    : ''
-                }`}
-                onClick={() =>
-                  onChangeTab(
-                    'my-profile'
-                  )
-                }
-              >
-                <Award className="mat-nav-icon" />
-
-                <span>
-                  My Profile
-                </span>
-              </button>
-
-              <button
-                type="button"
-                className={`mat-nav-button ${
-                  activeTab ===
-                  'new-member-guide'
-                    ? 'active'
-                    : ''
-                }`}
-                onClick={() =>
-                  onChangeTab(
-                    'new-member-guide'
-                  )
-                }
-              >
-                <ShieldCheck className="mat-nav-icon" />
-
-                <span>
-                  Team Guide
-                </span>
-              </button>
-            </>
-          )}
-
+        <nav className="mat-nav-links" aria-label="Primary navigation">
+          {items.map((item) => renderItem(item))}
         </nav>
 
-        <div
-          className="mat-account mat-account-menu-wrap"
-          ref={
-            accountRef
-          }
-        >
+        <div className="mat-navbar-actions">
+          <button
+            type="button"
+            className="mat-theme-toggle"
+            aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+            onClick={() => setTheme((current) => (current === 'dark' ? 'light' : 'dark'))}
+          >
+            {theme === 'dark' ? <Sun size={21} /> : <Moon size={21} />}
+          </button>
 
           <button
             type="button"
-            className="mat-account-menu-button"
-            onClick={() =>
-              setAccountMenuOpen(
-                (
-                  current
-                ) =>
-                  !current
-              )
-            }
+            className="mat-mobile-menu-toggle"
+            aria-label={mobileOpen ? 'Close navigation menu' : 'Open navigation menu'}
+            aria-expanded={mobileOpen}
+            aria-controls="mat-mobile-navigation"
+            onClick={() => setMobileOpen((current) => !current)}
           >
-
-            <div className="mat-account-icon">
-
-              <UserCircle2
-                size={25}
-              />
-
-            </div>
-
-            <div className="mat-account-name-wrap">
-
-              <span className="mat-account-email">
-                {accountName}
-              </span>
-
-              <span className="mat-account-role-label">
-                {getRoleLabel()}
-              </span>
-
-            </div>
-
-            <ChevronDown
-              size={16}
-              className={`mat-account-chevron ${
-                accountMenuOpen
-                  ? 'open'
-                  : ''
-              }`}
-            />
-
+            {mobileOpen ? <X size={22} /> : <Menu size={22} />}
           </button>
 
-          {accountMenuOpen && (
-            <div className="mat-account-dropdown">
+          <div className="mat-account-menu-wrap" ref={accountRef}>
+            <button
+              type="button"
+              className="mat-account-menu-button"
+              aria-expanded={accountOpen}
+              onClick={() => setAccountOpen((current) => !current)}
+            >
+              <span className="mat-account-icon"><UserCircle2 size={25} /></span>
+              <span className="mat-account-name-wrap">
+                <span className="mat-account-email">{accountName}</span>
+                <span className="mat-account-role-label">{roleLabel}</span>
+              </span>
+              <ChevronDown className="mat-account-chevron" size={16} />
+            </button>
 
-              <div className="mat-account-dropdown-header">
-
-                <strong>
-                  {accountName}
-                </strong>
-
-                <span>
-                  {getRoleLabel()}
-                </span>
-
-              </div>
-
-              {availableViews.length >
-                1 && (
-                <div className="mat-view-switcher">
-
-                  <div className="mat-view-switcher-label">
-                    Switch View
-                  </div>
-
-                  {isAdmin && (
-                    <button
-                      type="button"
-                      className={
-                        viewMode ===
-                        'admin'
-                          ? 'active'
-                          : ''
-                      }
-                      onClick={() =>
-                        changeView(
-                          'admin'
-                        )
-                      }
-                    >
-                      <ShieldCheck
-                        size={17}
-                      />
-
-                      <div>
-                        <strong>
-                          Admin
-                        </strong>
-
-                        <span>
-                          Manage the team
-                        </span>
-                      </div>
-                    </button>
-                  )}
-
-                  {isCoach && (
-                    <button
-                      type="button"
-                      className={
-                        viewMode ===
-                        'coach'
-                          ? 'active'
-                          : ''
-                      }
-                      onClick={() =>
-                        changeView(
-                          'coach'
-                        )
-                      }
-                    >
-                      <UserRound
-                        size={17}
-                      />
-
-                      <div>
-                        <strong>
-                          Coach
-                        </strong>
-
-                        <span>
-                          Manage my coaching
-                        </span>
-                      </div>
-                    </button>
-                  )}
-
-                  {isAthlete && (
-                    <button
-                      type="button"
-                      className={
-                        viewMode ===
-                        'athlete'
-                          ? 'active'
-                          : ''
-                      }
-                      onClick={() =>
-                        changeView(
-                          'athlete'
-                        )
-                      }
-                    >
-                      <Award
-                        size={17}
-                      />
-
-                      <div>
-                        <strong>
-                          Athlete
-                        </strong>
-
-                        <span>
-                          View my athlete account
-                        </span>
-                      </div>
-                    </button>
-                  )}
-
+            {accountOpen && (
+              <div className="mat-account-dropdown">
+                <div className="mat-account-dropdown-header">
+                  <strong>{accountName}</strong>
+                  <span>{roleLabel}</span>
                 </div>
-              )}
 
-              <button
-                type="button"
-                className="mat-account-dropdown-logout"
-                onClick={
-                  onLogout
-                }
-              >
-                <LogOut
-                  size={17}
-                />
+                {views.length > 1 && (
+                  <div className="mat-view-switcher">
+                    <div className="mat-view-switcher-label">Switch View</div>
+                    {views.map((view) => (
+                      <button
+                        key={view}
+                        type="button"
+                        className={viewMode === view ? 'active' : ''}
+                        onClick={() => switchView(view)}
+                      >
+                        {view === 'admin' ? <ShieldCheck size={17} /> : view === 'coach' ? <UserRound size={17} /> : <Award size={17} />}
+                        <span>{view[0].toUpperCase() + view.slice(1)}</span>
+                      </button>
+                    ))}
+                  </div>
+                )}
 
-                <span>
-                  Log Out
-                </span>
-              </button>
-
-            </div>
-          )}
-
+                <button type="button" className="mat-account-dropdown-logout" onClick={onLogout}>
+                  <LogOut size={17} />
+                  <span>Log Out</span>
+                </button>
+              </div>
+            )}
+          </div>
         </div>
-
       </div>
 
+      <div id="mat-mobile-navigation" className={`mat-mobile-navigation${mobileOpen ? ' open' : ''}`}>
+        <div className="mat-mobile-navigation-heading">
+          <span>Navigation</span>
+          <strong>{viewMode[0].toUpperCase() + viewMode.slice(1)} View</strong>
+        </div>
+        <nav className="mat-mobile-navigation-grid" aria-label="Mobile navigation">
+          {items.map((item) => renderItem(item, true))}
+        </nav>
+      </div>
     </header>
   )
 }
-
-export default TopNav

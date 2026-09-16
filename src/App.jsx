@@ -977,10 +977,11 @@ function App() {
         </div>
 
         <div className="mat-footer-values">
-          Discipline &nbsp; | &nbsp;
-          Respect &nbsp; | &nbsp;
-          Confidence &nbsp; | &nbsp;
-          Community
+          Courtesy &nbsp; | &nbsp;
+          Integrity &nbsp; | &nbsp;
+          Perseverance &nbsp; | &nbsp;
+          Self-Control &nbsp; | &nbsp;
+          Indomitable Spirit
         </div>
 
       </footer>

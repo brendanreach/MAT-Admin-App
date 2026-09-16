@@ -10456,3 +10456,502 @@ button.mat-athlete-home-panel:hover {
     align-items: flex-start;
   }
 }
+
+/* =========================================================
+   RESPONSIVE APPLICATION SHELL
+   Keep this section at the VERY BOTTOM of index.css
+========================================================= */
+
+html,
+body,
+#root {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: clip;
+}
+
+body {
+  margin: 0;
+}
+
+.mat-app,
+.mat-content,
+.mat-hub {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.mat-content {
+  width: min(100%, 1500px);
+  padding: clamp(16px, 1.8vw, 28px);
+}
+
+/* Desktop navigation */
+.mat-navbar {
+  width: 100%;
+  min-width: 0;
+}
+
+.mat-navbar-inner {
+  width: min(100%, 1920px);
+  min-width: 0;
+  margin: 0 auto;
+}
+
+.mat-brand {
+  width: clamp(190px, 16vw, 290px);
+  min-width: 190px;
+  padding: 14px 20px;
+}
+
+.mat-brand .mat-logo {
+  width: min(210px, 100%);
+  max-width: 100%;
+  transform: none;
+}
+
+.mat-nav-links {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.mat-nav-button {
+  flex: 1 1 0;
+  min-width: 0;
+  padding: 15px clamp(10px, 1.2vw, 22px);
+  font-size: clamp(12px, 0.95vw, 16px);
+  white-space: nowrap;
+}
+
+.mat-navbar-actions {
+  display: flex;
+  align-items: stretch;
+  flex: 0 0 auto;
+  min-width: 0;
+  margin-left: auto;
+}
+
+.mat-account {
+  min-width: 0;
+  margin-left: 0;
+  padding: 0 clamp(12px, 1.5vw, 24px);
+}
+
+.mat-account-menu-button {
+  max-width: 220px;
+  min-width: 0;
+}
+
+.mat-account-name-wrap {
+  max-width: 125px;
+}
+
+.mat-account-email,
+.mat-account-role-label {
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Mobile navigation is hidden on large displays */
+.mat-mobile-menu-toggle,
+.mat-mobile-navigation,
+.mat-mobile-navigation-backdrop {
+  display: none;
+}
+
+/* Main dashboard safety */
+.mat-hub-welcome,
+.mat-hub-tile,
+.mat-hub-start-card,
+.mat-hub-upcoming,
+.mat-hub-upcoming-item {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.mat-hub-tile-body strong,
+.mat-hub-tile-detail,
+.mat-hub-start-content,
+.mat-hub-start-content p,
+.mat-hub-upcoming-content {
+  overflow-wrap: anywhere;
+}
+
+/* Compact desktop and tablet navigation */
+@media (max-width: 1400px) {
+  .mat-brand {
+    width: 190px;
+    min-width: 190px;
+    padding-inline: 14px;
+  }
+
+  .mat-brand .mat-logo {
+    width: 165px;
+  }
+
+  .mat-nav-button {
+    padding-inline: 10px;
+    font-size: 12px;
+  }
+
+  .mat-nav-icon {
+    width: 21px;
+    height: 21px;
+  }
+
+  .mat-account {
+    padding-inline: 12px;
+  }
+
+  .mat-account-name-wrap {
+    display: none;
+  }
+}
+
+/* Switch to the responsive menu before clipping can occur */
+@media (max-width: 1180px) {
+  .mat-navbar {
+    min-height: 76px;
+    position: sticky;
+    top: 0;
+  }
+
+  .mat-navbar-inner {
+    min-height: 76px;
+    align-items: center;
+    flex-wrap: nowrap;
+  }
+
+  .mat-brand {
+    width: auto;
+    min-width: 0;
+    flex: 1 1 auto;
+    border-right: 0;
+    padding: 10px 16px;
+  }
+
+  .mat-brand .mat-logo {
+    width: clamp(145px, 24vw, 190px);
+    max-height: 56px;
+  }
+
+  .mat-nav-links {
+    display: none;
+  }
+
+  .mat-navbar-actions {
+    height: 76px;
+    align-items: center;
+    padding-right: 10px;
+  }
+
+  .mat-mobile-menu-toggle {
+    width: 44px;
+    height: 44px;
+    display: grid;
+    place-items: center;
+    border: 1px solid #d7e3eb;
+    border-radius: 10px;
+    background: #f7fafc;
+    color: #173957;
+  }
+
+  .mat-mobile-menu-toggle:hover {
+    border-color: #afd4e8;
+    background: #edf8fd;
+    color: #087bc7;
+  }
+
+  .mat-account {
+    padding: 0 0 0 8px;
+  }
+
+  .mat-account-menu-button {
+    max-width: none;
+  }
+
+  .mat-account-name-wrap {
+    display: none;
+  }
+
+  .mat-mobile-navigation {
+    position: absolute;
+    z-index: 52;
+    top: 100%;
+    left: 0;
+    right: 0;
+    display: block;
+    max-height: 0;
+    overflow: hidden;
+    visibility: hidden;
+    border-top: 1px solid transparent;
+    background: #ffffff;
+    opacity: 0;
+    transform: translateY(-8px);
+    transition:
+      max-height 0.22s ease,
+      opacity 0.18s ease,
+      transform 0.18s ease,
+      visibility 0.18s ease;
+  }
+
+  .mat-mobile-navigation.open {
+    max-height: calc(100vh - 76px);
+    overflow-y: auto;
+    visibility: visible;
+    border-top-color: #dfe8ee;
+    box-shadow: 0 18px 36px rgba(15, 39, 76, 0.16);
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .mat-mobile-navigation-inner {
+    width: min(100%, 900px);
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  .mat-mobile-navigation-heading {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    margin-bottom: 14px;
+  }
+
+  .mat-mobile-navigation-heading span {
+    color: #8798a5;
+    font-size: 10px;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .mat-mobile-navigation-heading strong {
+    color: #173957;
+    font-size: 17px;
+  }
+
+  .mat-mobile-navigation-grid {
+    display: grid;
+    grid-template-columns:
+      repeat(3, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .mat-mobile-nav-button {
+    min-width: 0;
+    min-height: 76px;
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    border: 1px solid #dfe8ee;
+    border-radius: 11px;
+    background: #f9fbfc;
+    color: #294b67;
+    font-weight: 800;
+    text-align: left;
+  }
+
+  .mat-mobile-nav-button:hover {
+    border-color: #b8daeb;
+    background: #f0f9fe;
+  }
+
+  .mat-mobile-nav-button.active {
+    border-color: #0d82cb;
+    background: linear-gradient(
+      135deg,
+      #138fd1,
+      #0567ba
+    );
+    color: #ffffff;
+  }
+
+  .mat-mobile-nav-icon {
+    width: 21px;
+    height: 21px;
+    flex: 0 0 21px;
+  }
+
+  .mat-mobile-nav-button span {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .mat-mobile-navigation-backdrop {
+    position: fixed;
+    z-index: 51;
+    inset: 76px 0 0;
+    display: block;
+    border: 0;
+    background: rgba(15, 39, 76, 0.24);
+  }
+
+  .mat-account-dropdown {
+    position: fixed;
+    top: 68px;
+    right: 12px;
+  }
+}
+
+/* Tablet dashboard */
+@media (max-width: 900px) {
+  .mat-content {
+    padding: 18px;
+  }
+
+  .mat-hub-tiles {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+  .mat-hub-tile:last-child {
+    grid-column: 1 / -1;
+  }
+
+  .mat-hub-upcoming-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Phones */
+@media (max-width: 700px) {
+  .mat-navbar,
+  .mat-navbar-inner,
+  .mat-navbar-actions {
+    min-height: 68px;
+    height: 68px;
+  }
+
+  .mat-brand {
+    padding: 8px 12px;
+  }
+
+  .mat-brand .mat-logo {
+    width: 145px;
+    max-height: 48px;
+  }
+
+  .mat-mobile-menu-toggle {
+    width: 40px;
+    height: 40px;
+  }
+
+  .mat-account-icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .mat-mobile-navigation.open {
+    max-height: calc(100vh - 68px);
+  }
+
+  .mat-mobile-navigation-inner {
+    padding: 14px;
+  }
+
+  .mat-mobile-navigation-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+  .mat-mobile-nav-button {
+    min-height: 66px;
+    padding: 10px;
+    font-size: 12px;
+  }
+
+  .mat-mobile-navigation-backdrop {
+    inset: 68px 0 0;
+  }
+
+  .mat-account-dropdown {
+    top: 61px;
+    right: 8px;
+    width: min(245px, calc(100vw - 16px));
+  }
+
+  .mat-content {
+    width: 100%;
+    padding: 14px 12px 24px;
+  }
+
+  .mat-hub {
+    gap: 14px;
+  }
+
+  .mat-hub-welcome {
+    padding: 22px 18px;
+    border-radius: 14px;
+  }
+
+  .mat-hub-welcome h1 {
+    font-size: clamp(24px, 8vw, 30px);
+  }
+
+  .mat-hub-tiles {
+    grid-template-columns: 1fr;
+  }
+
+  .mat-hub-tile:last-child {
+    grid-column: auto;
+  }
+
+  .mat-hub-tile {
+    min-height: 190px;
+  }
+
+  .mat-hub-start-card {
+    grid-template-columns: 44px minmax(0, 1fr);
+    gap: 12px;
+    padding: 17px;
+  }
+
+  .mat-hub-start-icon {
+    width: 44px;
+    height: 44px;
+  }
+
+  .mat-hub-start-action {
+    grid-column: 1 / -1;
+    justify-content: flex-start;
+    padding-top: 10px;
+    border-top: 1px solid #dce9f0;
+  }
+
+  .mat-hub-upcoming-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .mat-footer {
+    padding: 18px 14px;
+  }
+}
+
+/* Small phones */
+@media (max-width: 420px) {
+  .mat-brand .mat-logo {
+    width: 125px;
+  }
+
+  .mat-mobile-navigation-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .mat-mobile-nav-button {
+    min-height: 56px;
+  }
+
+  .mat-hub-start-card {
+    grid-template-columns: 1fr;
+  }
+
+  .mat-hub-start-icon {
+    display: none;
+  }
+}

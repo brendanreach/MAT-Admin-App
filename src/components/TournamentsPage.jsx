@@ -1,6 +1,7 @@
 import {
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from 'react'
 
@@ -13,11 +14,14 @@ import {
   ChevronUp,
   CircleDollarSign,
   Clock3,
+  Grid2X2,
+  List,
   Medal,
   MapPin,
   Pencil,
   Plus,
   Save,
+  Search,
   Trophy,
   UserPlus,
   Users,
@@ -26,6 +30,7 @@ import {
 
 import { supabase } from '../lib/supabase.js'
 import TournamentForm from './TournamentForm.jsx'
+import './TournamentsPage.css'
 
 const EVENT_GROUPS = [
   {
@@ -260,6 +265,11 @@ function TournamentsPage({
   )
 
   const [
+    archiveLayout,
+    setArchiveLayout,
+  ] = useState(() => localStorage.getItem('mat-archive-layout') || 'cards')
+
+  const [
     selectedTournamentId,
     setSelectedTournamentId,
   ] = useState('')
@@ -289,6 +299,11 @@ function TournamentsPage({
     setExpandedAthletes,
   ] = useState({})
 
+  const [memberSearch, setMemberSearch] = useState('')
+  const [showInactiveMembers, setShowInactiveMembers] = useState(false)
+  const [addingMemberId, setAddingMemberId] = useState('')
+  const tournamentDetailRef = useRef(null)
+
   useEffect(() => {
     if (
       selectedTournamentId &&
@@ -306,6 +321,25 @@ function TournamentsPage({
     tournaments,
     selectedTournamentId,
   ])
+
+  useEffect(() => {
+    localStorage.setItem('mat-archive-layout', archiveLayout)
+  }, [archiveLayout])
+
+  useEffect(() => {
+    if (!selectedTournamentId) {
+      return undefined
+    }
+
+    const scrollTimer = window.setTimeout(() => {
+      tournamentDetailRef.current?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      })
+    }, 80)
+
+    return () => window.clearTimeout(scrollTimer)
+  }, [selectedTournamentId])
 
   useEffect(() => {
     setExpandedAthletes({})
@@ -421,41 +455,53 @@ function TournamentsPage({
       ) < todayString
     )
 
-  const availableMembers =
-    useMemo(
-      () =>
-        members.filter(
-          (member) => {
-            const alreadyAdded =
-              selectedEntries.some(
-                (entry) =>
-                  entry.member_id ===
-                  member.id
-              )
+  const availableMembers = useMemo(
+    () =>
+      members.filter(
+        (member) =>
+          !selectedEntries.some(
+            (entry) => entry.member_id === member.id
+          )
+      ),
+    [members, selectedEntries]
+  )
 
-            if (
-              alreadyAdded
-            ) {
-              return false
-            }
+  const activeAvailableCount = useMemo(
+    () => availableMembers.filter((member) => member.is_active).length,
+    [availableMembers]
+  )
 
-            if (
-              isSelectedArchived
-            ) {
-              return true
-            }
+  const inactiveAvailableCount = useMemo(
+    () => availableMembers.filter((member) => !member.is_active).length,
+    [availableMembers]
+  )
 
-            return (
-              member.is_active
-            )
-          }
-        ),
-      [
-        members,
-        selectedEntries,
-        isSelectedArchived,
-      ]
-    )
+  const filteredAvailableMembers = useMemo(() => {
+    const query = memberSearch.trim().toLowerCase()
+
+    return [...availableMembers]
+      .filter((member) => showInactiveMembers || member.is_active)
+      .filter((member) => {
+        if (!query) return true
+
+        const searchable = [
+          member.first_name,
+          member.last_name,
+          `${member.first_name || ''} ${member.last_name || ''}`,
+          member.belt_rank,
+        ]
+          .filter(Boolean)
+          .join(' ')
+          .toLowerCase()
+
+        return searchable.includes(query)
+      })
+      .sort((a, b) => {
+        const aName = `${a.last_name || ''} ${a.first_name || ''}`.trim()
+        const bName = `${b.last_name || ''} ${b.first_name || ''}`.trim()
+        return aName.localeCompare(bName)
+      })
+  }, [availableMembers, memberSearch, showInactiveMembers])
 
   function getMember(
     memberId
@@ -782,6 +828,7 @@ function TournamentsPage({
     }
 
     setMessage('')
+    setAddingMemberId(member.id)
 
     const competitionAge =
       getTournamentCompetitionAge(
@@ -826,6 +873,7 @@ function TournamentsPage({
       setMessage(
         error.message
       )
+      setAddingMemberId('')
 
       return
     }
@@ -847,6 +895,8 @@ function TournamentsPage({
     setMessage(
       `${member.first_name} ${member.last_name} added.`
     )
+    setAddingMemberId('')
+    setMemberSearch('')
   }
 
   async function removeAthlete(
@@ -1877,69 +1927,101 @@ function TournamentsPage({
 
         </div>
 
-        {availableMembers.length ===
-        0 ? (
+        {availableMembers.length === 0 ? (
           <div className="mat-tournament-all-added">
             {historical
               ? 'Every roster member has already been added to this tournament.'
               : 'All active athletes are already registered.'}
           </div>
         ) : (
-          <div className="mat-tournament-add-grid">
+          <div className="mat-competitor-picker">
+            <div className="mat-competitor-search-row">
+              <div className="mat-competitor-search">
+                <Search size={20} aria-hidden="true" />
+                <input
+                  type="search"
+                  value={memberSearch}
+                  onChange={(event) => setMemberSearch(event.target.value)}
+                  placeholder="Search by athlete name or belt rank..."
+                  aria-label="Search roster members"
+                />
+                {memberSearch && (
+                  <button
+                    type="button"
+                    className="mat-competitor-search-clear"
+                    aria-label="Clear member search"
+                    onClick={() => setMemberSearch('')}
+                  >
+                    <X size={17} />
+                  </button>
+                )}
+              </div>
 
-            {availableMembers.map(
-              (member) => (
-                <button
-                  type="button"
-                  key={
-                    member.id
-                  }
-                  className="mat-tournament-add-athlete"
-                  onClick={() =>
-                    addAthlete(
-                      member
-                    )
-                  }
-                >
+              <div className="mat-competitor-search-count">
+                {filteredAvailableMembers.length} shown
+              </div>
+            </div>
 
-                  <div className="mat-tournament-add-avatar">
-                    {member.first_name
-                      ?.charAt(0)
-                      .toUpperCase()}
+            <div className="mat-competitor-filter-row">
+              <span>
+                {activeAvailableCount} active athlete{activeAvailableCount === 1 ? '' : 's'} available
+              </span>
 
-                    {member.last_name
-                      ?.charAt(0)
-                      .toUpperCase()}
-                  </div>
+              <label className="mat-competitor-inactive-toggle">
+                <input
+                  type="checkbox"
+                  checked={showInactiveMembers}
+                  onChange={(event) => setShowInactiveMembers(event.target.checked)}
+                />
+                <span className="mat-competitor-toggle-track" aria-hidden="true">
+                  <span className="mat-competitor-toggle-thumb" />
+                </span>
+                <span>
+                  Show inactive athletes
+                  {inactiveAvailableCount > 0 ? ` (${inactiveAvailableCount})` : ''}
+                </span>
+              </label>
+            </div>
 
-                  <div>
-                    <strong>
-                      {
-                        member.first_name
-                      }{' '}
-                      {
-                        member.last_name
-                      }
-                    </strong>
+            {filteredAvailableMembers.length === 0 ? (
+              <div className="mat-competitor-empty">
+                No available roster members match “{memberSearch}”.
+              </div>
+            ) : (
+              <div className="mat-competitor-results">
+                {filteredAvailableMembers.map((member) => {
+                  const fullName = `${member.first_name || ''} ${member.last_name || ''}`.trim()
+                  const isAdding = addingMemberId === member.id
 
-                    <span>
-                      {member.belt_rank ||
-                        'No belt set'}
+                  return (
+                    <div className="mat-competitor-result" key={member.id}>
+                      <div className="mat-tournament-add-avatar" aria-hidden="true">
+                        {member.first_name?.charAt(0).toUpperCase()}
+                        {member.last_name?.charAt(0).toUpperCase()}
+                      </div>
 
-                      {!member.is_active
-                        ? ' • Inactive'
-                        : ''}
-                    </span>
-                  </div>
+                      <div className="mat-competitor-result-copy">
+                        <strong>{fullName}</strong>
+                        <span>
+                          {member.belt_rank || 'No belt set'}
+                          {!member.is_active ? ' • Inactive' : ''}
+                        </span>
+                      </div>
 
-                  <Plus
-                    size={18}
-                  />
-
-                </button>
-              )
+                      <button
+                        type="button"
+                        className="mat-competitor-add-button"
+                        disabled={Boolean(addingMemberId)}
+                        onClick={() => addAthlete(member)}
+                      >
+                        <Plus size={17} />
+                        <span>{isAdding ? 'Adding...' : historical ? 'Add to History' : 'Add Competitor'}</span>
+                      </button>
+                    </div>
+                  )
+                })}
+              </div>
             )}
-
           </div>
         )}
 
@@ -2057,6 +2139,34 @@ function TournamentsPage({
 
       </div>
 
+      {viewMode === 'archive' && (
+        <div className="mat-archive-view-toolbar" aria-label="Archive view options">
+          <span>View</span>
+          <div className="mat-archive-view-toggle">
+            <button
+              type="button"
+              className={archiveLayout === 'cards' ? 'active' : ''}
+              aria-pressed={archiveLayout === 'cards'}
+              onClick={() => setArchiveLayout('cards')}
+            >
+              <Grid2X2 size={17} />
+              Cards
+            </button>
+            <button
+              type="button"
+              className={archiveLayout === 'list' ? 'active' : ''}
+              aria-pressed={archiveLayout === 'list'}
+              onClick={() => setArchiveLayout('list')}
+            >
+              <List size={18} />
+              List
+            </button>
+          </div>
+        </div>
+      )}
+
+
+
       {visibleTournaments.length ===
       0 ? (
         <div className="mat-tournament-empty">
@@ -2092,7 +2202,73 @@ function TournamentsPage({
 
         </div>
       ) : (
-        <div className="mat-tournament-grid">
+        <>
+          {viewMode === 'archive' && archiveLayout === 'list' && (
+            <div className="mat-archive-list-wrap">
+              <table className="mat-archive-list">
+                <thead>
+                  <tr>
+                    <th>Tournament Name</th>
+                    <th>Date</th>
+                    <th>Location</th>
+                    <th className="numeric">Athletes</th>
+                    <th className="numeric">Medals</th>
+                    <th className="numeric medal-column">Gold</th>
+                    <th className="numeric medal-column">Silver</th>
+                    <th className="numeric medal-column">Bronze</th>
+                    <th className="action-column"><span className="sr-only">Action</span></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {visibleTournaments.map((tournament) => {
+                    const stats = getTournamentStats(tournament)
+                    const medals = getMedalCounts(tournament.id)
+                    const totalMedals = medals.gold + medals.silver + medals.bronze
+                    const selected = tournament.id === selectedTournamentId
+
+                    return (
+                      <tr
+                        key={tournament.id}
+                        className={selected ? 'selected' : ''}
+                        tabIndex={0}
+                        aria-selected={selected}
+                        onClick={() => setSelectedTournamentId(tournament.id)}
+                        onKeyDown={(event) => {
+                          if (event.key === 'Enter' || event.key === ' ') {
+                            event.preventDefault()
+                            setSelectedTournamentId(tournament.id)
+                          }
+                        }}
+                      >
+                        <td><strong>{tournament.name}</strong></td>
+                        <td>{formatTournamentDate(tournament)}</td>
+                        <td>{tournament.location || 'Location TBD'}</td>
+                        <td className="numeric">{stats.totalAthletes}</td>
+                        <td className="numeric total-medals">{totalMedals}</td>
+                        <td className="numeric medal-column gold">{medals.gold}</td>
+                        <td className="numeric medal-column silver">{medals.silver}</td>
+                        <td className="numeric medal-column bronze">{medals.bronze}</td>
+                        <td className="action-column">
+                          <button
+                            type="button"
+                            className="mat-archive-open-button"
+                            onClick={(event) => {
+                              event.stopPropagation()
+                              setSelectedTournamentId(tournament.id)
+                            }}
+                          >
+                            Open <ChevronRight size={17} />
+                          </button>
+                        </td>
+                      </tr>
+                    )
+                  })}
+                </tbody>
+              </table>
+            </div>
+          )}
+
+          <div className={`mat-tournament-grid ${viewMode === 'archive' && archiveLayout === 'list' ? 'mat-archive-grid-hidden' : ''}`}>
 
           {visibleTournaments.map(
             (tournament) => {
@@ -2281,11 +2457,12 @@ function TournamentsPage({
           )}
 
         </div>
+        </>
       )}
 
       {selectedTournament &&
         selectedStats && (
-          <section className="mat-tournament-detail">
+          <section className="mat-tournament-detail" ref={tournamentDetailRef}>
 
             <div className="mat-tournament-detail-hero">
 
@@ -2410,13 +2587,13 @@ function TournamentsPage({
                     size={21}
                   />
 
-                  <strong>
+                  <div className="mat-historical-stat-value">
                     {
                       selectedStats.totalAthletes
                     }
-                  </strong>
+                  </div>
 
-                  <span>
+                  <span className="mat-historical-stat-label">
                     Athletes
                   </span>
                 </div>
@@ -2426,13 +2603,13 @@ function TournamentsPage({
                     size={21}
                   />
 
-                  <strong>
+                  <div className="mat-historical-stat-value">
                     {
                       selectedMedals.gold
                     }
-                  </strong>
+                  </div>
 
-                  <span>
+                  <span className="mat-historical-stat-label">
                     Gold
                   </span>
                 </div>
@@ -2442,13 +2619,13 @@ function TournamentsPage({
                     size={21}
                   />
 
-                  <strong>
+                  <div className="mat-historical-stat-value">
                     {
                       selectedMedals.silver
                     }
-                  </strong>
+                  </div>
 
-                  <span>
+                  <span className="mat-historical-stat-label">
                     Silver
                   </span>
                 </div>
@@ -2458,13 +2635,13 @@ function TournamentsPage({
                     size={21}
                   />
 
-                  <strong>
+                  <div className="mat-historical-stat-value">
                     {
                       selectedMedals.bronze
                     }
-                  </strong>
+                  </div>
 
-                  <span>
+                  <span className="mat-historical-stat-label">
                     Bronze
                   </span>
                 </div>
@@ -2482,13 +2659,13 @@ function TournamentsPage({
                   </div>
 
                   <div>
-                    <strong>
+                    <div className="mat-historical-stat-value">
                       {
                         selectedStats.totalAthletes
                       }
-                    </strong>
+                    </div>
 
-                    <span>
+                    <span className="mat-historical-stat-label">
                       Registered Athletes
                     </span>
                   </div>
@@ -2504,13 +2681,13 @@ function TournamentsPage({
                   </div>
 
                   <div>
-                    <strong>
+                    <div className="mat-historical-stat-value">
                       {
                         selectedStats.paidAthletes
                       }
-                    </strong>
+                    </div>
 
-                    <span>
+                    <span className="mat-historical-stat-label">
                       Fees Paid
                     </span>
                   </div>
@@ -2526,14 +2703,14 @@ function TournamentsPage({
                   </div>
 
                   <div>
-                    <strong>
+                    <div className="mat-historical-stat-value">
                       $
                       {selectedStats.feesOutstanding.toFixed(
                         2
                       )}
-                    </strong>
+                    </div>
 
-                    <span>
+                    <span className="mat-historical-stat-label">
                       Fees Outstanding
                     </span>
                   </div>
@@ -2583,9 +2760,9 @@ function TournamentsPage({
                     size={30}
                   />
 
-                  <strong>
+                  <div className="mat-historical-stat-value">
                     No athletes added yet
-                  </strong>
+                  </div>
 
                 </div>
               ) : (
