@@ -5,8 +5,6 @@ import {
 
 import {
   CalendarDays,
-  CircleDollarSign,
-  Info,
   MapPin,
   Trophy,
   X,
@@ -20,7 +18,6 @@ const emptyForm = {
   event_date: '',
   end_date: '',
   registration_deadline: '',
-  entry_fee: '',
 }
 
 function TournamentForm({
@@ -72,9 +69,6 @@ function TournamentForm({
         editingTournament.registration_deadline ||
         '',
 
-      entry_fee:
-        editingTournament.entry_fee ??
-        '',
     })
   }, [
     editingTournament,
@@ -145,12 +139,6 @@ function TournamentForm({
         formData.registration_deadline ||
         null,
 
-      entry_fee:
-        formData.entry_fee === ''
-          ? 0
-          : Number(
-              formData.entry_fee
-            ),
     }
 
     let data
@@ -408,52 +396,6 @@ function TournamentForm({
                 handleChange
               }
             />
-
-          </div>
-
-          <div className="mat-tournament-form-field">
-
-            <label htmlFor="entry-fee">
-
-              <span className="mat-tournament-form-label-icon">
-                <CircleDollarSign size={21} />
-              </span>
-
-              <span>
-                Entry Fee
-              </span>
-
-            </label>
-
-            <input
-              id="entry-fee"
-              className="mat-tournament-form-input"
-              name="entry_fee"
-              type="number"
-              min="0"
-              step="0.01"
-              placeholder="Enter entry fee amount (e.g. 75.00)"
-              value={
-                formData.entry_fee
-              }
-              onChange={
-                handleChange
-              }
-            />
-
-          </div>
-
-          <div className="mat-tournament-form-info">
-
-            <div className="mat-tournament-form-info-icon">
-              <Info size={19} />
-            </div>
-
-            <p>
-              Entry fees are paid by athletes
-              toward tournament registration
-              and are not MAT revenue.
-            </p>
 
           </div>
 

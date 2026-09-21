@@ -9,6 +9,7 @@ import {
   ArrowUpRight,
   CalendarDays,
   CircleDollarSign,
+  Pencil,
   Plus,
   ReceiptText,
   Trash2,
@@ -43,11 +44,6 @@ const EXPENSE_CATEGORIES = [
   'Equipment',
   'Tournament / Travel',
   'Coaching',
-  'Facility',
-  'Insurance',
-  'Marketing',
-  'Uniforms',
-  'Office / Software',
   'Team Event',
   'Other Expense',
 ]
@@ -60,7 +56,15 @@ const emptyTransaction = {
   transaction_date:
     new Date().toISOString().slice(0, 10),
   member_id: '',
+  tournament_id: '',
   notes: '',
+}
+
+function sanitizeCurrencyInput(value) {
+  const cleaned = String(value ?? '').replace(/[^0-9.]/g, '')
+  const [whole = '', ...decimalParts] = cleaned.split('.')
+  const decimal = decimalParts.join('').slice(0, 2)
+  return decimalParts.length ? `${whole}.${decimal}` : whole
 }
 
 function FinancialsPage({
@@ -92,6 +96,10 @@ function FinancialsPage({
     transactionForm,
     setTransactionForm,
   ] = useState(emptyTransaction)
+  const [
+    editingTransactionId,
+    setEditingTransactionId,
+  ] = useState('')
 
   const [
     saving,
@@ -501,6 +509,13 @@ function FinancialsPage({
     return `${member.first_name} ${member.last_name}`
   }
 
+  function getTournamentName(tournamentId) {
+    if (!tournamentId) return ''
+    return tournaments.find(
+      (tournament) => tournament.id === tournamentId
+    )?.name || ''
+  }
+
   function formatMoney(
     amount
   ) {
@@ -546,14 +561,40 @@ function FinancialsPage({
   }
 
   function openAddTransaction() {
-    setTransactionForm(
-      emptyTransaction
-    )
-
+    setEditingTransactionId('')
+    setTransactionForm({ ...emptyTransaction })
     setMessage('')
-    setShowTransactionForm(
-      true
-    )
+    setShowTransactionForm(true)
+  }
+
+  function openEditTransaction(transaction) {
+    const options = transaction.transaction_type === 'income'
+      ? INCOME_CATEGORIES
+      : EXPENSE_CATEGORIES
+
+    setEditingTransactionId(transaction.id)
+    setTransactionForm({
+      transaction_type: transaction.transaction_type,
+      category: options.includes(transaction.category)
+        ? transaction.category
+        : transaction.transaction_type === 'expense'
+          ? 'Other Expense'
+          : 'Other Income',
+      description: transaction.description || '',
+      amount: Number(transaction.amount || 0).toFixed(2),
+      transaction_date: transaction.transaction_date,
+      member_id: transaction.member_id || '',
+      tournament_id: transaction.tournament_id || '',
+      notes: transaction.notes || '',
+    })
+    setMessage('')
+    setShowTransactionForm(true)
+  }
+
+  function closeTransactionForm() {
+    setShowTransactionForm(false)
+    setEditingTransactionId('')
+    setMessage('')
   }
 
   function handleTransactionChange(
@@ -563,6 +604,14 @@ function FinancialsPage({
       name,
       value,
     } = event.target
+
+    if (name === 'amount') {
+      setTransactionForm((current) => ({
+        ...current,
+        amount: sanitizeCurrencyInput(value),
+      }))
+      return
+    }
 
     setTransactionForm(
       (current) => {
@@ -579,6 +628,10 @@ function FinancialsPage({
               value === 'income'
                 ? 'Tuition'
                 : 'Equipment',
+            tournament_id:
+              value === 'income'
+                ? ''
+                : current.tournament_id,
           }
         }
 
@@ -590,65 +643,39 @@ function FinancialsPage({
     )
   }
 
-  async function saveTransaction(
-    event
-  ) {
+  async function saveTransaction(event) {
     event.preventDefault()
-
     setSaving(true)
     setMessage('')
 
-    const {
-      error,
-    } =
-      await supabase
-        .from(
-          'financial_transactions'
-        )
-        .insert([
-          {
-            transaction_type:
-              transactionForm.transaction_type,
+    const payload = {
+      transaction_type: transactionForm.transaction_type,
+      category: transactionForm.category,
+      description: transactionForm.description.trim(),
+      amount: Number(sanitizeCurrencyInput(transactionForm.amount)),
+      transaction_date: transactionForm.transaction_date,
+      member_id: transactionForm.member_id || null,
+      tournament_id:
+        transactionForm.transaction_type === 'expense'
+          ? transactionForm.tournament_id || null
+          : null,
+      notes: transactionForm.notes.trim() || null,
+    }
 
-            category:
-              transactionForm.category,
+    const request = editingTransactionId
+      ? supabase.from('financial_transactions').update(payload).eq('id', editingTransactionId)
+      : supabase.from('financial_transactions').insert([payload])
 
-            description:
-              transactionForm.description.trim(),
-
-            amount:
-              Number(
-                transactionForm.amount
-              ),
-
-            transaction_date:
-              transactionForm.transaction_date,
-
-            member_id:
-              transactionForm.member_id ||
-              null,
-
-            notes:
-              transactionForm.notes.trim() ||
-              null,
-          },
-        ])
-
+    const { error } = await request
     if (error) {
-      setMessage(
-        error.message
-      )
-
+      setMessage(error.message)
       setSaving(false)
       return
     }
 
     await loadTransactions()
-
     setSaving(false)
-    setShowTransactionForm(
-      false
-    )
+    closeTransactionForm()
   }
 
   async function deleteTransaction(
@@ -1240,6 +1267,10 @@ function FinancialsPage({
                   </th>
 
                   <th>
+                    Tournament
+                  </th>
+
+                  <th>
                     Amount
                   </th>
 
@@ -1309,6 +1340,10 @@ function FinancialsPage({
                           '—'}
                       </td>
 
+                      <td>
+                        {getTournamentName(transaction.tournament_id) || '—'}
+                      </td>
+
                       <td
                         className={
                           transaction.transaction_type ===
@@ -1328,20 +1363,24 @@ function FinancialsPage({
                       </td>
 
                       <td>
-                        <button
-                          type="button"
-                          className="mat-financial-delete"
-                          onClick={() =>
-                            deleteTransaction(
-                              transaction.id
-                            )
-                          }
-                          aria-label="Delete transaction"
-                        >
-                          <Trash2
-                            size={16}
-                          />
-                        </button>
+                        <div className="mat-financial-row-actions">
+                          <button
+                            type="button"
+                            className="mat-financial-edit"
+                            onClick={() => openEditTransaction(transaction)}
+                            aria-label="Edit transaction"
+                          >
+                            <Pencil size={16} />
+                          </button>
+                          <button
+                            type="button"
+                            className="mat-financial-delete"
+                            onClick={() => deleteTransaction(transaction.id)}
+                            aria-label="Delete transaction"
+                          >
+                            <Trash2 size={16} />
+                          </button>
+                        </div>
                       </td>
 
                     </tr>
@@ -1370,18 +1409,14 @@ function FinancialsPage({
                 </div>
 
                 <h2>
-                  Add Transaction
+                  {editingTransactionId ? 'Edit Transaction' : 'Add Transaction'}
                 </h2>
               </div>
 
               <button
                 type="button"
                 className="mat-financial-modal-close"
-                onClick={() =>
-                  setShowTransactionForm(
-                    false
-                  )
-                }
+                onClick={closeTransactionForm}
               >
                 <X
                   size={23}
@@ -1524,21 +1559,26 @@ function FinancialsPage({
                     Amount
                   </label>
 
-                  <input
-                    className="mat-input"
-                    name="amount"
-                    type="number"
-                    min="0"
-                    step="0.01"
-                    placeholder="0.00"
-                    value={
-                      transactionForm.amount
-                    }
-                    onChange={
-                      handleTransactionChange
-                    }
-                    required
-                  />
+                  <div className="mat-currency-input-wrap">
+                    <span className="mat-currency-symbol" aria-hidden="true">$</span>
+                    <input
+                      className="mat-input mat-currency-input"
+                      name="amount"
+                      type="text"
+                      inputMode="decimal"
+                      placeholder="0.00"
+                      value={transactionForm.amount}
+                      onChange={handleTransactionChange}
+                      onBlur={() =>
+                        setTransactionForm((current) => ({
+                          ...current,
+                          amount: Number(sanitizeCurrencyInput(current.amount) || 0).toFixed(2),
+                        }))
+                      }
+                      aria-label="Amount in US dollars"
+                      required
+                    />
+                  </div>
 
                 </div>
 
@@ -1588,6 +1628,30 @@ function FinancialsPage({
                   </select>
 
                 </div>
+
+              {transactionForm.transaction_type === 'expense' && (
+                <div className="mat-form-group mat-financial-tournament-field">
+                  <label>
+                    Tournament <span className="mat-optional">optional</span>
+                  </label>
+                  <select
+                    className="mat-input"
+                    name="tournament_id"
+                    value={transactionForm.tournament_id}
+                    onChange={handleTransactionChange}
+                  >
+                    <option value="">Not associated with a tournament</option>
+                    {[...tournaments]
+                      .sort((a, b) => String(b.event_date || '').localeCompare(String(a.event_date || '')))
+                      .map((tournament) => (
+                        <option key={tournament.id} value={tournament.id}>
+                          {tournament.name}
+                          {tournament.event_date ? ` — ${formatDate(tournament.event_date)}` : ''}
+                        </option>
+                      ))}
+                  </select>
+                </div>
+              )}
 
               </div>
 
@@ -1653,11 +1717,7 @@ function FinancialsPage({
                 <button
                   type="button"
                   className="mat-secondary-button"
-                  onClick={() =>
-                    setShowTransactionForm(
-                      false
-                    )
-                  }
+                  onClick={closeTransactionForm}
                 >
                   Cancel
                 </button>
@@ -1671,7 +1731,9 @@ function FinancialsPage({
                 >
                   {saving
                     ? 'Saving...'
-                    : 'Save Transaction'}
+                    : editingTransactionId
+                      ? 'Update Transaction'
+                      : 'Save Transaction'}
                 </button>
 
               </div>
