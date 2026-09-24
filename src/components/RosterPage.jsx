@@ -7,6 +7,7 @@ import {
   Award,
   Ban,
   CheckCircle2,
+  Eye,
   Pencil,
   Plus,
   Search,
@@ -179,6 +180,45 @@ function RosterPage({
     }
   }
 
+  function renderDisciplines(
+    member
+  ) {
+    const hasDisciplines =
+      member.poomsae ||
+      member.sparring ||
+      member.breaking
+
+    if (!hasDisciplines) {
+      return (
+        <span className="mat-muted">
+          No disciplines selected
+        </span>
+      )
+    }
+
+    return (
+      <>
+        {member.poomsae && (
+          <span className="mat-pill mat-poomsae">
+            Poomsae
+          </span>
+        )}
+
+        {member.sparring && (
+          <span className="mat-pill mat-sparring">
+            Sparring
+          </span>
+        )}
+
+        {member.breaking && (
+          <span className="mat-pill mat-breaking">
+            Breaking
+          </span>
+        )}
+      </>
+    )
+  }
+
   return (
     <div className="mat-page">
 
@@ -317,35 +357,146 @@ function RosterPage({
 
         </div>
 
-        <div className="mat-table-container">
+        <div className="mat-roster-desktop">
 
-          <table className="mat-table">
+          <div className="mat-table-container">
 
-            <thead>
-              <tr>
-                <th>Athlete</th>
-                <th>
-                  Competition Age
-                </th>
-                <th>Belt</th>
-                <th>
-                  Disciplines
-                </th>
-                <th>Status</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
+            <table className="mat-table">
 
-            <tbody>
+              <thead>
+                <tr>
+                  <th>Athlete</th>
+                  <th>
+                    Competition Age
+                  </th>
+                  <th>Belt</th>
+                  <th>
+                    Disciplines
+                  </th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
 
-              {filteredMembers.map(
-                (member) => (
-                  <tr key={member.id}>
+              <tbody>
 
-                    <td>
+                {filteredMembers.map(
+                  (member) => (
+                    <tr key={member.id}>
+
+                      <td>
+                        <button
+                          type="button"
+                          className="mat-athlete-profile-link"
+                          onClick={() =>
+                            openProfile(
+                              member
+                            )
+                          }
+                        >
+                          {
+                            member.first_name
+                          }{' '}
+                          {
+                            member.last_name
+                          }
+                        </button>
+
+                        <div className="mat-athlete-profile-hint">
+                          View athlete profile
+                        </div>
+                      </td>
+
+                      <td>
+                        {getCompetitionAge(
+                          member.birthdate
+                        )}
+                      </td>
+
+                      <td>
+                        <span
+                          className={`mat-pill mat-belt ${getBeltClass(
+                            member.belt_rank
+                          )}`}
+                        >
+                          {member.belt_rank ||
+                            'White'}
+                        </span>
+                      </td>
+
+                      <td>
+                        <div className="mat-discipline-list">
+                          {renderDisciplines(
+                            member
+                          )}
+                        </div>
+                      </td>
+
+                      <td>
+                        <span
+                          className={`mat-pill ${
+                            member.is_active
+                              ? 'mat-active-pill'
+                              : 'mat-inactive-pill'
+                          }`}
+                        >
+                          {member.is_active
+                            ? 'Active'
+                            : 'Inactive'}
+                        </span>
+                      </td>
+
+                      <td>
+                        <button
+                          type="button"
+                          className="mat-edit-button"
+                          onClick={() =>
+                            openEdit(
+                              member
+                            )
+                          }
+                        >
+                          <Pencil
+                            size={15}
+                          />
+                          Edit
+                        </button>
+                      </td>
+
+                    </tr>
+                  )
+                )}
+
+              </tbody>
+
+            </table>
+
+          </div>
+
+        </div>
+
+        <div className="mat-roster-mobile">
+
+          <div className="mat-roster-mobile-list">
+
+            {filteredMembers.map(
+              (member) => (
+                <article
+                  key={member.id}
+                  className={`mat-roster-mobile-card${
+                    member.is_active
+                      ? ''
+                      : ' inactive'
+                  }`}
+                >
+
+                  <div className="mat-roster-mobile-card-header">
+
+                    <div className="mat-roster-mobile-name-area">
+
                       <button
                         type="button"
-                        className="mat-athlete-profile-link"
+                        className="mat-roster-mobile-name"
                         onClick={() =>
                           openProfile(
                             member
@@ -360,114 +511,115 @@ function RosterPage({
                         }
                       </button>
 
-                      <div className="mat-athlete-profile-hint">
-                        View athlete profile
+                      <div className="mat-roster-mobile-meta">
+                        <span>
+                          Competition Age{' '}
+                          <strong>
+                            {getCompetitionAge(
+                              member.birthdate
+                            )}
+                          </strong>
+                        </span>
                       </div>
-                    </td>
 
-                    <td>
-                      {getCompetitionAge(
-                        member.birthdate
-                      )}
-                    </td>
+                    </div>
 
-                    <td>
-                      <span
-                        className={`mat-pill mat-belt ${getBeltClass(
-                          member.belt_rank
-                        )}`}
-                      >
-                        {member.belt_rank ||
-                          'White'}
+                    <span
+                      className={`mat-pill ${
+                        member.is_active
+                          ? 'mat-active-pill'
+                          : 'mat-inactive-pill'
+                      }`}
+                    >
+                      {member.is_active
+                        ? 'Active'
+                        : 'Inactive'}
+                    </span>
+
+                  </div>
+
+                  <div className="mat-roster-mobile-details">
+
+                    <div className="mat-roster-mobile-detail-group">
+
+                      <span className="mat-roster-mobile-label">
+                        Belt
                       </span>
-                    </td>
 
-                    <td>
+                      <div>
+                        <span
+                          className={`mat-pill mat-belt ${getBeltClass(
+                            member.belt_rank
+                          )}`}
+                        >
+                          {member.belt_rank ||
+                            'White'}
+                        </span>
+                      </div>
+
+                    </div>
+
+                    <div className="mat-roster-mobile-detail-group">
+
+                      <span className="mat-roster-mobile-label">
+                        Disciplines
+                      </span>
+
                       <div className="mat-discipline-list">
-
-                        {member.poomsae && (
-                          <span className="mat-pill mat-poomsae">
-                            Poomsae
-                          </span>
+                        {renderDisciplines(
+                          member
                         )}
-
-                        {member.sparring && (
-                          <span className="mat-pill mat-sparring">
-                            Sparring
-                          </span>
-                        )}
-
-                        {member.breaking && (
-                          <span className="mat-pill mat-breaking">
-                            Breaking
-                          </span>
-                        )}
-
-                        {!member.poomsae &&
-                          !member.sparring &&
-                          !member.breaking && (
-                            <span className="mat-muted">
-                              —
-                            </span>
-                          )}
-
                       </div>
-                    </td>
 
-                    <td>
-                      <span
-                        className={`mat-pill ${
-                          member.is_active
-                            ? 'mat-active-pill'
-                            : 'mat-inactive-pill'
-                        }`}
-                      >
-                        {member.is_active
-                          ? 'Active'
-                          : 'Inactive'}
-                      </span>
-                    </td>
+                    </div>
 
-                    <td>
-                      <button
-                        type="button"
-                        className="mat-edit-button"
-                        onClick={() =>
-                          openEdit(
-                            member
-                          )
-                        }
-                      >
-                        <Pencil
-                          size={15}
-                        />
-                        Edit
-                      </button>
-                    </td>
+                  </div>
 
-                  </tr>
-                )
-              )}
+                  <div className="mat-roster-mobile-actions">
 
-            </tbody>
+                    <button
+                      type="button"
+                      className="mat-roster-mobile-profile-button"
+                      onClick={() =>
+                        openProfile(
+                          member
+                        )
+                      }
+                    >
+                      <Eye size={18} />
+                      View Profile
+                    </button>
 
-          </table>
+                    <button
+                      type="button"
+                      className="mat-roster-mobile-edit-button"
+                      onClick={() =>
+                        openEdit(
+                          member
+                        )
+                      }
+                    >
+                      <Pencil size={17} />
+                      Edit
+                    </button>
 
-          {filteredMembers.length ===
-            0 && (
-            <div
-              style={{
-                padding: '35px',
-                textAlign: 'center',
-                color: '#718198',
-              }}
-            >
-              No athletes match your
-              current search.
-            </div>
-          )}
+                  </div>
+
+                </article>
+              )
+            )}
+
+          </div>
 
         </div>
+
+        {filteredMembers.length ===
+          0 && (
+          <div className="mat-roster-empty">
+            No athletes match your
+            current search.
+          </div>
+        )}
 
       </section>
 
