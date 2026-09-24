@@ -488,3 +488,100 @@
 :root[data-theme='dark'] .mat-footer-values {
   color: #bdd0dc !important;
 }
+
+/* Financial transaction editing and tournament association */
+.mat-financial-row-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.mat-financial-edit,
+.mat-financial-delete {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border-radius: 8px;
+}
+
+.mat-financial-edit {
+  color: #087bc7;
+  border: 1px solid #bcd9e9;
+  background: #f1f9fd;
+}
+
+.mat-financial-edit:hover {
+  color: #056aa9;
+  border-color: #8fc6e3;
+  background: #e4f4fc;
+}
+
+.mat-financial-tournament-field {
+  grid-column: 1 / -1;
+}
+
+:root[data-theme='dark'] .mat-financial-table th {
+  color: var(--theme-muted) !important;
+  border-color: var(--theme-border) !important;
+  background: var(--theme-surface-alt) !important;
+}
+
+:root[data-theme='dark'] .mat-financial-table td {
+  color: var(--theme-text) !important;
+  border-color: var(--theme-border) !important;
+  background: var(--theme-surface) !important;
+}
+
+:root[data-theme='dark'] .mat-financial-table tbody tr:hover td {
+  background: var(--theme-surface-alt) !important;
+}
+
+:root[data-theme='dark'] .mat-financial-edit {
+  color: #80d1fb !important;
+  border-color: #4e7187 !important;
+  background: #183c50 !important;
+}
+
+:root[data-theme='dark'] .mat-financial-edit:hover {
+  color: #ffffff !important;
+  border-color: #70c9fa !important;
+  background: #21536d !important;
+}
+
+:root[data-theme='dark'] .mat-financial-delete {
+  color: #ff9fa7 !important;
+  border-color: #7f4b54 !important;
+  background: #452a31 !important;
+}
+
+:root[data-theme='dark'] .mat-financial-modal-close {
+  color: var(--theme-text) !important;
+  background: var(--theme-surface-alt) !important;
+}
+
+/* USD-formatted Financials amount input */
+.mat-currency-input-wrap {
+  position: relative;
+}
+
+.mat-currency-symbol {
+  position: absolute;
+  top: 50%;
+  left: 15px;
+  z-index: 1;
+  color: #587596;
+  font-weight: 800;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.mat-currency-input {
+  padding-left: 32px !important;
+  font-variant-numeric: tabular-nums;
+}
+
+:root[data-theme='dark'] .mat-currency-symbol {
+  color: #b8cbd8 !important;
+}

@@ -260,3 +260,82 @@ html[data-theme='dark'] body #root .mat-page .mat-tournament-detail .mat-tournam
 :root[data-theme='dark'] .mat-archive-list .gold{color:#ffd45a}.mat-archive-list .silver{color:#cfdae1}.mat-archive-list .bronze{color:#efa36b}
 :root[data-theme='dark'] .mat-archive-open-button{color:#8bd6fb;border-color:#4c7389;background:#173b50}
 @media(max-width:850px){.mat-archive-view-toolbar{justify-content:space-between}.mat-archive-list .medal-column{display:none}}
+
+/* Tournament create/edit form: complete dark-mode treatment */
+:root[data-theme='dark'] .mat-tournament-form-modal {
+  color: #e7f1f7 !important;
+  border: 1px solid #46677a !important;
+  background: #132938 !important;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, .55) !important;
+}
+
+:root[data-theme='dark'] .mat-tournament-form-header {
+  border-bottom-color: #3f6074 !important;
+  background: #132938 !important;
+}
+
+:root[data-theme='dark'] .mat-tournament-form-header h2 {
+  color: #ffffff !important;
+}
+
+:root[data-theme='dark'] .mat-tournament-form-close {
+  color: #dceaf3 !important;
+  border: 1px solid #46677a !important;
+  background: #193f54 !important;
+}
+
+:root[data-theme='dark'] .mat-tournament-form-close:hover {
+  color: #ffffff !important;
+  border-color: #70c9fa !important;
+  background: #23546e !important;
+}
+
+:root[data-theme='dark'] .mat-tournament-form {
+  color: #e7f1f7 !important;
+  background: #132938 !important;
+}
+
+:root[data-theme='dark'] .mat-tournament-form-field label {
+  color: #e7f1f7 !important;
+}
+
+:root[data-theme='dark'] .mat-tournament-form-label-icon {
+  color: #65c3f5 !important;
+}
+
+:root[data-theme='dark'] .mat-tournament-form-input {
+  color: #ffffff !important;
+  caret-color: #ffffff !important;
+  border-color: #4b6d81 !important;
+  background: #0d2432 !important;
+  color-scheme: dark;
+}
+
+:root[data-theme='dark'] .mat-tournament-form-input::placeholder {
+  color: #9db4c3 !important;
+  opacity: 1 !important;
+}
+
+:root[data-theme='dark'] .mat-tournament-form-input:focus {
+  border-color: #65c3f5 !important;
+  box-shadow: 0 0 0 3px rgba(101, 195, 245, .16) !important;
+}
+
+:root[data-theme='dark'] .mat-tournament-form-input::-webkit-calendar-picker-indicator {
+  filter: invert(1) brightness(1.4);
+  opacity: .9;
+}
+
+:root[data-theme='dark'] .mat-tournament-form-actions {
+  border-top-color: #3f6074 !important;
+}
+
+:root[data-theme='dark'] .mat-tournament-form-cancel {
+  color: #e7f1f7 !important;
+  border-color: #4b6d81 !important;
+  background: #193444 !important;
+}
+
+:root[data-theme='dark'] .mat-tournament-form-cancel:hover {
+  background: #23485c !important;
+}
