@@ -10955,3 +10955,254 @@ body {
     display: none;
   }
 }
+/* =========================================================
+   NATIVE MOBILE SAFE AREAS
+   Keeps MAT clear of phone status/navigation areas
+   ========================================================= */
+
+@supports (padding: env(safe-area-inset-top)) {
+  body {
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+@media (max-width: 760px) {
+  .app-shell {
+    min-height: 100dvh;
+  }
+}
+/* =========================================================
+   MOBILE TEAM ROSTER
+   Desktop keeps the existing roster table.
+   Phones receive dedicated athlete cards.
+   ========================================================= */
+
+.mat-roster-mobile {
+  display: none;
+}
+
+.mat-roster-empty {
+  padding: 35px;
+  text-align: center;
+  color: #718198;
+}
+
+@media (max-width: 700px) {
+  .mat-roster-desktop {
+    display: none;
+  }
+
+  .mat-roster-mobile {
+    display: block;
+  }
+
+  .mat-roster-mobile-list {
+    display: grid;
+    gap: 12px;
+  }
+
+  .mat-roster-mobile-card {
+    overflow: hidden;
+    background: var(
+      --mat-card,
+      #ffffff
+    );
+    border: 1px solid
+      var(
+        --mat-border,
+        #d8e4ed
+      );
+    border-radius: 16px;
+    box-shadow:
+      0 4px 14px
+      rgba(10, 34, 55, 0.06);
+  }
+
+  .mat-roster-mobile-card.inactive {
+    opacity: 0.82;
+  }
+
+  .mat-roster-mobile-card-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 16px 16px 13px;
+  }
+
+  .mat-roster-mobile-name-area {
+    min-width: 0;
+  }
+
+  .mat-roster-mobile-name {
+    display: block;
+    max-width: 100%;
+    padding: 0;
+    overflow: hidden;
+    color: var(
+      --mat-heading,
+      #123557
+    );
+    background: transparent;
+    border: 0;
+    font-size: 17px;
+    font-weight: 800;
+    line-height: 1.25;
+    text-align: left;
+    text-overflow: ellipsis;
+  }
+
+  .mat-roster-mobile-meta {
+    margin-top: 5px;
+    color: var(
+      --mat-muted,
+      #718198
+    );
+    font-size: 12px;
+  }
+
+  .mat-roster-mobile-meta strong {
+    color: var(
+      --mat-text,
+      #173957
+    );
+  }
+
+  .mat-roster-mobile-details {
+    display: grid;
+    gap: 13px;
+    padding: 14px 16px 16px;
+    border-top: 1px solid
+      var(
+        --mat-border,
+        #e1e9ef
+      );
+  }
+
+  .mat-roster-mobile-detail-group {
+    display: grid;
+    gap: 7px;
+  }
+
+  .mat-roster-mobile-label {
+    color: var(
+      --mat-muted,
+      #718198
+    );
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+  }
+
+  .mat-roster-mobile-card
+    .mat-discipline-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .mat-roster-mobile-actions {
+    display: grid;
+    grid-template-columns:
+      minmax(0, 1fr)
+      minmax(0, 0.7fr);
+    gap: 8px;
+    padding: 12px 16px 16px;
+    border-top: 1px solid
+      var(
+        --mat-border,
+        #e1e9ef
+      );
+  }
+
+  .mat-roster-mobile-profile-button,
+  .mat-roster-mobile-edit-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    min-height: 44px;
+    padding: 9px 12px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 800;
+  }
+
+  .mat-roster-mobile-profile-button {
+    color: #ffffff;
+    background:
+      linear-gradient(
+        135deg,
+        #1698dc,
+        #0875c7
+      );
+    border: 1px solid #0875c7;
+  }
+
+  .mat-roster-mobile-edit-button {
+    color: var(
+      --mat-heading,
+      #123557
+    );
+    background: var(
+      --mat-soft,
+      #edf5fa
+    );
+    border: 1px solid
+      var(
+        --mat-border,
+        #cbdbe5
+      );
+  }
+
+  .mat-roster-empty {
+    padding: 30px 15px;
+  }
+
+  /*
+   * Roster toolbar:
+   * search on top, filter + Add Athlete below.
+   */
+  .mat-toolbar {
+    gap: 10px;
+  }
+
+  .mat-toolbar
+    .mat-search {
+    width: 100%;
+  }
+
+  .mat-toolbar
+    .mat-toolbar-actions {
+    display: grid;
+    grid-template-columns:
+      minmax(0, 1fr)
+      minmax(0, 1fr);
+    width: 100%;
+    gap: 8px;
+  }
+
+  .mat-toolbar
+    .mat-toolbar-actions
+    .mat-select,
+  .mat-toolbar
+    .mat-toolbar-actions
+    .mat-primary-button {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .mat-toolbar
+    .mat-toolbar-actions
+    .mat-primary-button {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 380px) {
+  .mat-roster-mobile-actions {
+    grid-template-columns: 1fr;
+  }
+}

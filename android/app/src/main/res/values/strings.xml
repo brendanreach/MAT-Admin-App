@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">MAT Competition Team</string>
+    <string name="title_activity_main">MAT Competition Team</string>
+    <string name="package_name">com.michiganacademytaekwondo.mat</string>
+    <string name="custom_url_scheme">com.michiganacademytaekwondo.mat</string>
+</resources>
