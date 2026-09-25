@@ -8,6 +8,7 @@ import {
   LogOut,
   Megaphone,
   Menu,
+  MessagesSquare,
   Moon,
   MoreHorizontal,
   ShieldCheck,
@@ -29,6 +30,7 @@ const NAV_ITEMS = {
     ['tournaments', 'Tournaments', Trophy],
     ['calendar', 'Calendar', CalendarDays],
     ['announcements', 'Announcements', Megaphone],
+    ['messages', 'Messages', MessagesSquare],
     ['financials', 'Financials', BarChart3],
   ],
   coach: [
@@ -36,6 +38,7 @@ const NAV_ITEMS = {
     ['lesson-requests', 'Lesson Requests', ClipboardList],
     ['calendar', 'Calendar', CalendarDays],
     ['announcements', 'Announcements', Megaphone],
+    ['messages', 'Messages', MessagesSquare],
   ],
   athlete: [
     ['home', 'Home', Home],
@@ -43,6 +46,7 @@ const NAV_ITEMS = {
     ['tournaments', 'Tournaments', Trophy],
     ['calendar', 'Calendar', CalendarDays],
     ['announcements', 'Announcements', Megaphone],
+    ['messages', 'Messages', MessagesSquare],
     ['my-profile', 'My Profile', Award],
     ['new-member-guide', 'Team Guide', ShieldCheck],
   ],

@@ -23,6 +23,7 @@ import TournamentsPage from './components/TournamentsPage.jsx'
 import CalendarPage from './components/CalendarPage.jsx'
 import AnnouncementsPage from './components/AnnouncementsPage.jsx'
 import FinancialsPage from './components/FinancialsPage.jsx'
+import MessagesPage from './components/MessagesPage.jsx'
 
 function normalizeRoles(roles) {
   if (!Array.isArray(roles)) {
@@ -968,6 +969,13 @@ function App() {
           </>
         )}
 
+
+        {activeTab === 'messages' && (
+          <MessagesPage
+            accountId={userId}
+            roles={roles}
+          />
+        )}
       </main>
 
       <footer className="mat-footer">
