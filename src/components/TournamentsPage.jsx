@@ -40,6 +40,12 @@ const EVENT_GROUPS = [
     ],
   },
   {
+    label: 'Recognized Poomsae',
+    events: [
+      'Recognized Poomsae - Individual',
+    ],
+  },
+  {
     label: 'World Class Poomsae',
     events: [
       'World Class Poomsae - Individual',
@@ -57,6 +63,12 @@ const EVENT_GROUPS = [
     label: 'Board Breaking',
     events: [
       'Board Breaking',
+    ],
+  },
+  {
+    label: 'Weapons',
+    events: [
+      'Weapons',
     ],
   },
 ]
@@ -141,6 +153,13 @@ function getTournamentCompetitionAge(
 function getEventDisplayName(
   eventName
 ) {
+  if (
+    eventName ===
+    'Recognized Poomsae - Individual'
+  ) {
+    return 'Individual'
+  }
+
   if (
     eventName ===
     'World Class Poomsae - Individual'
@@ -1433,13 +1452,13 @@ function TournamentsPage({
             onChange={(
               event
             ) =>
-              updateResultForm(
-                entry.id,
-                eventName,
-                'notes',
-                event.target.value
-              )
-            }
+                updateResultForm(
+                  entry.id,
+                  eventName,
+                  'notes',
+                  event.target.value
+                )
+              }
           />
 
         </div>
@@ -1938,6 +1957,7 @@ function TournamentsPage({
             <div className="mat-competitor-search-row">
               <div className="mat-competitor-search">
                 <Search size={20} aria-hidden="true" />
+
                 <input
                   type="search"
                   value={memberSearch}
@@ -1945,6 +1965,7 @@ function TournamentsPage({
                   placeholder="Search by athlete name or belt rank..."
                   aria-label="Search roster members"
                 />
+
                 {memberSearch && (
                   <button
                     type="button"
@@ -1973,9 +1994,11 @@ function TournamentsPage({
                   checked={showInactiveMembers}
                   onChange={(event) => setShowInactiveMembers(event.target.checked)}
                 />
+
                 <span className="mat-competitor-toggle-track" aria-hidden="true">
                   <span className="mat-competitor-toggle-thumb" />
                 </span>
+
                 <span>
                   Show inactive athletes
                   {inactiveAvailableCount > 0 ? ` (${inactiveAvailableCount})` : ''}
@@ -1995,13 +2018,17 @@ function TournamentsPage({
 
                   return (
                     <div className="mat-competitor-result" key={member.id}>
+
                       <div className="mat-tournament-add-avatar" aria-hidden="true">
                         {member.first_name?.charAt(0).toUpperCase()}
                         {member.last_name?.charAt(0).toUpperCase()}
                       </div>
 
                       <div className="mat-competitor-result-copy">
-                        <strong>{fullName}</strong>
+                        <strong>
+                          {fullName}
+                        </strong>
+
                         <span>
                           {member.belt_rank || 'No belt set'}
                           {!member.is_active ? ' • Inactive' : ''}
@@ -2015,8 +2042,16 @@ function TournamentsPage({
                         onClick={() => addAthlete(member)}
                       >
                         <Plus size={17} />
-                        <span>{isAdding ? 'Adding...' : historical ? 'Add to History' : 'Add Competitor'}</span>
+
+                        <span>
+                          {isAdding
+                            ? 'Adding...'
+                            : historical
+                              ? 'Add to History'
+                              : 'Add Competitor'}
+                        </span>
                       </button>
+
                     </div>
                   )
                 })}
@@ -2141,8 +2176,12 @@ function TournamentsPage({
 
       {viewMode === 'archive' && (
         <div className="mat-archive-view-toolbar" aria-label="Archive view options">
-          <span>View</span>
+          <span>
+            View
+          </span>
+
           <div className="mat-archive-view-toggle">
+
             <button
               type="button"
               className={archiveLayout === 'cards' ? 'active' : ''}
@@ -2152,6 +2191,7 @@ function TournamentsPage({
               <Grid2X2 size={17} />
               Cards
             </button>
+
             <button
               type="button"
               className={archiveLayout === 'list' ? 'active' : ''}
@@ -2161,11 +2201,10 @@ function TournamentsPage({
               <List size={18} />
               List
             </button>
+
           </div>
         </div>
       )}
-
-
 
       {visibleTournaments.length ===
       0 ? (
@@ -2216,9 +2255,14 @@ function TournamentsPage({
                     <th className="numeric medal-column">Gold</th>
                     <th className="numeric medal-column">Silver</th>
                     <th className="numeric medal-column">Bronze</th>
-                    <th className="action-column"><span className="sr-only">Action</span></th>
+                    <th className="action-column">
+                      <span className="sr-only">
+                        Action
+                      </span>
+                    </th>
                   </tr>
                 </thead>
+
                 <tbody>
                   {visibleTournaments.map((tournament) => {
                     const stats = getTournamentStats(tournament)
@@ -2240,14 +2284,40 @@ function TournamentsPage({
                           }
                         }}
                       >
-                        <td><strong>{tournament.name}</strong></td>
-                        <td>{formatTournamentDate(tournament)}</td>
-                        <td>{tournament.location || 'Location TBD'}</td>
-                        <td className="numeric">{stats.totalAthletes}</td>
-                        <td className="numeric total-medals">{totalMedals}</td>
-                        <td className="numeric medal-column gold">{medals.gold}</td>
-                        <td className="numeric medal-column silver">{medals.silver}</td>
-                        <td className="numeric medal-column bronze">{medals.bronze}</td>
+                        <td>
+                          <strong>
+                            {tournament.name}
+                          </strong>
+                        </td>
+
+                        <td>
+                          {formatTournamentDate(tournament)}
+                        </td>
+
+                        <td>
+                          {tournament.location || 'Location TBD'}
+                        </td>
+
+                        <td className="numeric">
+                          {stats.totalAthletes}
+                        </td>
+
+                        <td className="numeric total-medals">
+                          {totalMedals}
+                        </td>
+
+                        <td className="numeric medal-column gold">
+                          {medals.gold}
+                        </td>
+
+                        <td className="numeric medal-column silver">
+                          {medals.silver}
+                        </td>
+
+                        <td className="numeric medal-column bronze">
+                          {medals.bronze}
+                        </td>
+
                         <td className="action-column">
                           <button
                             type="button"
@@ -2257,7 +2327,8 @@ function TournamentsPage({
                               setSelectedTournamentId(tournament.id)
                             }}
                           >
-                            Open <ChevronRight size={17} />
+                            Open
+                            <ChevronRight size={17} />
                           </button>
                         </td>
                       </tr>
@@ -2268,201 +2339,210 @@ function TournamentsPage({
             </div>
           )}
 
-          <div className={`mat-tournament-grid ${viewMode === 'archive' && archiveLayout === 'list' ? 'mat-archive-grid-hidden' : ''}`}>
+          <div
+            className={`mat-tournament-grid ${
+              viewMode === 'archive' && archiveLayout === 'list'
+                ? 'mat-archive-grid-hidden'
+                : ''
+            }`}
+          >
 
-          {visibleTournaments.map(
-            (tournament) => {
-              const stats =
-                getTournamentStats(
-                  tournament
-                )
+            {visibleTournaments.map(
+              (tournament) => {
+                const stats =
+                  getTournamentStats(
+                    tournament
+                  )
 
-              const status =
-                getTournamentStatus(
-                  tournament
-                )
+                const status =
+                  getTournamentStatus(
+                    tournament
+                  )
 
-              const medals =
-                getMedalCounts(
-                  tournament.id
-                )
-
-              const totalMedals =
-                medals.gold +
-                medals.silver +
-                medals.bronze
-
-              const isSelected =
-                tournament.id ===
-                selectedTournamentId
-
-              return (
-                <button
-                  type="button"
-                  key={
+                const medals =
+                  getMedalCounts(
                     tournament.id
-                  }
-                  className={`mat-tournament-tile ${
-                    isSelected
-                      ? 'selected'
-                      : ''
-                  }`}
-                  onClick={() =>
-                    setSelectedTournamentId(
+                  )
+
+                const totalMedals =
+                  medals.gold +
+                  medals.silver +
+                  medals.bronze
+
+                const isSelected =
+                  tournament.id ===
+                  selectedTournamentId
+
+                return (
+                  <button
+                    type="button"
+                    key={
                       tournament.id
-                    )
-                  }
-                >
-
-                  <div className="mat-tournament-tile-top">
-
-                    <div className="mat-tournament-icon">
-                      {viewMode ===
-                      'archive' ? (
-                        <Medal
-                          size={23}
-                        />
-                      ) : (
-                        <Trophy
-                          size={23}
-                        />
-                      )}
-                    </div>
-
-                    <span
-                      className={
-                        status.className
-                      }
-                    >
-                      {
-                        status.label
-                      }
-                    </span>
-
-                  </div>
-
-                  <h2 className="mat-tournament-name">
-                    {
-                      tournament.name
                     }
-                  </h2>
+                    className={`mat-tournament-tile ${
+                      isSelected
+                        ? 'selected'
+                        : ''
+                    }`}
+                    onClick={() =>
+                      setSelectedTournamentId(
+                        tournament.id
+                      )
+                    }
+                  >
 
-                  <div className="mat-tournament-meta">
+                    <div className="mat-tournament-tile-top">
 
-                    <div>
-                      <CalendarDays
-                        size={16}
-                      />
-
-                      <span>
-                        {formatTournamentDate(
-                          tournament
+                      <div className="mat-tournament-icon">
+                        {viewMode ===
+                        'archive' ? (
+                          <Medal
+                            size={23}
+                          />
+                        ) : (
+                          <Trophy
+                            size={23}
+                          />
                         )}
+                      </div>
+
+                      <span
+                        className={
+                          status.className
+                        }
+                      >
+                        {
+                          status.label
+                        }
                       </span>
+
                     </div>
 
-                    <div>
-                      <MapPin
-                        size={16}
-                      />
+                    <h2 className="mat-tournament-name">
+                      {
+                        tournament.name
+                      }
+                    </h2>
+
+                    <div className="mat-tournament-meta">
+
+                      <div>
+                        <CalendarDays
+                          size={16}
+                        />
+
+                        <span>
+                          {formatTournamentDate(
+                            tournament
+                          )}
+                        </span>
+                      </div>
+
+                      <div>
+                        <MapPin
+                          size={16}
+                        />
+
+                        <span>
+                          {tournament.location ||
+                            'Location not set'}
+                        </span>
+                      </div>
+
+                    </div>
+
+                    <div className="mat-tournament-tile-divider" />
+
+                    {viewMode ===
+                    'archive' ? (
+                      <div className="mat-tournament-tile-stats">
+
+                        <div>
+                          <strong>
+                            {
+                              stats.totalAthletes
+                            }
+                          </strong>
+
+                          <span>
+                            Athletes
+                          </span>
+                        </div>
+
+                        <div>
+                          <strong>
+                            {
+                              totalMedals
+                            }
+                          </strong>
+
+                          <span>
+                            Medals
+                          </span>
+                        </div>
+
+                      </div>
+                    ) : (
+                      <div className="mat-tournament-tile-stats">
+
+                        <div>
+                          <strong>
+                            {
+                              stats.totalAthletes
+                            }
+                          </strong>
+
+                          <span>
+                            Athletes
+                          </span>
+                        </div>
+
+                        <div>
+                          <strong>
+                            $
+                            {stats.feesOutstanding.toFixed(
+                              2
+                            )}
+                          </strong>
+
+                          <span>
+                            Outstanding
+                          </span>
+                        </div>
+
+                      </div>
+                    )}
+
+                    <div className="mat-tournament-view">
 
                       <span>
-                        {tournament.location ||
-                          'Location not set'}
+                        {viewMode ===
+                        'archive'
+                          ? 'Edit History'
+                          : 'View Tournament'}
                       </span>
-                    </div>
 
-                  </div>
-
-                  <div className="mat-tournament-tile-divider" />
-
-                  {viewMode ===
-                  'archive' ? (
-                    <div className="mat-tournament-tile-stats">
-
-                      <div>
-                        <strong>
-                          {
-                            stats.totalAthletes
-                          }
-                        </strong>
-
-                        <span>
-                          Athletes
-                        </span>
-                      </div>
-
-                      <div>
-                        <strong>
-                          {
-                            totalMedals
-                          }
-                        </strong>
-
-                        <span>
-                          Medals
-                        </span>
-                      </div>
+                      <ChevronRight
+                        size={18}
+                      />
 
                     </div>
-                  ) : (
-                    <div className="mat-tournament-tile-stats">
 
-                      <div>
-                        <strong>
-                          {
-                            stats.totalAthletes
-                          }
-                        </strong>
+                  </button>
+                )
+              }
+            )}
 
-                        <span>
-                          Athletes
-                        </span>
-                      </div>
-
-                      <div>
-                        <strong>
-                          $
-                          {stats.feesOutstanding.toFixed(
-                            2
-                          )}
-                        </strong>
-
-                        <span>
-                          Outstanding
-                        </span>
-                      </div>
-
-                    </div>
-                  )}
-
-                  <div className="mat-tournament-view">
-
-                    <span>
-                      {viewMode ===
-                      'archive'
-                        ? 'Edit History'
-                        : 'View Tournament'}
-                    </span>
-
-                    <ChevronRight
-                      size={18}
-                    />
-
-                  </div>
-
-                </button>
-              )
-            }
-          )}
-
-        </div>
+          </div>
         </>
       )}
 
       {selectedTournament &&
         selectedStats && (
-          <section className="mat-tournament-detail" ref={tournamentDetailRef}>
+          <section
+            className="mat-tournament-detail"
+            ref={tournamentDetailRef}
+          >
 
             <div className="mat-tournament-detail-hero">
 
