@@ -7,6 +7,7 @@ import {
 import { supabase } from './lib/supabase.js'
 
 import LoginPage from './components/LoginPage.jsx'
+import AccessPendingPage from './components/AccessPendingPage.jsx'
 import TopNav from './components/TopNav.jsx'
 import HomePage from './components/HomePage.jsx'
 import NewMemberGuidePage from './components/NewMemberGuidePage.jsx'
@@ -45,6 +46,11 @@ function App() {
 
   const [loading, setLoading] =
     useState(true)
+
+  const [
+    accountLoading,
+    setAccountLoading,
+  ] = useState(false)
 
   const [
     accountProfile,
@@ -159,6 +165,7 @@ function App() {
     }
 
     setAccountProfile(null)
+    setAccountLoading(false)
     setAccountMemberLinks([])
     setMembers([])
     setTournaments([])
@@ -181,6 +188,17 @@ function App() {
       [
         accountProfile,
       ]
+    )
+
+  const approvedRoles = [
+    'admin',
+    'coach',
+    'athlete',
+  ]
+
+  const hasApprovedRole =
+    roles.some((role) =>
+      approvedRoles.includes(role)
     )
 
   const isAdmin =
@@ -237,9 +255,27 @@ function App() {
 
   async function initializeSignedInUser() {
     setMessage('')
+    setAccountLoading(true)
 
     const profile =
       await loadAccountProfile()
+
+    const approvedRoles = normalizeRoles(profile?.roles)
+    const hasApprovedRole = approvedRoles.some((role) =>
+      ['admin', 'coach', 'athlete'].includes(role)
+    )
+
+    if (!hasApprovedRole) {
+      setMembers([])
+      setTournaments([])
+      setAllTournamentEntries([])
+      setTournamentResults([])
+      setCalendarEvents([])
+      setAnnouncements([])
+      await loadAccountMemberLinks()
+      setAccountLoading(false)
+      return
+    }
 
     await Promise.all([
       loadMembers(
@@ -252,6 +288,8 @@ function App() {
       loadAnnouncements(),
       loadAccountMemberLinks(),
     ])
+
+    setAccountLoading(false)
   }
 
   async function loadAccountProfile() {
@@ -654,6 +692,32 @@ function App() {
   if (!session) {
     return (
       <LoginPage />
+    )
+  }
+
+  if (accountLoading) {
+    return (
+      <div className="mat-login-page">
+        <div style={{ textAlign: 'center' }}>
+          <img
+            src="/mat-logo.jpg"
+            alt="MAT"
+            style={{ width: '250px', marginBottom: '20px' }}
+          />
+          <div className="mat-muted">
+            Checking account access...
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  if (!hasApprovedRole) {
+    return (
+      <AccessPendingPage
+        email={session.user?.email}
+        onLogout={handleLogout}
+      />
     )
   }
 
