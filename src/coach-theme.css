@@ -1,0 +1,97 @@
+/* Coach directory palette. AthleteCoachesPage uses these tokens in inline styles. */
+.mat-coaches-page {
+  --coach-card-bg: #ffffff;
+  --coach-panel-bg: #f8fafc;
+  --coach-avatar-bg: #eef5ff;
+  --coach-border: #dfe7f1;
+  --coach-heading: #173957;
+  --coach-text: #334155;
+  --coach-muted: #64748b;
+  --coach-success-bg: #ecfdf3;
+  --coach-success-text: #166534;
+  --coach-success-border: #bbf7d0;
+  color: var(--coach-text);
+}
+
+:root[data-theme='dark'] .mat-coaches-page {
+  --coach-card-bg: #132938;
+  --coach-panel-bg: #193444;
+  --coach-avatar-bg: #193f54;
+  --coach-border: #46677a;
+  --coach-heading: #ffffff;
+  --coach-text: #e7f1f7;
+  --coach-muted: #b8cbd8;
+  --coach-success-bg: #143d30;
+  --coach-success-text: #c8f7da;
+  --coach-success-border: #39775c;
+  color: var(--coach-text);
+}
+
+:root[data-theme='dark'] .mat-coaches-page > section:first-child h1,
+:root[data-theme='dark'] .mat-coaches-page article h2,
+:root[data-theme='dark'] .mat-coaches-page article h3,
+:root[data-theme='dark'] .mat-coaches-page article strong {
+  color: var(--coach-heading) !important;
+}
+
+:root[data-theme='dark'] .mat-coaches-page > section:first-child p,
+:root[data-theme='dark'] .mat-coaches-page article p,
+:root[data-theme='dark'] .mat-coaches-page article .mat-muted {
+  color: var(--coach-muted) !important;
+}
+
+:root[data-theme='dark'] .mat-coaches-page article svg {
+  color: #d9eaf4;
+}
+
+:root[data-theme='dark'] .mat-coaches-page article > div:first-child > div:first-child {
+  color: #70c9fa !important;
+  border: 1px solid #5d849a;
+}
+
+:root[data-theme='dark'] .mat-coaches-page .mat-athlete-home-event-pill {
+  color: #dff3ff !important;
+  border: 1px solid #5d849a !important;
+  background: #23546e !important;
+}
+
+:root[data-theme='dark'] .mat-coaches-page article [style*="var(--coach-panel-bg)"] {
+  color: var(--coach-text) !important;
+}
+
+:root[data-theme='dark'] .mat-coaches-page article [style*="var(--coach-panel-bg)"] strong {
+  color: #ffffff !important;
+}
+
+:root[data-theme='dark'] .mat-coaches-page .mat-primary-button {
+  color: #ffffff !important;
+  border-color: #159add !important;
+  background: linear-gradient(135deg, #159add, #087bc7) !important;
+}
+
+:root[data-theme='dark'] .mat-coaches-page .mat-modal,
+:root[data-theme='dark'] .mat-coaches-page .mat-modal-header {
+  color: #e7f1f7 !important;
+  border-color: #46677a !important;
+  background: #132938 !important;
+}
+
+:root[data-theme='dark'] .mat-coaches-page .mat-modal-title,
+:root[data-theme='dark'] .mat-coaches-page .mat-form-group label {
+  color: #ffffff !important;
+}
+
+:root[data-theme='dark'] .mat-coaches-page .mat-input,
+:root[data-theme='dark'] .mat-coaches-page .mat-textarea,
+:root[data-theme='dark'] .mat-coaches-page select {
+  color: #ffffff !important;
+  border-color: #4b6d81 !important;
+  background: #0d2432 !important;
+  color-scheme: dark;
+}
+
+@media (max-width: 700px) {
+  .mat-coaches-page article {
+    padding: 18px !important;
+  }
+}

@@ -6,7 +6,6 @@ import {
   ClipboardList,
   Home,
   LogOut,
-  Megaphone,
   Menu,
   MessagesSquare,
   Moon,
@@ -29,7 +28,6 @@ const NAV_ITEMS = {
     ['coaches', 'Coaches', UserRound],
     ['tournaments', 'Tournaments', Trophy],
     ['calendar', 'Calendar', CalendarDays],
-    ['announcements', 'Announcements', Megaphone],
     ['messages', 'Messages', MessagesSquare],
     ['financials', 'Financials', BarChart3],
   ],
@@ -37,7 +35,6 @@ const NAV_ITEMS = {
     ['home', 'Home', Home],
     ['lesson-requests', 'Lesson Requests', ClipboardList],
     ['calendar', 'Calendar', CalendarDays],
-    ['announcements', 'Announcements', Megaphone],
     ['messages', 'Messages', MessagesSquare],
   ],
   athlete: [
@@ -45,7 +42,6 @@ const NAV_ITEMS = {
     ['coaches', 'Coaches', UserRound],
     ['tournaments', 'Tournaments', Trophy],
     ['calendar', 'Calendar', CalendarDays],
-    ['announcements', 'Announcements', Megaphone],
     ['messages', 'Messages', MessagesSquare],
     ['my-profile', 'My Profile', Award],
     ['new-member-guide', 'Team Guide', ShieldCheck],
@@ -69,7 +65,6 @@ const MOBILE_PRIMARY_IDS = {
     'home',
     'lesson-requests',
     'calendar',
-    'announcements',
   ],
 }
 

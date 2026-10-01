@@ -134,9 +134,9 @@ function getStatusStyle(
     case 'approved':
       return {
         background:
-          '#ecfdf3',
+          'var(--coach-success-bg)',
         color:
-          '#166534',
+          'var(--coach-success-text)',
         border:
           '1px solid #bbf7d0',
       }
@@ -154,9 +154,9 @@ function getStatusStyle(
     case 'cancelled':
       return {
         background:
-          '#f8fafc',
+          'var(--coach-panel-bg)',
         color:
-          '#475569',
+          'var(--coach-text)',
         border:
           '1px solid #cbd5e1',
       }
@@ -479,7 +479,7 @@ function LessonRequestModal({
                 padding:
                   '13px 14px',
                 background:
-                  '#f8fafc',
+                  'var(--coach-panel-bg)',
                 border:
                   '1px solid #e4eaf1',
                 borderRadius:
@@ -794,7 +794,7 @@ function AthleteCoachesPage({
     )
 
   return (
-    <div>
+    <div className="mat-coaches-page">
 
       <section
         style={{
@@ -846,9 +846,9 @@ function AthleteCoachesPage({
             padding:
               '12px 14px',
             background:
-              '#ecfdf3',
+              'var(--coach-success-bg)',
             color:
-              '#166534',
+              'var(--coach-success-text)',
             border:
               '1px solid #bbf7d0',
             borderRadius:
@@ -873,7 +873,7 @@ function AthleteCoachesPage({
           <div
             style={{
               background:
-                '#ffffff',
+                'var(--coach-card-bg)',
               border:
                 '1px solid #dfe7f1',
               borderRadius:
@@ -924,7 +924,7 @@ function AthleteCoachesPage({
                   }
                   style={{
                     background:
-                      '#ffffff',
+                      'var(--coach-card-bg)',
                     border:
                       '1px solid #dfe7f1',
                     borderRadius:
@@ -960,7 +960,7 @@ function AthleteCoachesPage({
                         borderRadius:
                           '50%',
                         background:
-                          '#eef5ff',
+                          'var(--coach-avatar-bg)',
                         display:
                           'flex',
                         alignItems:
@@ -1064,7 +1064,7 @@ function AthleteCoachesPage({
                         padding:
                           '14px 15px',
                         background:
-                          '#f8fafc',
+                          'var(--coach-panel-bg)',
                         border:
                           '1px solid #e4eaf1',
                         borderRadius:
@@ -1115,7 +1115,7 @@ function AthleteCoachesPage({
                         padding:
                           '14px 15px',
                         background:
-                          '#f8fafc',
+                          'var(--coach-panel-bg)',
                         border:
                           '1px solid #e4eaf1',
                         borderRadius:
@@ -1166,7 +1166,7 @@ function AthleteCoachesPage({
                         padding:
                           '14px 15px',
                         background:
-                          '#f8fafc',
+                          'var(--coach-panel-bg)',
                         border:
                           '1px solid #e4eaf1',
                         borderRadius:
@@ -1398,7 +1398,7 @@ function AthleteCoachesPage({
             <div
               style={{
                 background:
-                  '#ffffff',
+                  'var(--coach-card-bg)',
                 border:
                   '1px solid #dfe7f1',
                 borderRadius:
@@ -1438,7 +1438,7 @@ function AthleteCoachesPage({
                     }
                     style={{
                       background:
-                        '#ffffff',
+                        'var(--coach-card-bg)',
                       border:
                         '1px solid #dfe7f1',
                       borderRadius:
@@ -1588,7 +1588,7 @@ function AthleteCoachesPage({
                           padding:
                             '12px',
                           background:
-                            '#f8fafc',
+                            'var(--coach-panel-bg)',
                           borderRadius:
                             '10px',
                         }}

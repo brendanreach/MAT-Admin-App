@@ -1,0 +1,400 @@
+/* Athlete portal dark theme. This file must load after index.css and theme.css. */
+
+:root[data-theme='dark'] .mat-athlete-home,
+:root[data-theme='dark'] .mat-athlete-page {
+  color: #e7f1f7;
+}
+
+/* Shared hero and section headings */
+:root[data-theme='dark'] .mat-athlete-welcome,
+:root[data-theme='dark'] .mat-athlete-page-hero {
+  color: #e7f1f7 !important;
+  border: 1px solid #46677a !important;
+  background: linear-gradient(135deg, #173444, #102938) !important;
+  box-shadow: none !important;
+}
+:root[data-theme='dark'] .mat-athlete-welcome h1,
+:root[data-theme='dark'] .mat-athlete-page-hero h1,
+:root[data-theme='dark'] .mat-athlete-page-section-heading h2 {
+  color: #fff !important;
+}
+:root[data-theme='dark'] .mat-athlete-welcome p,
+:root[data-theme='dark'] .mat-athlete-page-hero p,
+:root[data-theme='dark'] .mat-athlete-page-section-heading p {
+  color: #b8cbd8 !important;
+}
+:root[data-theme='dark'] .mat-athlete-eyebrow {
+  color: #70c9fa !important;
+}
+:root[data-theme='dark'] .mat-athlete-page-icon,
+:root[data-theme='dark'] .mat-athlete-welcome-badge,
+:root[data-theme='dark'] .mat-athlete-dashboard-card-icon,
+:root[data-theme='dark'] .mat-athlete-tournament-icon {
+  color: #70c9fa !important;
+  border-color: #4f7185 !important;
+  background: #193f54 !important;
+}
+
+/* Home dashboard */
+:root[data-theme='dark'] .mat-athlete-dashboard-stat,
+:root[data-theme='dark'] .mat-athlete-dashboard-feature,
+:root[data-theme='dark'] .mat-athlete-milestone-card,
+:root[data-theme='dark'] .mat-athlete-quick-card {
+  color: #e7f1f7 !important;
+  border-color: #46677a !important;
+  background: #132938 !important;
+  box-shadow: none !important;
+}
+:root[data-theme='dark'] .mat-athlete-dashboard-stat strong,
+:root[data-theme='dark'] .mat-athlete-dashboard-feature h2,
+:root[data-theme='dark'] .mat-athlete-dashboard-feature h3,
+:root[data-theme='dark'] .mat-athlete-milestone-card h2,
+:root[data-theme='dark'] .mat-athlete-milestone-card h3,
+:root[data-theme='dark'] .mat-athlete-quick-card h2,
+:root[data-theme='dark'] .mat-athlete-quick-card h3 {
+  color: #fff !important;
+}
+:root[data-theme='dark'] .mat-athlete-dashboard-stat span,
+:root[data-theme='dark'] .mat-athlete-dashboard-feature p,
+:root[data-theme='dark'] .mat-athlete-dashboard-empty-text,
+:root[data-theme='dark'] .mat-athlete-dashboard-detail-list,
+:root[data-theme='dark'] .mat-athlete-home-announcement-meta,
+:root[data-theme='dark'] .mat-athlete-milestone-card p,
+:root[data-theme='dark'] .mat-athlete-quick-card p {
+  color: #b8cbd8 !important;
+}
+:root[data-theme='dark'] .mat-athlete-dashboard-card-label,
+:root[data-theme='dark'] .mat-athlete-dashboard-link {
+  color: #70c9fa !important;
+}
+:root[data-theme='dark'] .mat-athlete-dashboard-link,
+:root[data-theme='dark'] .mat-athlete-home-quick-links a {
+  border-color: #3f6074 !important;
+}
+:root[data-theme='dark'] .mat-athlete-dashboard-link:hover,
+:root[data-theme='dark'] .mat-athlete-home-quick-links a:hover {
+  color: #fff !important;
+  background: #203e51 !important;
+}
+:root[data-theme='dark'] .mat-athlete-home-progress { background: #294959 !important; }
+:root[data-theme='dark'] .mat-athlete-home-progress-fill { background: linear-gradient(90deg, #159add, #70c9fa) !important; }
+:root[data-theme='dark'] .mat-athlete-home-milestone-count,
+:root[data-theme='dark'] .mat-athlete-tournament-countdown { color: #fff !important; }
+
+/* Athlete tournaments */
+:root[data-theme='dark'] .mat-athlete-tournament-card,
+:root[data-theme='dark'] .mat-athlete-tournament-entry,
+:root[data-theme='dark'] .mat-athlete-tournament-event,
+:root[data-theme='dark'] .mat-athlete-empty-card,
+:root[data-theme='dark'] .mat-athlete-link-missing {
+  color: #e7f1f7 !important;
+  border-color: #46677a !important;
+  background: #132938 !important;
+  box-shadow: none !important;
+}
+:root[data-theme='dark'] .mat-athlete-tournament-card h3,
+:root[data-theme='dark'] .mat-athlete-tournament-entry h3,
+:root[data-theme='dark'] .mat-athlete-tournament-header h3,
+:root[data-theme='dark'] .mat-athlete-tournament-event strong,
+:root[data-theme='dark'] .mat-athlete-link-missing h2 {
+  color: #fff !important;
+}
+:root[data-theme='dark'] .mat-athlete-tournament-meta,
+:root[data-theme='dark'] .mat-athlete-tournament-note,
+:root[data-theme='dark'] .mat-athlete-link-missing p {
+  color: #b8cbd8 !important;
+}
+:root[data-theme='dark'] .mat-athlete-tournament-label { color: #70c9fa !important; }
+:root[data-theme='dark'] .mat-athlete-registration-badge {
+  color: #d7e4ec !important;
+  background: #294959 !important;
+}
+:root[data-theme='dark'] .mat-athlete-registration-badge.registered {
+  color: #bff3d2 !important;
+  background: #1b503c !important;
+}
+:root[data-theme='dark'] .mat-athlete-result-badge {
+  color: #dff3ff !important;
+  background: #23546e !important;
+}
+
+/* Athlete calendar */
+:root[data-theme='dark'] .mat-athlete-calendar-card {
+  color: #e7f1f7 !important;
+  border-color: #46677a !important;
+  background: #132938 !important;
+  box-shadow: none !important;
+}
+:root[data-theme='dark'] .mat-athlete-calendar-heading h3 { color: #fff !important; }
+:root[data-theme='dark'] .mat-athlete-calendar-heading,
+:root[data-theme='dark'] .mat-athlete-calendar-repeat { color: #70c9fa !important; }
+:root[data-theme='dark'] .mat-athlete-calendar-meta,
+:root[data-theme='dark'] .mat-athlete-calendar-content p { color: #b8cbd8 !important; }
+:root[data-theme='dark'] .mat-athlete-calendar-date-box {
+  color: #fff !important;
+  border-color: #4f7185 !important;
+  background: #193f54 !important;
+}
+:root[data-theme='dark'] .mat-athlete-calendar-date-box span { color: #9fc9df !important; }
+:root[data-theme='dark'] .mat-athlete-event-type {
+  color: #dff3ff !important;
+  background: #23546e !important;
+}
+
+/* Profile modal structure */
+:root[data-theme='dark'] .mat-profile-modal {
+  color: #e7f1f7 !important;
+  border-color: #46677a !important;
+  background: #0d2432 !important;
+  scrollbar-color: #55788d #0d2432;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, .65) !important;
+}
+:root[data-theme='dark'] .mat-profile-header {
+  color: #e7f1f7 !important;
+  border-bottom-color: #3f6074 !important;
+  background: linear-gradient(135deg, #173444, #102938) !important;
+}
+:root[data-theme='dark'] .mat-profile-header h2,
+:root[data-theme='dark'] .mat-profile-section-heading h3 { color: #fff !important; }
+:root[data-theme='dark'] .mat-profile-header p,
+:root[data-theme='dark'] .mat-profile-section-heading p { color: #b8cbd8 !important; }
+:root[data-theme='dark'] .mat-profile-avatar,
+:root[data-theme='dark'] .mat-profile-photo {
+  color: #70c9fa !important;
+  border-color: #5d849a !important;
+  background: #193f54 !important;
+}
+:root[data-theme='dark'] .mat-profile-photo-controls,
+:root[data-theme='dark'] .mat-profile-tabs,
+:root[data-theme='dark'] .mat-profile-body {
+  color: #e7f1f7 !important;
+  border-color: #3f6074 !important;
+  background: #102938 !important;
+}
+:root[data-theme='dark'] .mat-profile-photo-controls strong { color: #fff !important; }
+:root[data-theme='dark'] .mat-profile-photo-controls span,
+:root[data-theme='dark'] .mat-profile-image-message { color: #afc5d3 !important; }
+:root[data-theme='dark'] .mat-profile-tabs button {
+  color: #b8cbd8 !important;
+  border-color: transparent !important;
+  background: transparent !important;
+}
+:root[data-theme='dark'] .mat-profile-tabs button:hover {
+  color: #fff !important;
+  border-color: #4f7185 !important;
+  background: #193f54 !important;
+}
+:root[data-theme='dark'] .mat-profile-tabs button.active {
+  color: #fff !important;
+  border-color: #35a8e6 !important;
+  background: #087bc7 !important;
+}
+:root[data-theme='dark'] .mat-profile-tabs button.trophy.active {
+  color: #fff4c2 !important;
+  border-color: #8b7437 !important;
+  background: #5a481b !important;
+}
+:root[data-theme='dark'] .mat-profile-tab-count { color: #dff3ff !important; background: #23546e !important; }
+:root[data-theme='dark'] .mat-profile-tabs button.active .mat-profile-tab-count { color: #087bc7 !important; background: #fff !important; }
+:root[data-theme='dark'] .mat-profile-section {
+  color: #e7f1f7 !important;
+  border-color: #46677a !important;
+  background: #132938 !important;
+  box-shadow: none !important;
+}
+:root[data-theme='dark'] .mat-profile-section-heading {
+  border-color: #3f6074 !important;
+  background: #173444 !important;
+}
+:root[data-theme='dark'] .mat-profile-info-grid,
+:root[data-theme='dark'] .mat-profile-money-summary,
+:root[data-theme='dark'] .mat-profile-disciplines,
+:root[data-theme='dark'] .mat-profile-notes { background: #132938 !important; }
+:root[data-theme='dark'] .mat-profile-info-grid > div,
+:root[data-theme='dark'] .mat-profile-money-summary > div {
+  border-color: #3f6074 !important;
+  background: #132938 !important;
+}
+:root[data-theme='dark'] .mat-profile-info-grid span,
+:root[data-theme='dark'] .mat-profile-money-summary span,
+:root[data-theme='dark'] .mat-profile-disciplines > span,
+:root[data-theme='dark'] .mat-profile-notes > span { color: #9fb7c6 !important; }
+:root[data-theme='dark'] .mat-profile-info-grid strong,
+:root[data-theme='dark'] .mat-profile-money-summary strong { color: #fff !important; }
+
+/* Career summary */
+:root[data-theme='dark'] .mat-career-stat,
+:root[data-theme='dark'] .mat-career-medal,
+:root[data-theme='dark'] .mat-career-discipline-card {
+  color: #e7f1f7 !important;
+  border-color: #4b6d81 !important;
+  background: #193444 !important;
+}
+:root[data-theme='dark'] .mat-career-stat span,
+:root[data-theme='dark'] .mat-career-medal span,
+:root[data-theme='dark'] .mat-career-discipline-stats span,
+:root[data-theme='dark'] .mat-career-best-finish span { color: #9fb7c6 !important; }
+:root[data-theme='dark'] .mat-career-stat strong,
+:root[data-theme='dark'] .mat-career-medal strong,
+:root[data-theme='dark'] .mat-career-discipline-heading > strong,
+:root[data-theme='dark'] .mat-career-discipline-stats strong,
+:root[data-theme='dark'] .mat-career-best-finish strong { color: #fff !important; }
+:root[data-theme='dark'] .mat-career-medal.gold { color: #f2c94c !important; }
+:root[data-theme='dark'] .mat-career-medal.silver { color: #c8d4dc !important; }
+:root[data-theme='dark'] .mat-career-medal.bronze { color: #dc9867 !important; }
+:root[data-theme='dark'] .mat-career-discipline-icon { color: #70c9fa !important; background: #23546e !important; }
+:root[data-theme='dark'] .mat-career-discipline-stats > div { border: 1px solid #3f6074 !important; background: #102938 !important; }
+:root[data-theme='dark'] .mat-career-best-finish { border-color: #4b6d81 !important; }
+
+/* Milestones */
+:root[data-theme='dark'] .mat-discipline-milestone,
+:root[data-theme='dark'] .mat-progress-track-card {
+  color: #e7f1f7 !important;
+  border-color: #4b6d81 !important;
+  background: #193444 !important;
+}
+:root[data-theme='dark'] .mat-discipline-milestone.earned,
+:root[data-theme='dark'] .mat-progress-achieved { border-color: #39775c !important; background: #143d30 !important; }
+:root[data-theme='dark'] .mat-discipline-milestone-icon,
+:root[data-theme='dark'] .mat-progress-track-icon { color: #70c9fa !important; background: #23546e !important; }
+:root[data-theme='dark'] .mat-discipline-milestone-title,
+:root[data-theme='dark'] .mat-progress-track-heading { color: #fff !important; }
+:root[data-theme='dark'] .mat-discipline-milestone-detail,
+:root[data-theme='dark'] .mat-progress-meter-label,
+:root[data-theme='dark'] .mat-progress-next-goal { color: #afc5d3 !important; }
+:root[data-theme='dark'] .mat-progress-meter { background: #294959 !important; }
+
+/* Results timeline */
+:root[data-theme='dark'] .mat-results-timeline-dot { color: #70c9fa !important; border-color: #132938 !important; background: #23546e !important; box-shadow: 0 0 0 1px #5d849a !important; }
+:root[data-theme='dark'] .mat-results-timeline-line { background: #46677a !important; }
+:root[data-theme='dark'] .mat-results-timeline-card,
+:root[data-theme='dark'] .mat-results-event,
+:root[data-theme='dark'] .mat-results-event-main {
+  color: #e7f1f7 !important;
+  border-color: #4b6d81 !important;
+  background: #193444 !important;
+}
+:root[data-theme='dark'] .mat-results-timeline-header { border-color: #3f6074 !important; }
+:root[data-theme='dark'] .mat-results-timeline-title h4,
+:root[data-theme='dark'] .mat-results-event strong,
+:root[data-theme='dark'] .mat-results-placement,
+:root[data-theme='dark'] .mat-results-recorded { color: #fff !important; }
+:root[data-theme='dark'] .mat-results-timeline-date { color: #70c9fa !important; }
+:root[data-theme='dark'] .mat-results-timeline-location,
+:root[data-theme='dark'] .mat-results-tournament-note,
+:root[data-theme='dark'] .mat-results-event-notes,
+:root[data-theme='dark'] .mat-results-not-recorded { color: #afc5d3 !important; }
+:root[data-theme='dark'] .mat-results-timeline-status { color: #d7e4ec !important; background: #294959 !important; }
+:root[data-theme='dark'] .mat-results-timeline-status.gold { color: #ffe79a !important; background: #5a481b !important; }
+:root[data-theme='dark'] .mat-results-timeline-status.silver { color: #e1eaf0 !important; background: #465966 !important; }
+:root[data-theme='dark'] .mat-results-timeline-status.bronze { color: #ffd0ae !important; background: #633e2b !important; }
+
+/* Trophy area already starts dark, normalize nested contrast. */
+:root[data-theme='dark'] .mat-trophy-case { color: #e7f1f7 !important; background: linear-gradient(180deg, #102938, #132938 48%, #0d2432) !important; }
+:root[data-theme='dark'] .mat-trophy-collection,
+:root[data-theme='dark'] .mat-trophy-achievement { border-color: #46677a !important; background: #193444 !important; }
+:root[data-theme='dark'] .mat-trophy-collection-title,
+:root[data-theme='dark'] .mat-trophy-achievement-copy strong { color: #fff !important; }
+
+/* Career summary and tournament history contrast corrections */
+:root[data-theme='dark'] .mat-career-stat {
+  color: #e7f1f7 !important;
+  border-color: #4b6d81 !important;
+  background: #193444 !important;
+}
+:root[data-theme='dark'] .mat-career-stat span { color: #afc5d3 !important; }
+:root[data-theme='dark'] .mat-career-stat strong { color: #ffffff !important; }
+
+:root[data-theme='dark'] .mat-career-medal {
+  border-color: #4b6d81 !important;
+  background: #193444 !important;
+}
+:root[data-theme='dark'] .mat-career-medal strong { color: #ffffff !important; }
+:root[data-theme='dark'] .mat-career-medal span { color: #afc5d3 !important; }
+:root[data-theme='dark'] .mat-career-medal.gold { color: #f2c94c !important; }
+:root[data-theme='dark'] .mat-career-medal.silver { color: #c8d4dc !important; }
+:root[data-theme='dark'] .mat-career-medal.bronze { color: #dc9867 !important; }
+
+:root[data-theme='dark'] .mat-career-discipline-card {
+  border-color: #4b6d81 !important;
+  background: #193444 !important;
+}
+:root[data-theme='dark'] .mat-career-discipline-heading > strong { color: #ffffff !important; }
+:root[data-theme='dark'] .mat-career-discipline-icon {
+  color: #70c9fa !important;
+  background: #23546e !important;
+}
+:root[data-theme='dark'] .mat-career-discipline-stats > div {
+  border: 1px solid #3f6074 !important;
+  background: #102938 !important;
+}
+:root[data-theme='dark'] .mat-career-discipline-stats span,
+:root[data-theme='dark'] .mat-career-best-finish span { color: #9fb7c6 !important; }
+:root[data-theme='dark'] .mat-career-discipline-stats strong,
+:root[data-theme='dark'] .mat-career-best-finish strong { color: #ffffff !important; }
+:root[data-theme='dark'] .mat-career-best-finish { border-top-color: #4b6d81 !important; }
+
+:root[data-theme='dark'] .mat-discipline-milestone {
+  border-color: #4b6d81 !important;
+  background: #193444 !important;
+}
+:root[data-theme='dark'] .mat-discipline-milestone.earned {
+  border-color: #39775c !important;
+  background: #143d30 !important;
+}
+:root[data-theme='dark'] .mat-discipline-milestone.locked {
+  color: #afc5d3 !important;
+  background: #172f3e !important;
+}
+:root[data-theme='dark'] .mat-discipline-milestone-icon {
+  color: #70c9fa !important;
+  background: #23546e !important;
+}
+:root[data-theme='dark'] .mat-discipline-milestone.earned .mat-discipline-milestone-icon {
+  color: #9eebbd !important;
+  background: #205e46 !important;
+}
+
+:root[data-theme='dark'] .mat-results-timeline-dot {
+  color: #70c9fa !important;
+  border-color: #132938 !important;
+  background: #23546e !important;
+  box-shadow: 0 0 0 1px #5d849a !important;
+}
+:root[data-theme='dark'] .mat-results-timeline-line { background: #46677a !important; }
+:root[data-theme='dark'] .mat-results-timeline-card {
+  color: #e7f1f7 !important;
+  border-color: #4b6d81 !important;
+  background: #193444 !important;
+}
+:root[data-theme='dark'] .mat-results-timeline-header { border-bottom-color: #3f6074 !important; }
+:root[data-theme='dark'] .mat-results-timeline-title h4 { color: #ffffff !important; }
+:root[data-theme='dark'] .mat-results-timeline-date { color: #70c9fa !important; }
+:root[data-theme='dark'] .mat-results-timeline-location,
+:root[data-theme='dark'] .mat-results-tournament-note,
+:root[data-theme='dark'] .mat-results-event-notes { color: #afc5d3 !important; }
+:root[data-theme='dark'] .mat-results-timeline-status {
+  color: #d7e4ec !important;
+  background: #294959 !important;
+}
+:root[data-theme='dark'] .mat-results-timeline-status.gold {
+  color: #ffe79a !important;
+  background: #5a481b !important;
+}
+:root[data-theme='dark'] .mat-results-timeline-status.silver {
+  color: #e1eaf0 !important;
+  background: #465966 !important;
+}
+:root[data-theme='dark'] .mat-results-timeline-status.bronze {
+  color: #ffd0ae !important;
+  background: #633e2b !important;
+}
+:root[data-theme='dark'] .mat-results-event,
+:root[data-theme='dark'] .mat-results-event-main {
+  border-color: #3f6074 !important;
+  background: #102938 !important;
+}
+:root[data-theme='dark'] .mat-results-event strong,
+:root[data-theme='dark'] .mat-results-placement,
+:root[data-theme='dark'] .mat-results-recorded { color: #ffffff !important; }
+:root[data-theme='dark'] .mat-results-not-recorded { color: #afc5d3 !important; }

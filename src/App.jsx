@@ -13,16 +13,15 @@ import HomePage from './components/HomePage.jsx'
 import NewMemberGuidePage from './components/NewMemberGuidePage.jsx'
 import AthleteHomePage from './components/AthleteHomePage.jsx'
 import AthleteProfileModal from './components/AthleteProfileModal.jsx'
-import AthleteAnnouncementsPage from './components/AthleteAnnouncementsPage.jsx'
 import AthleteCalendarPage from './components/AthleteCalendarPage.jsx'
 import AthleteTournamentsPage from './components/AthleteTournamentsPage.jsx'
 import AthleteCoachesPage from './components/AthleteCoachesPage.jsx'
 import RosterPage from './components/RosterPage.jsx'
+import AccountAthleteAssignments from './components/AccountAthleteAssignments.jsx'
 import CoachesPage from './components/CoachesPage.jsx'
 import AdminPrivateLessonRequests from './components/AdminPrivateLessonRequests.jsx'
 import TournamentsPage from './components/TournamentsPage.jsx'
 import CalendarPage from './components/CalendarPage.jsx'
-import AnnouncementsPage from './components/AnnouncementsPage.jsx'
 import FinancialsPage from './components/FinancialsPage.jsx'
 import MessagesPage from './components/MessagesPage.jsx'
 
@@ -791,6 +790,7 @@ function App() {
 
             {activeTab ===
               'roster' && (
+              <>
               <RosterPage
                 members={
                   members
@@ -810,6 +810,14 @@ function App() {
                   )
                 }
               />
+                <AccountAthleteAssignments
+                  members={members}
+                  onChanged={async () => {
+                    await loadAccountMemberLinks()
+                    await loadAccountProfile()
+                  }}
+                />
+              </>
             )}
 
             {activeTab ===
@@ -862,18 +870,6 @@ function App() {
                 }
                 onTournamentsChanged={
                   loadTournaments
-                }
-              />
-            )}
-
-            {activeTab ===
-              'announcements' && (
-              <AnnouncementsPage
-                announcements={
-                  announcements
-                }
-                onAnnouncementsChanged={
-                  loadAnnouncements
                 }
               />
             )}
@@ -960,15 +956,6 @@ function App() {
                 }
                 tournaments={
                   tournaments
-                }
-              />
-            )}
-
-            {activeTab ===
-              'announcements' && (
-              <AthleteAnnouncementsPage
-                announcements={
-                  announcements
                 }
               />
             )}
