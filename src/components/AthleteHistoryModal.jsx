@@ -1,3 +1,4 @@
+import './AthleteHistoryModal.css'
 import {
   CalendarDays,
   Medal,

@@ -1,0 +1,2390 @@
+/* Extracted Athlete Profile feature styles. */
+/* =========================================================
+   ATHLETE PROFILE
+========================================================= */
+
+.mat-profile-modal {
+  width: min(950px, 95vw);
+  max-height: 90vh;
+  overflow-y: auto;
+  background: #ffffff;
+  border: 1px solid #dce6ee;
+  border-radius: 18px;
+  box-shadow: 0 24px 70px rgba(20, 47, 78, 0.25);
+}
+
+.mat-profile-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+  padding: 26px 28px;
+  border-bottom: 1px solid #e2eaf0;
+  background: linear-gradient(135deg, #f8fcff, #edf7fd);
+}
+
+.mat-profile-identity {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.mat-profile-avatar {
+  width: 52px;
+  height: 52px;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  background: #e6f4fc;
+  color: #087dce;
+}
+
+.mat-profile-header h2 {
+  margin: 4px 0;
+  color: #10294f;
+  font-size: 27px;
+}
+
+.mat-profile-header p {
+  margin: 0;
+  color: #728497;
+  font-size: 12px;
+}
+
+.mat-profile-body {
+  padding: 24px 28px 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.mat-profile-section {
+  border: 1px solid #dce6ee;
+  border-radius: 14px;
+  background: #fbfdff;
+  overflow: hidden;
+}
+
+.mat-profile-section-heading {
+  padding: 17px 19px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  border-bottom: 1px solid #e2eaf0;
+  color: #1686ce;
+}
+
+.mat-profile-section-heading h3 {
+  margin: 0;
+  color: #173957;
+  font-size: 15px;
+}
+
+.mat-profile-section-heading p {
+  margin: 3px 0 0;
+  color: #8594a3;
+  font-size: 10px;
+}
+
+.mat-profile-info-grid,
+.mat-profile-money-summary {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.mat-profile-info-grid > div,
+.mat-profile-money-summary > div {
+  padding: 17px;
+  border-right: 1px solid #e6edf2;
+  border-bottom: 1px solid #e6edf2;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.mat-profile-info-grid span,
+.mat-profile-money-summary span {
+  color: #8393a4;
+  font-size: 10px;
+}
+
+.mat-profile-info-grid strong,
+.mat-profile-money-summary strong {
+  color: #173957;
+  font-size: 14px;
+}
+
+.mat-profile-disciplines,
+.mat-profile-notes {
+  padding: 17px 19px;
+}
+
+.mat-profile-disciplines > span,
+.mat-profile-notes > span {
+  display: block;
+  margin-bottom: 9px;
+  color: #8393a4;
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.mat-profile-disciplines > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.mat-profile-notes p {
+  margin: 0;
+  color: #65798c;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.mat-profile-payment-list {
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mat-profile-payment {
+  padding: 12px 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  border: 1px solid #e1e8ee;
+  border-radius: 9px;
+  background: white;
+}
+
+.mat-profile-payment > div:first-child {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.mat-profile-payment strong {
+  color: #176c4d;
+}
+
+.mat-profile-payment span {
+  color: #8292a1;
+  font-size: 10px;
+}
+
+.mat-profile-payment > div:last-child {
+  color: #62778c;
+  font-size: 11px;
+}
+
+.mat-profile-empty-line {
+  padding: 20px;
+  color: #8292a1;
+  font-size: 12px;
+}
+
+.mat-profile-medals {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.mat-profile-medals > div {
+  min-height: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 3px;
+  border-right: 1px solid #e4ebf0;
+}
+
+.mat-profile-medals > div:last-child {
+  border-right: 0;
+}
+
+.mat-profile-medals strong {
+  color: #173957;
+  font-size: 21px;
+}
+
+.mat-profile-medals span {
+  color: #8191a1;
+  font-size: 10px;
+}
+
+.mat-profile-medals .gold {
+  color: #d09a13;
+}
+
+.mat-profile-medals .silver {
+  color: #8f9dab;
+}
+
+.mat-profile-medals .bronze {
+  color: #aa6b3d;
+}
+
+.mat-profile-tournaments {
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mat-profile-tournament {
+  border: 1px solid #dfe7ed;
+  border-radius: 10px;
+  background: white;
+  overflow: hidden;
+}
+
+.mat-profile-tournament-header {
+  padding: 13px 15px;
+  border-bottom: 1px solid #e6edf2;
+  background: #f7fbfe;
+}
+
+.mat-profile-tournament-header > div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.mat-profile-tournament-header strong {
+  color: #173957;
+  font-size: 13px;
+}
+
+.mat-profile-tournament-header span {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #8191a1;
+  font-size: 10px;
+}
+
+.mat-profile-result-list {
+  padding: 10px;
+}
+
+.mat-profile-result-row {
+  min-height: 48px;
+  padding: 8px 5px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  border-bottom: 1px solid #edf1f4;
+}
+
+.mat-profile-result-row:last-child {
+  border-bottom: 0;
+}
+
+.mat-profile-result-row > div:first-child {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.mat-profile-result-row > div:last-child {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.mat-profile-result-row strong {
+  color: #183a5d;
+  font-size: 12px;
+}
+
+.mat-profile-result-row > div:first-child span {
+  color: #8997a5;
+  font-size: 9px;
+}
+
+@media (max-width: 700px) {
+  .mat-profile-modal {
+    width: 95vw;
+    max-height: 92vh;
+  }
+
+  .mat-profile-header {
+    padding: 20px;
+  }
+
+  .mat-profile-body {
+    padding: 17px;
+  }
+
+  .mat-profile-info-grid,
+  .mat-profile-money-summary,
+  .mat-profile-medals {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .mat-profile-payment,
+  .mat-profile-result-row {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+/* =========================================================
+   ATHLETE PROFILE PHOTO
+========================================================= */
+
+.mat-profile-photo-wrap {
+  flex-shrink: 0;
+}
+
+.mat-profile-photo {
+  width: 72px;
+  height: 72px;
+  display: block;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 16px;
+  border: 3px solid #ffffff;
+  box-shadow: 0 5px 16px rgba(20, 47, 78, 0.16);
+}
+
+.mat-profile-avatar {
+  width: 72px;
+  height: 72px;
+  display: grid;
+  place-items: center;
+  border-radius: 16px;
+  background: #e6f4fc;
+  color: #087dce;
+  border: 3px solid #ffffff;
+  box-shadow: 0 5px 16px rgba(20, 47, 78, 0.1);
+}
+
+.mat-profile-photo-controls {
+  padding: 14px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  border-bottom: 1px solid #e3ebf1;
+  background: #ffffff;
+}
+
+.mat-profile-photo-controls > div:first-child {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.mat-profile-photo-controls strong {
+  color: #173957;
+  font-size: 12px;
+}
+
+.mat-profile-photo-controls span {
+  color: #8796a5;
+  font-size: 10px;
+}
+
+.mat-profile-photo-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.mat-profile-photo-button {
+  min-height: 38px;
+  height: 38px;
+  padding: 0 14px;
+  font-size: 11px;
+}
+
+.mat-profile-remove-photo {
+  min-height: 38px;
+  padding: 0 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid #e3c7c7;
+  border-radius: 8px;
+  background: #fffafa;
+  color: #a14444;
+  font-size: 11px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.mat-profile-remove-photo:hover {
+  background: #fff0f0;
+  border-color: #dca7a7;
+}
+
+.mat-profile-photo-button:disabled,
+.mat-profile-remove-photo:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.mat-profile-image-message {
+  margin: 14px 28px 0;
+  padding: 10px 13px;
+  border-radius: 8px;
+  background: #eef8fd;
+  border: 1px solid #cde7f6;
+  color: #28719f;
+  font-size: 11px;
+}
+
+@media (max-width: 700px) {
+  .mat-profile-photo {
+    width: 62px;
+    height: 62px;
+  }
+
+  .mat-profile-avatar {
+    width: 62px;
+    height: 62px;
+  }
+
+  .mat-profile-photo-controls {
+    padding: 14px 20px;
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .mat-profile-photo-actions {
+    width: 100%;
+  }
+
+  .mat-profile-photo-button {
+    flex: 1;
+  }
+}
+/* =========================================================
+/* =========================================================
+   ATHLETE PROFILE - RESULTS TIMELINE
+========================================================= */
+
+.mat-results-timeline-section {
+  overflow: hidden;
+}
+
+.mat-results-timeline {
+  margin-top: 18px;
+}
+
+.mat-results-timeline-item {
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr);
+  align-items: stretch;
+}
+
+.mat-results-timeline-rail {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.mat-results-timeline-dot {
+  position: relative;
+  z-index: 2;
+
+  width: 30px;
+  height: 30px;
+
+  display: grid;
+  place-items: center;
+
+  border: 3px solid #ffffff;
+  border-radius: 50%;
+
+  background: #e9f6fd;
+  color: #087bc7;
+
+  box-shadow: 0 0 0 1px #c9e4f3;
+}
+
+.mat-results-timeline-line {
+  width: 2px;
+  flex: 1;
+  min-height: 24px;
+
+  background: #d9e8f0;
+}
+
+.mat-results-timeline-item:last-child
+  .mat-results-timeline-line {
+  background: transparent;
+}
+
+.mat-results-timeline-card {
+  min-width: 0;
+
+  margin: 0 0 18px 4px;
+  padding: 17px;
+
+  border: 1px solid #dce8ef;
+  border-radius: 12px;
+
+  background: #ffffff;
+}
+
+.mat-results-timeline-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+
+  padding-bottom: 13px;
+  border-bottom: 1px solid #edf2f5;
+}
+
+.mat-results-timeline-title {
+  min-width: 0;
+}
+
+.mat-results-timeline-date,
+.mat-results-timeline-location {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+
+  color: #748b9d;
+
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.mat-results-timeline-date {
+  color: #087bc7;
+  font-weight: 800;
+}
+
+.mat-results-timeline-title h4 {
+  margin: 5px 0;
+
+  color: #173957;
+
+  font-size: 18px;
+  line-height: 1.3;
+}
+
+.mat-results-timeline-status {
+  flex-shrink: 0;
+
+  padding: 6px 9px;
+
+  border-radius: 999px;
+
+  background: #edf3f6;
+  color: #6d8292;
+
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1.3;
+}
+
+.mat-results-timeline-status.gold {
+  background: #fff6d9;
+  color: #8c6a00;
+}
+
+.mat-results-timeline-status.silver {
+  background: #f0f3f5;
+  color: #61717d;
+}
+
+.mat-results-timeline-status.bronze {
+  background: #f8ebe1;
+  color: #92562d;
+}
+
+.mat-results-timeline-status.recorded {
+  background: #e9f7ef;
+  color: #27774b;
+}
+
+.mat-results-timeline-status.pending {
+  background: #f3f5f7;
+  color: #778a98;
+}
+
+.mat-results-event-list {
+  margin-top: 13px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mat-results-event {
+  padding: 12px;
+
+  display: grid;
+  grid-template-columns:
+    minmax(0, 1fr)
+    auto;
+  gap: 8px 14px;
+  align-items: center;
+
+  border: 1px solid #e5edf2;
+  border-radius: 9px;
+
+  background: #fbfdfe;
+}
+
+.mat-results-event-main {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.mat-results-event-main strong {
+  color: #294b67;
+
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.mat-results-event-main span {
+  color: #7c909f;
+
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.mat-results-event-outcome {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.mat-results-placement {
+  color: #365a74;
+
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.mat-results-not-recorded {
+  color: #8a9aa6;
+
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.mat-results-recorded {
+  color: #347653;
+
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.mat-results-event-notes {
+  grid-column: 1 / -1;
+
+  padding-top: 8px;
+
+  border-top: 1px solid #e9eff3;
+
+  color: #708596;
+
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.mat-results-tournament-note {
+  margin-top: 11px;
+  padding: 11px 12px;
+
+  border-radius: 8px;
+
+  background: #f5f9fb;
+}
+
+.mat-results-tournament-note strong {
+  display: block;
+
+  margin-bottom: 3px;
+
+  color: #547087;
+
+  font-size: 11px;
+}
+
+.mat-results-tournament-note p {
+  margin: 0;
+
+  color: #718797;
+
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+
+/* =========================================================
+   RESULTS TIMELINE - MOBILE
+========================================================= */
+
+@media (max-width: 700px) {
+
+  .mat-results-timeline-item {
+    grid-template-columns: 30px minmax(0, 1fr);
+  }
+
+  .mat-results-timeline-dot {
+    width: 26px;
+    height: 26px;
+  }
+
+  .mat-results-timeline-card {
+    margin-left: 3px;
+    padding: 14px;
+  }
+
+  .mat-results-timeline-header {
+    flex-direction: column;
+    gap: 9px;
+  }
+
+  .mat-results-timeline-title h4 {
+    font-size: 17px;
+  }
+
+  .mat-results-timeline-status {
+    align-self: flex-start;
+  }
+
+  .mat-results-event {
+    grid-template-columns: 1fr;
+  }
+
+  .mat-results-event-outcome {
+    justify-content: flex-start;
+  }
+}
+/* =========================================================
+   ATHLETE PROGRESS MILESTONES
+========================================================= */
+
+.mat-milestones-section {
+  overflow: hidden;
+}
+
+.mat-progress-track-grid {
+  display: grid;
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+  gap: 14px;
+
+  margin-top: 18px;
+}
+
+.mat-progress-track-card {
+  min-width: 0;
+
+  padding: 18px;
+
+  border: 1px solid #dbe8ef;
+  border-radius: 12px;
+
+  background: #fbfdfe;
+}
+
+.mat-progress-track-top {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+
+  margin-bottom: 16px;
+}
+
+.mat-progress-track-icon {
+  width: 39px;
+  height: 39px;
+
+  display: grid;
+  place-items: center;
+
+  flex-shrink: 0;
+
+  border-radius: 10px;
+
+  background: #e9f6fd;
+  color: #087bc7;
+}
+
+.mat-progress-track-heading {
+  min-width: 0;
+}
+
+.mat-progress-track-heading h4 {
+  margin: 0 0 3px;
+
+  color: #244966;
+
+  font-size: 15px;
+  line-height: 1.3;
+}
+
+.mat-progress-track-heading p {
+  margin: 0;
+
+  color: #7a8e9c;
+
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+.mat-progress-achieved {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+
+  margin-bottom: 16px;
+  padding: 10px;
+
+  border: 1px solid #d6eadf;
+  border-radius: 9px;
+
+  background: #f4fbf7;
+  color: #2d7c51;
+}
+
+.mat-progress-achieved > svg {
+  flex-shrink: 0;
+
+  margin-top: 1px;
+}
+
+.mat-progress-achieved > div {
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.mat-progress-achieved strong {
+  color: #2d6f4d;
+
+  font-size: 12px;
+}
+
+.mat-progress-achieved span {
+  color: #718c7e;
+
+  font-size: 10px;
+  line-height: 1.4;
+}
+
+.mat-progress-first-goal {
+  margin-bottom: 16px;
+  padding: 9px 10px;
+
+  border-radius: 8px;
+
+  background: #f0f4f7;
+  color: #708491;
+
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.mat-progress-next-goal {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+
+  margin-bottom: 12px;
+}
+
+.mat-progress-next-goal span {
+  color: #78909f;
+
+  font-size: 10px;
+  font-weight: 700;
+
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.mat-progress-next-goal strong {
+  color: #173f5c;
+
+  font-size: 14px;
+}
+
+.mat-progress-meter-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin-bottom: 6px;
+
+  color: #7a8d99;
+
+  font-size: 10px;
+}
+
+.mat-progress-meter-label strong {
+  color: #496a7f;
+}
+
+.mat-progress-meter {
+  height: 8px;
+
+  overflow: hidden;
+
+  border-radius: 999px;
+
+  background: #e5edf2;
+}
+
+.mat-progress-meter-fill {
+  height: 100%;
+
+  border-radius: inherit;
+
+  background: #1896d2;
+
+  transition: width 0.2s ease;
+}
+
+.mat-progress-max {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+
+  padding: 10px;
+
+  border-radius: 9px;
+
+  background: #fff8df;
+  color: #80640b;
+
+  font-size: 11px;
+  font-weight: 800;
+}
+
+
+/* =========================================================
+   DISCIPLINE ACHIEVEMENTS
+========================================================= */
+
+.mat-milestone-subheading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+
+  margin-top: 28px;
+  margin-bottom: 12px;
+}
+
+.mat-milestone-subheading > div {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+
+  color: #31536c;
+}
+
+.mat-milestone-subheading strong {
+  font-size: 14px;
+}
+
+.mat-milestone-subheading > span {
+  color: #8294a0;
+
+  font-size: 11px;
+}
+
+.mat-discipline-milestone-grid {
+  display: grid;
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.mat-discipline-milestone {
+  min-width: 0;
+
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+
+  padding: 15px;
+
+  border: 1px solid #dfe8ed;
+  border-radius: 11px;
+
+  background: #fbfcfd;
+}
+
+.mat-discipline-milestone.earned {
+  border-color: #cce7d8;
+  background: #fbfffc;
+}
+
+.mat-discipline-milestone.locked {
+  opacity: 0.7;
+}
+
+.mat-discipline-milestone-icon {
+  width: 36px;
+  height: 36px;
+
+  display: grid;
+  place-items: center;
+
+  flex-shrink: 0;
+
+  border-radius: 9px;
+
+  background: #edf3f6;
+  color: #718896;
+}
+
+.mat-discipline-milestone.earned
+  .mat-discipline-milestone-icon {
+  background: #e9f8ef;
+  color: #288353;
+}
+
+.mat-discipline-milestone-content {
+  min-width: 0;
+  flex: 1;
+}
+
+.mat-discipline-milestone-title {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.mat-discipline-milestone-title strong {
+  color: #294b64;
+
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.mat-discipline-milestone-title span {
+  flex-shrink: 0;
+
+  padding: 3px 6px;
+
+  border-radius: 999px;
+
+  background: #eef2f4;
+  color: #82919a;
+
+  font-size: 8px;
+  font-weight: 800;
+}
+
+.mat-discipline-milestone.earned
+  .mat-discipline-milestone-title span {
+  background: #e6f6ed;
+  color: #2f7952;
+}
+
+.mat-discipline-milestone-content > p {
+  margin: 5px 0 0;
+
+  color: #82939e;
+
+  font-size: 10px;
+  line-height: 1.45;
+}
+
+.mat-discipline-milestone-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+
+  margin-top: 8px;
+  padding-top: 8px;
+
+  border-top: 1px solid #e5ece8;
+}
+
+.mat-discipline-milestone-detail strong {
+  color: #32694e;
+
+  font-size: 11px;
+}
+
+.mat-discipline-milestone-detail span {
+  color: #758a97;
+
+  font-size: 9px;
+  line-height: 1.35;
+}
+
+
+/* =========================================================
+   MILESTONES - TABLET
+========================================================= */
+
+@media (max-width: 900px) {
+
+  .mat-progress-track-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+  .mat-discipline-milestone-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+}
+
+
+/* =========================================================
+   MILESTONES - MOBILE
+========================================================= */
+
+@media (max-width: 600px) {
+
+  .mat-progress-track-grid,
+  .mat-discipline-milestone-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .mat-milestone-subheading {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 4px;
+  }
+}
+/* =========================================================
+/* =========================================================
+   ATHLETE CAREER SUMMARY
+========================================================= */
+
+.mat-career-summary-section {
+  overflow: hidden;
+}
+
+.mat-career-stat-grid {
+  display: grid;
+  grid-template-columns:
+    repeat(4, minmax(0, 1fr));
+  gap: 10px;
+
+  margin-bottom: 14px;
+}
+
+.mat-career-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  padding: 14px;
+
+  border: 1px solid #e0e9ee;
+  border-radius: 11px;
+
+  background: #f9fcfe;
+}
+
+.mat-career-stat span {
+  color: #7c909d;
+
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.mat-career-stat strong {
+  color: #28506b;
+
+  font-size: 22px;
+}
+
+.mat-career-medal-row {
+  display: grid;
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+  gap: 10px;
+
+  margin-bottom: 16px;
+}
+
+.mat-career-medal {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 12px 14px;
+
+  border: 1px solid #e2e9ed;
+  border-radius: 10px;
+
+  background: #ffffff;
+}
+
+.mat-career-medal > div {
+  display: flex;
+  flex-direction: column;
+}
+
+.mat-career-medal strong {
+  color: #2d5067;
+
+  font-size: 17px;
+}
+
+.mat-career-medal span {
+  color: #7d8f9a;
+
+  font-size: 10px;
+}
+
+.mat-career-medal.gold {
+  color: #c99a1b;
+}
+
+.mat-career-medal.silver {
+  color: #87959d;
+}
+
+.mat-career-medal.bronze {
+  color: #aa7043;
+}
+
+.mat-career-discipline-grid {
+  display: grid;
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.mat-career-discipline-card {
+  padding: 15px;
+
+  border: 1px solid #dfe9ef;
+  border-radius: 12px;
+
+  background: #ffffff;
+}
+
+.mat-career-discipline-heading {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+
+  margin-bottom: 14px;
+}
+
+.mat-career-discipline-heading > strong {
+  color: #2d5169;
+
+  font-size: 13px;
+}
+
+.mat-career-discipline-icon {
+  width: 34px;
+  height: 34px;
+
+  display: grid;
+  place-items: center;
+
+  border-radius: 9px;
+
+  background: #eaf6fc;
+  color: #158bc6;
+}
+
+.mat-career-discipline-stats {
+  display: grid;
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+  gap: 8px;
+
+  margin-bottom: 12px;
+}
+
+.mat-career-discipline-stats > div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+
+  padding: 9px;
+
+  border-radius: 8px;
+
+  background: #f5f9fb;
+}
+
+.mat-career-discipline-stats span,
+.mat-career-best-finish span {
+  color: #80919c;
+
+  font-size: 9px;
+  font-weight: 700;
+
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.mat-career-discipline-stats strong {
+  color: #31566d;
+
+  font-size: 16px;
+}
+
+.mat-career-best-finish {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+
+  padding-top: 10px;
+
+  border-top: 1px solid #e7edf0;
+}
+
+.mat-career-best-finish strong {
+  color: #1689c3;
+
+  font-size: 11px;
+}
+
+@media (max-width: 900px) {
+
+  .mat-career-stat-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+  .mat-career-discipline-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+
+  .mat-career-stat-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+  .mat-career-medal-row {
+    grid-template-columns: 1fr;
+  }
+}
+/* =========================================================
+/* =========================================================
+   ATHLETE PROFILE TABS + TROPHY CASE
+========================================================= */
+
+.mat-profile-tabs {
+  display: flex;
+  gap: 8px;
+
+  padding: 12px 20px;
+
+  border-top: 1px solid #e8eef1;
+  border-bottom: 1px solid #e2e9ed;
+
+  background: #f8fbfc;
+}
+
+.mat-profile-tabs button {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+
+  padding: 9px 14px;
+
+  border: 1px solid transparent;
+  border-radius: 9px;
+
+  background: transparent;
+  color: #718894;
+
+  font-size: 11px;
+  font-weight: 800;
+
+  cursor: pointer;
+}
+
+.mat-profile-tabs button:hover {
+  background: #eef7fb;
+  color: #168bc5;
+}
+
+.mat-profile-tabs button.active {
+  border-color: #cce4ef;
+
+  background: #ffffff;
+  color: #168bc5;
+
+  box-shadow:
+    0 2px 7px rgba(30, 79, 104, 0.08);
+}
+
+.mat-profile-tabs button.trophy.active {
+  border-color: #d7c48d;
+
+  background:
+    linear-gradient(
+      135deg,
+      #fffdf5,
+      #fff9e7
+    );
+
+  color: #98701a;
+}
+
+.mat-profile-tab-count {
+  min-width: 19px;
+  height: 19px;
+
+  display: inline-grid;
+  place-items: center;
+
+  padding: 0 5px;
+
+  border-radius: 999px;
+
+  background: #e3f2f9;
+  color: #168bc5;
+
+  font-size: 9px;
+  font-weight: 900;
+}
+
+.mat-profile-tabs button.trophy.active
+.mat-profile-tab-count {
+  background: #f3e3ae;
+  color: #806018;
+}
+
+
+/* =========================================================
+   TROPHY CASE MAIN
+========================================================= */
+
+.mat-trophy-case {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+
+  padding: 20px;
+
+  background:
+    linear-gradient(
+      180deg,
+      #152b3a 0%,
+      #1b3444 45%,
+      #122633 100%
+    );
+
+  color: #ffffff;
+}
+
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.mat-trophy-hero {
+  position: relative;
+
+  display: grid;
+  grid-template-columns:
+    minmax(0, 1fr)
+    minmax(180px, 250px);
+  gap: 20px;
+  align-items: center;
+
+  overflow: hidden;
+
+  padding: 24px;
+
+  border: 1px solid rgba(255, 220, 122, 0.25);
+  border-radius: 18px;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.08),
+      rgba(255, 215, 95, 0.04)
+    );
+
+  box-shadow:
+    0 12px 30px rgba(0, 0, 0, 0.18);
+}
+
+.mat-trophy-hero-glow {
+  position: absolute;
+  top: -75px;
+  right: -45px;
+
+  width: 220px;
+  height: 220px;
+
+  border-radius: 50%;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(255, 212, 88, 0.18),
+      transparent 68%
+    );
+
+  pointer-events: none;
+}
+
+.mat-trophy-hero-content {
+  position: relative;
+  z-index: 1;
+
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.mat-trophy-hero-icon {
+  width: 64px;
+  height: 64px;
+
+  display: grid;
+  place-items: center;
+
+  flex: 0 0 64px;
+
+  border: 1px solid rgba(255, 221, 126, 0.35);
+  border-radius: 18px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255, 222, 116, 0.2),
+      rgba(255, 255, 255, 0.05)
+    );
+
+  color: #ffd76b;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    0 8px 20px rgba(0, 0, 0, 0.18);
+}
+
+.mat-trophy-eyebrow {
+  display: block;
+
+  margin-bottom: 5px;
+
+  color: #d7ba69;
+
+  font-size: 9px;
+  font-weight: 900;
+
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+}
+
+.mat-trophy-hero h2 {
+  margin: 0;
+
+  color: #ffffff;
+  font-size: 24px;
+}
+
+.mat-trophy-hero p {
+  margin: 5px 0 0;
+
+  color: #b6c9d3;
+  font-size: 11px;
+}
+
+.mat-trophy-completion {
+  position: relative;
+  z-index: 1;
+
+  padding: 15px;
+
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 13px;
+
+  background: rgba(6, 24, 34, 0.36);
+}
+
+.mat-trophy-completion-number {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.mat-trophy-completion-number strong {
+  color: #ffd76b;
+  font-size: 25px;
+}
+
+.mat-trophy-completion-number span {
+  color: #c1d1d9;
+  font-size: 10px;
+}
+
+.mat-trophy-completion-meter {
+  height: 6px;
+
+  margin-top: 10px;
+
+  overflow: hidden;
+
+  border-radius: 999px;
+
+  background:
+    rgba(255, 255, 255, 0.11);
+}
+
+.mat-trophy-completion-fill {
+  height: 100%;
+
+  border-radius: inherit;
+
+  background:
+    linear-gradient(
+      90deg,
+      #d49b26,
+      #ffd96c
+    );
+}
+
+.mat-trophy-completion-percent {
+  display: block;
+
+  margin-top: 7px;
+
+  color: #8ea7b3;
+  font-size: 9px;
+}
+
+
+/* =========================================================
+   LATEST ACHIEVEMENT
+========================================================= */
+
+.mat-trophy-latest {
+  display: grid;
+  grid-template-columns:
+    48px
+    minmax(0, 1fr)
+    auto;
+  align-items: center;
+  gap: 13px;
+
+  padding: 14px 17px;
+
+  border: 1px solid rgba(255, 217, 108, 0.23);
+  border-radius: 13px;
+
+  background:
+    linear-gradient(
+      90deg,
+      rgba(223, 171, 48, 0.15),
+      rgba(255, 255, 255, 0.035)
+    );
+}
+
+.mat-trophy-latest-icon {
+  width: 45px;
+  height: 45px;
+
+  display: grid;
+  place-items: center;
+
+  border-radius: 12px;
+
+  background: rgba(255, 215, 107, 0.13);
+  color: #ffd76b;
+}
+
+.mat-trophy-latest-copy > span {
+  display: block;
+
+  color: #c7a84c;
+
+  font-size: 8px;
+  font-weight: 900;
+
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.mat-trophy-latest-copy h3 {
+  margin: 3px 0;
+
+  color: #ffffff;
+  font-size: 14px;
+}
+
+.mat-trophy-latest-copy p {
+  margin: 0;
+
+  color: #9fb4bf;
+  font-size: 10px;
+}
+
+.mat-trophy-latest-event {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 3px;
+
+  max-width: 220px;
+
+  text-align: right;
+}
+
+.mat-trophy-latest-event strong {
+  color: #e9f1f4;
+  font-size: 10px;
+}
+
+.mat-trophy-latest-event span {
+  color: #89a0ac;
+  font-size: 9px;
+}
+
+
+/* =========================================================
+   COLLECTION GROUPS
+========================================================= */
+
+.mat-trophy-collection {
+  padding: 18px;
+
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 16px;
+
+  background:
+    rgba(255, 255, 255, 0.035);
+}
+
+.mat-trophy-collection-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+
+  margin-bottom: 15px;
+}
+
+.mat-trophy-collection-title {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+
+.mat-trophy-collection-icon {
+  width: 39px;
+  height: 39px;
+
+  display: grid;
+  place-items: center;
+
+  flex: 0 0 39px;
+
+  border-radius: 11px;
+
+  background: rgba(255, 214, 103, 0.11);
+  color: #eac45c;
+}
+
+.mat-trophy-collection-title h3 {
+  margin: 0;
+
+  color: #ffffff;
+  font-size: 14px;
+}
+
+.mat-trophy-collection-title p {
+  margin: 3px 0 0;
+
+  color: #8fa6b2;
+  font-size: 9px;
+}
+
+.mat-trophy-collection-count {
+  padding: 5px 8px;
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+
+  background: rgba(255, 255, 255, 0.05);
+  color: #b8c8cf;
+
+  font-size: 9px;
+  font-weight: 800;
+}
+
+
+/* =========================================================
+   ACHIEVEMENT CARDS
+========================================================= */
+
+.mat-trophy-achievement-grid {
+  display: grid;
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.mat-trophy-achievement {
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  min-height: 205px;
+
+  padding: 17px 12px 14px;
+
+  overflow: hidden;
+
+  border-radius: 14px;
+
+  text-align: center;
+}
+
+.mat-trophy-achievement.earned {
+  border: 1px solid rgba(255, 216, 101, 0.24);
+
+  background:
+    radial-gradient(
+      circle at top,
+      rgba(255, 213, 89, 0.14),
+      transparent 47%
+    ),
+    rgba(9, 29, 40, 0.68);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.mat-trophy-achievement.locked {
+  border: 1px solid rgba(255, 255, 255, 0.055);
+
+  background:
+    rgba(6, 23, 32, 0.4);
+
+  opacity: 0.72;
+}
+
+.mat-trophy-achievement-medallion {
+  width: 64px;
+  height: 64px;
+
+  display: grid;
+  place-items: center;
+
+  margin-bottom: 12px;
+
+  border-radius: 50%;
+}
+
+.mat-trophy-achievement.earned
+.mat-trophy-achievement-medallion {
+  border: 1px solid rgba(255, 221, 122, 0.35);
+
+  background:
+    linear-gradient(
+      145deg,
+      #8b681e,
+      #dbaf46
+    );
+
+  color: #fff4bf;
+
+  box-shadow:
+    0 0 0 6px rgba(255, 213, 94, 0.05),
+    0 8px 18px rgba(0, 0, 0, 0.24);
+}
+
+.mat-trophy-achievement.locked
+.mat-trophy-achievement-medallion {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+
+  background:
+    rgba(255, 255, 255, 0.045);
+
+  color: #617986;
+}
+
+.mat-trophy-achievement-copy {
+  width: 100%;
+}
+
+.mat-trophy-achievement-kicker {
+  display: block;
+
+  color: #9aacb5;
+
+  font-size: 8px;
+  font-weight: 800;
+
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.mat-trophy-achievement.earned
+.mat-trophy-achievement-kicker {
+  color: #d2b561;
+}
+
+.mat-trophy-achievement h4 {
+  margin: 4px 0 9px;
+
+  color: #f5f8f9;
+  font-size: 12px;
+}
+
+.mat-trophy-achievement.locked h4 {
+  color: #80949e;
+}
+
+.mat-trophy-earned-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+
+  padding: 4px 7px;
+
+  border-radius: 999px;
+
+  background: rgba(255, 214, 98, 0.1);
+  color: #f1cd65;
+
+  font-size: 8px;
+  font-weight: 900;
+
+  text-transform: uppercase;
+}
+
+.mat-trophy-earned-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+
+  margin-top: 9px;
+}
+
+.mat-trophy-earned-detail span {
+  color: #829ba7;
+  font-size: 8px;
+}
+
+.mat-trophy-earned-detail strong {
+  color: #becdd3;
+  font-size: 9px;
+}
+
+.mat-trophy-locked-label {
+  color: #657b86;
+
+  font-size: 9px;
+  font-weight: 800;
+
+  text-transform: uppercase;
+}
+
+.mat-trophy-locked-progress {
+  margin-top: 13px;
+}
+
+.mat-trophy-locked-progress > span {
+  color: #748a95;
+  font-size: 9px;
+  font-weight: 800;
+}
+
+.mat-trophy-mini-meter {
+  height: 5px;
+
+  margin-top: 6px;
+
+  overflow: hidden;
+
+  border-radius: 999px;
+
+  background:
+    rgba(255, 255, 255, 0.07);
+}
+
+.mat-trophy-mini-meter-fill {
+  height: 100%;
+
+  border-radius: inherit;
+
+  background: #647c87;
+}
+
+
+/* =========================================================
+   MOBILE TROPHY CASE
+========================================================= */
+
+@media (max-width: 850px) {
+  .mat-trophy-hero {
+    grid-template-columns: 1fr;
+  }
+
+  .mat-trophy-achievement-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+  .mat-trophy-latest {
+    grid-template-columns:
+      45px minmax(0, 1fr);
+  }
+
+  .mat-trophy-latest-event {
+    grid-column: 2;
+
+    align-items: flex-start;
+
+    text-align: left;
+  }
+}
+
+@media (max-width: 560px) {
+  .mat-profile-tabs {
+    padding: 10px 12px;
+  }
+
+  .mat-profile-tabs button {
+    flex: 1;
+    justify-content: center;
+
+    padding: 9px 8px;
+  }
+
+  .mat-trophy-case {
+    padding: 12px;
+  }
+
+  .mat-trophy-hero {
+    padding: 18px;
+  }
+
+  .mat-trophy-hero-content {
+    align-items: flex-start;
+  }
+
+  .mat-trophy-hero-icon {
+    width: 52px;
+    height: 52px;
+
+    flex-basis: 52px;
+  }
+
+  .mat-trophy-achievement-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .mat-trophy-achievement {
+    min-height: 190px;
+
+    padding: 14px 9px;
+  }
+
+  .mat-trophy-achievement-medallion {
+    width: 54px;
+    height: 54px;
+  }
+
+  .mat-trophy-collection {
+    padding: 13px;
+  }
+
+  .mat-trophy-collection-heading {
+    align-items: flex-start;
+  }
+}
+
+/* =========================================================
+
+/* Dark theme consolidated from athlete-theme.css. */
+/* Profile modal structure */
+:root[data-theme='dark'] .mat-profile-modal {
+  color: #e7f1f7 !important;
+  border-color: #46677a !important;
+  background: #0d2432 !important;
+  scrollbar-color: #55788d #0d2432;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, .65) !important;
+}
+:root[data-theme='dark'] .mat-profile-header {
+  color: #e7f1f7 !important;
+  border-bottom-color: #3f6074 !important;
+  background: linear-gradient(135deg, #173444, #102938) !important;
+}
+:root[data-theme='dark'] .mat-profile-header h2,
+:root[data-theme='dark'] .mat-profile-section-heading h3 { color: #fff !important; }
+:root[data-theme='dark'] .mat-profile-header p,
+:root[data-theme='dark'] .mat-profile-section-heading p { color: #b8cbd8 !important; }
+:root[data-theme='dark'] .mat-profile-avatar,
+:root[data-theme='dark'] .mat-profile-photo {
+  color: #70c9fa !important;
+  border-color: #5d849a !important;
+  background: #193f54 !important;
+}
+:root[data-theme='dark'] .mat-profile-photo-controls,
+:root[data-theme='dark'] .mat-profile-tabs,
+:root[data-theme='dark'] .mat-profile-body {
+  color: #e7f1f7 !important;
+  border-color: #3f6074 !important;
+  background: #102938 !important;
+}
+:root[data-theme='dark'] .mat-profile-photo-controls strong { color: #fff !important; }
+:root[data-theme='dark'] .mat-profile-photo-controls span,
+:root[data-theme='dark'] .mat-profile-image-message { color: #afc5d3 !important; }
+:root[data-theme='dark'] .mat-profile-tabs button {
+  color: #b8cbd8 !important;
+  border-color: transparent !important;
+  background: transparent !important;
+}
+:root[data-theme='dark'] .mat-profile-tabs button:hover {
+  color: #fff !important;
+  border-color: #4f7185 !important;
+  background: #193f54 !important;
+}
+:root[data-theme='dark'] .mat-profile-tabs button.active {
+  color: #fff !important;
+  border-color: #35a8e6 !important;
+  background: #087bc7 !important;
+}
+:root[data-theme='dark'] .mat-profile-tabs button.trophy.active {
+  color: #fff4c2 !important;
+  border-color: #8b7437 !important;
+  background: #5a481b !important;
+}
+:root[data-theme='dark'] .mat-profile-tab-count { color: #dff3ff !important; background: #23546e !important; }
+:root[data-theme='dark'] .mat-profile-tabs button.active .mat-profile-tab-count { color: #087bc7 !important; background: #fff !important; }
+:root[data-theme='dark'] .mat-profile-section {
+  color: #e7f1f7 !important;
+  border-color: #46677a !important;
+  background: #132938 !important;
+  box-shadow: none !important;
+}
+:root[data-theme='dark'] .mat-profile-section-heading {
+  border-color: #3f6074 !important;
+  background: #173444 !important;
+}
+:root[data-theme='dark'] .mat-profile-info-grid,
+:root[data-theme='dark'] .mat-profile-money-summary,
+:root[data-theme='dark'] .mat-profile-disciplines,
+:root[data-theme='dark'] .mat-profile-notes { background: #132938 !important; }
+:root[data-theme='dark'] .mat-profile-info-grid > div,
+:root[data-theme='dark'] .mat-profile-money-summary > div {
+  border-color: #3f6074 !important;
+  background: #132938 !important;
+}
+:root[data-theme='dark'] .mat-profile-info-grid span,
+:root[data-theme='dark'] .mat-profile-money-summary span,
+:root[data-theme='dark'] .mat-profile-disciplines > span,
+:root[data-theme='dark'] .mat-profile-notes > span { color: #9fb7c6 !important; }
+:root[data-theme='dark'] .mat-profile-info-grid strong,
+:root[data-theme='dark'] .mat-profile-money-summary strong { color: #fff !important; }
+
+/* Career summary */
+:root[data-theme='dark'] .mat-career-stat,
+:root[data-theme='dark'] .mat-career-medal,
+:root[data-theme='dark'] .mat-career-discipline-card {
+  color: #e7f1f7 !important;
+  border-color: #4b6d81 !important;
+  background: #193444 !important;
+}
+:root[data-theme='dark'] .mat-career-stat span,
+:root[data-theme='dark'] .mat-career-medal span,
+:root[data-theme='dark'] .mat-career-discipline-stats span,
+:root[data-theme='dark'] .mat-career-best-finish span { color: #9fb7c6 !important; }
+:root[data-theme='dark'] .mat-career-stat strong,
+:root[data-theme='dark'] .mat-career-medal strong,
+:root[data-theme='dark'] .mat-career-discipline-heading > strong,
+:root[data-theme='dark'] .mat-career-discipline-stats strong,
+:root[data-theme='dark'] .mat-career-best-finish strong { color: #fff !important; }
+:root[data-theme='dark'] .mat-career-medal.gold { color: #f2c94c !important; }
+:root[data-theme='dark'] .mat-career-medal.silver { color: #c8d4dc !important; }
+:root[data-theme='dark'] .mat-career-medal.bronze { color: #dc9867 !important; }
+:root[data-theme='dark'] .mat-career-discipline-icon { color: #70c9fa !important; background: #23546e !important; }
+:root[data-theme='dark'] .mat-career-discipline-stats > div { border: 1px solid #3f6074 !important; background: #102938 !important; }
+:root[data-theme='dark'] .mat-career-best-finish { border-color: #4b6d81 !important; }
+
+/* Milestones */
+:root[data-theme='dark'] .mat-discipline-milestone,
+:root[data-theme='dark'] .mat-progress-track-card {
+  color: #e7f1f7 !important;
+  border-color: #4b6d81 !important;
+  background: #193444 !important;
+}
+:root[data-theme='dark'] .mat-discipline-milestone.earned,
+:root[data-theme='dark'] .mat-progress-achieved { border-color: #39775c !important; background: #143d30 !important; }
+:root[data-theme='dark'] .mat-discipline-milestone-icon,
+:root[data-theme='dark'] .mat-progress-track-icon { color: #70c9fa !important; background: #23546e !important; }
+:root[data-theme='dark'] .mat-discipline-milestone-title,
+:root[data-theme='dark'] .mat-progress-track-heading { color: #fff !important; }
+:root[data-theme='dark'] .mat-discipline-milestone-detail,
+:root[data-theme='dark'] .mat-progress-meter-label,
+:root[data-theme='dark'] .mat-progress-next-goal { color: #afc5d3 !important; }
+:root[data-theme='dark'] .mat-progress-meter { background: #294959 !important; }
+
+/* Results timeline */
+:root[data-theme='dark'] .mat-results-timeline-dot { color: #70c9fa !important; border-color: #132938 !important; background: #23546e !important; box-shadow: 0 0 0 1px #5d849a !important; }
+:root[data-theme='dark'] .mat-results-timeline-line { background: #46677a !important; }
+:root[data-theme='dark'] .mat-results-timeline-card,
+:root[data-theme='dark'] .mat-results-event,
+:root[data-theme='dark'] .mat-results-event-main {
+  color: #e7f1f7 !important;
+  border-color: #4b6d81 !important;
+  background: #193444 !important;
+}
+:root[data-theme='dark'] .mat-results-timeline-header { border-color: #3f6074 !important; }
+:root[data-theme='dark'] .mat-results-timeline-title h4,
+:root[data-theme='dark'] .mat-results-event strong,
+:root[data-theme='dark'] .mat-results-placement,
+:root[data-theme='dark'] .mat-results-recorded { color: #fff !important; }
+:root[data-theme='dark'] .mat-results-timeline-date { color: #70c9fa !important; }
+:root[data-theme='dark'] .mat-results-timeline-location,
+:root[data-theme='dark'] .mat-results-tournament-note,
+:root[data-theme='dark'] .mat-results-event-notes,
+:root[data-theme='dark'] .mat-results-not-recorded { color: #afc5d3 !important; }
+:root[data-theme='dark'] .mat-results-timeline-status { color: #d7e4ec !important; background: #294959 !important; }
+:root[data-theme='dark'] .mat-results-timeline-status.gold { color: #ffe79a !important; background: #5a481b !important; }
+:root[data-theme='dark'] .mat-results-timeline-status.silver { color: #e1eaf0 !important; background: #465966 !important; }
+:root[data-theme='dark'] .mat-results-timeline-status.bronze { color: #ffd0ae !important; background: #633e2b !important; }
+
+/* Trophy area already starts dark, normalize nested contrast. */
+:root[data-theme='dark'] .mat-trophy-case { color: #e7f1f7 !important; background: linear-gradient(180deg, #102938, #132938 48%, #0d2432) !important; }
+:root[data-theme='dark'] .mat-trophy-collection,
+:root[data-theme='dark'] .mat-trophy-achievement { border-color: #46677a !important; background: #193444 !important; }
+:root[data-theme='dark'] .mat-trophy-collection-title,
+:root[data-theme='dark'] .mat-trophy-achievement-copy strong { color: #fff !important; }
+
+/* Career summary and tournament history contrast corrections */
+:root[data-theme='dark'] .mat-career-stat {
+  color: #e7f1f7 !important;
+  border-color: #4b6d81 !important;
+  background: #193444 !important;
+}
+:root[data-theme='dark'] .mat-career-stat span { color: #afc5d3 !important; }
+:root[data-theme='dark'] .mat-career-stat strong { color: #ffffff !important; }
+
+:root[data-theme='dark'] .mat-career-medal {
+  border-color: #4b6d81 !important;
+  background: #193444 !important;
+}
+:root[data-theme='dark'] .mat-career-medal strong { color: #ffffff !important; }
+:root[data-theme='dark'] .mat-career-medal span { color: #afc5d3 !important; }
+:root[data-theme='dark'] .mat-career-medal.gold { color: #f2c94c !important; }
+:root[data-theme='dark'] .mat-career-medal.silver { color: #c8d4dc !important; }
+:root[data-theme='dark'] .mat-career-medal.bronze { color: #dc9867 !important; }
+
+:root[data-theme='dark'] .mat-career-discipline-card {
+  border-color: #4b6d81 !important;
+  background: #193444 !important;
+}
+:root[data-theme='dark'] .mat-career-discipline-heading > strong { color: #ffffff !important; }
+:root[data-theme='dark'] .mat-career-discipline-icon {
+  color: #70c9fa !important;
+  background: #23546e !important;
+}
+:root[data-theme='dark'] .mat-career-discipline-stats > div {
+  border: 1px solid #3f6074 !important;
+  background: #102938 !important;
+}
+:root[data-theme='dark'] .mat-career-discipline-stats span,
+:root[data-theme='dark'] .mat-career-best-finish span { color: #9fb7c6 !important; }
+:root[data-theme='dark'] .mat-career-discipline-stats strong,
+:root[data-theme='dark'] .mat-career-best-finish strong { color: #ffffff !important; }
+:root[data-theme='dark'] .mat-career-best-finish { border-top-color: #4b6d81 !important; }
+
+:root[data-theme='dark'] .mat-discipline-milestone {
+  border-color: #4b6d81 !important;
+  background: #193444 !important;
+}
+:root[data-theme='dark'] .mat-discipline-milestone.earned {
+  border-color: #39775c !important;
+  background: #143d30 !important;
+}
+:root[data-theme='dark'] .mat-discipline-milestone.locked {
+  color: #afc5d3 !important;
+  background: #172f3e !important;
+}
+:root[data-theme='dark'] .mat-discipline-milestone-icon {
+  color: #70c9fa !important;
+  background: #23546e !important;
+}
+:root[data-theme='dark'] .mat-discipline-milestone.earned .mat-discipline-milestone-icon {
+  color: #9eebbd !important;
+  background: #205e46 !important;
+}
+
+:root[data-theme='dark'] .mat-results-timeline-dot {
+  color: #70c9fa !important;
+  border-color: #132938 !important;
+  background: #23546e !important;
+  box-shadow: 0 0 0 1px #5d849a !important;
+}
+:root[data-theme='dark'] .mat-results-timeline-line { background: #46677a !important; }
+:root[data-theme='dark'] .mat-results-timeline-card {
+  color: #e7f1f7 !important;
+  border-color: #4b6d81 !important;
+  background: #193444 !important;
+}
+:root[data-theme='dark'] .mat-results-timeline-header { border-bottom-color: #3f6074 !important; }
+:root[data-theme='dark'] .mat-results-timeline-title h4 { color: #ffffff !important; }
+:root[data-theme='dark'] .mat-results-timeline-date { color: #70c9fa !important; }
+:root[data-theme='dark'] .mat-results-timeline-location,
+:root[data-theme='dark'] .mat-results-tournament-note,
+:root[data-theme='dark'] .mat-results-event-notes { color: #afc5d3 !important; }
+:root[data-theme='dark'] .mat-results-timeline-status {
+  color: #d7e4ec !important;
+  background: #294959 !important;
+}
+:root[data-theme='dark'] .mat-results-timeline-status.gold {
+  color: #ffe79a !important;
+  background: #5a481b !important;
+}
+:root[data-theme='dark'] .mat-results-timeline-status.silver {
+  color: #e1eaf0 !important;
+  background: #465966 !important;
+}
+:root[data-theme='dark'] .mat-results-timeline-status.bronze {
+  color: #ffd0ae !important;
+  background: #633e2b !important;
+}
+:root[data-theme='dark'] .mat-results-event,
+:root[data-theme='dark'] .mat-results-event-main {
+  border-color: #3f6074 !important;
+  background: #102938 !important;
+}
+:root[data-theme='dark'] .mat-results-event strong,
+:root[data-theme='dark'] .mat-results-placement,
+:root[data-theme='dark'] .mat-results-recorded { color: #ffffff !important; }
+:root[data-theme='dark'] .mat-results-not-recorded { color: #afc5d3 !important; }
+
+.mat-profile-modal .mat-history-close { width:38px;height:38px;border:0;border-radius:10px;background:#fff;color:#5f7488;display:grid;place-items:center;cursor:pointer;box-shadow:0 4px 12px rgba(20,47,78,.08); }
+.mat-profile-modal .mat-history-close:hover { background:#eef6fb;color:#087dce; }
+:root[data-theme='dark'] .mat-profile-modal .mat-history-close { color:#dceaf3 !important;background:#193f54 !important; }
+:root[data-theme='dark'] .mat-profile-modal .mat-history-close:hover { color:#fff !important;background:#23546e !important; }

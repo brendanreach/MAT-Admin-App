@@ -1,3 +1,4 @@
+import './AthleteTournamentsPage.css'
 import {
   CalendarDays,
   CheckCircle2,

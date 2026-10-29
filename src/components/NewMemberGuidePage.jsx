@@ -1,3 +1,4 @@
+import './NewMemberGuidePage.css'
 import { useMemo, useState } from 'react'
 import {
   ArrowLeft,

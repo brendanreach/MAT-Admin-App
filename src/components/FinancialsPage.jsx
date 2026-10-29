@@ -31,6 +31,7 @@ import {
 
 import { supabase } from '../lib/supabase.js'
 
+import './FinancialsPage.css'
 const INCOME_CATEGORIES = [
   'Tuition',
   'Private Lesson',

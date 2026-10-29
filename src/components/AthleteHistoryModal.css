@@ -1,0 +1,286 @@
+/* Extracted Athlete History modal styles. */
+/* =========================================================
+   ATHLETE HISTORY MODAL
+========================================================= */
+
+.mat-history-modal {
+  width: min(920px, 94vw);
+  max-height: 88vh;
+  overflow-y: auto;
+  background: #ffffff;
+  border-radius: 18px;
+  box-shadow: 0 22px 60px rgba(20, 47, 78, 0.22);
+  border: 1px solid #dce6ee;
+}
+
+.mat-history-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+  padding: 26px 28px 22px;
+  border-bottom: 1px solid #e3ebf1;
+  background: linear-gradient(135deg, #f9fcff, #eef7fd);
+}
+
+.mat-history-header h2 {
+  margin: 5px 0 6px;
+  color: #10294f;
+  font-size: 28px;
+}
+
+.mat-history-header p {
+  margin: 0;
+  color: #6f8194;
+  font-size: 13px;
+}
+
+.mat-history-close {
+  width: 38px;
+  height: 38px;
+  border: 0;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #5f7488;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(20, 47, 78, 0.08);
+}
+
+.mat-history-close:hover {
+  background: #eef6fb;
+  color: #087dce;
+}
+
+.mat-history-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border-bottom: 1px solid #e3ebf1;
+}
+
+.mat-history-stats > div {
+  min-height: 105px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  border-right: 1px solid #e3ebf1;
+  color: #1686ce;
+}
+
+.mat-history-stats > div:last-child {
+  border-right: 0;
+}
+
+.mat-history-stats strong {
+  font-size: 25px;
+  color: #10294f;
+}
+
+.mat-history-stats span {
+  font-size: 11px;
+  color: #7b8b9d;
+}
+
+.mat-history-stats .gold {
+  color: #d09a13;
+}
+
+.mat-history-stats .silver {
+  color: #8f9dab;
+}
+
+.mat-history-stats .bronze {
+  color: #aa6b3d;
+}
+/* =========================================================
+   ATHLETE HISTORY CONTENT
+========================================================= */
+
+.mat-history-body {
+  padding: 24px 28px 28px;
+}
+
+.mat-history-empty {
+  min-height: 220px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 8px;
+  color: #7a8da0;
+}
+
+.mat-history-empty strong {
+  color: #183a5d;
+  font-size: 16px;
+}
+
+.mat-history-empty span {
+  font-size: 12px;
+}
+
+.mat-history-tournament {
+  border: 1px solid #dce6ee;
+  border-radius: 14px;
+  background: #fbfdff;
+  overflow: hidden;
+  margin-bottom: 18px;
+}
+
+.mat-history-tournament:last-child {
+  margin-bottom: 0;
+}
+
+.mat-history-tournament-header {
+  padding: 16px 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  border-bottom: 1px solid #e3ebf1;
+  background: linear-gradient(135deg, #f8fcff, #f0f8fd);
+}
+
+.mat-history-tournament-header > div:first-child {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.mat-history-tournament-header strong {
+  color: #153755;
+  font-size: 15px;
+}
+
+.mat-history-tournament-header span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #75879a;
+  font-size: 11px;
+}
+
+.mat-history-result-count {
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: #e8f4fb;
+  color: #0878c7;
+  font-size: 11px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.mat-history-events {
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.mat-history-event {
+  padding: 14px 15px;
+  border: 1px solid #e1e8ee;
+  border-radius: 10px;
+  background: #ffffff;
+}
+
+.mat-history-event-name {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.mat-history-event-name strong {
+  color: #183a5d;
+  font-size: 13px;
+}
+
+.mat-history-event-name span {
+  color: #8795a4;
+  font-size: 10px;
+}
+
+.mat-history-event-result {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.mat-history-placement {
+  display: inline-flex;
+  align-items: center;
+  min-height: 29px;
+  padding: 0 10px;
+  border-radius: 999px;
+  background: #edf6fc;
+  color: #0c76bf;
+  border: 1px solid #cee5f3;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.mat-history-notes {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid #edf1f4;
+  color: #6d7f92;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.mat-history-no-events {
+  padding: 18px;
+  color: #7d8d9d;
+  font-size: 12px;
+}
+/* =========================================================
+   ATHLETE HISTORY RESPONSIVE
+========================================================= */
+
+@media (max-width: 700px) {
+  .mat-history-modal {
+    width: 95vw;
+    max-height: 92vh;
+    border-radius: 14px;
+  }
+
+  .mat-history-header {
+    padding: 20px;
+  }
+
+  .mat-history-header h2 {
+    font-size: 22px;
+  }
+
+  .mat-history-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .mat-history-stats > div:nth-child(2) {
+    border-right: 0;
+  }
+
+  .mat-history-stats > div:nth-child(-n + 2) {
+    border-bottom: 1px solid #e3ebf1;
+  }
+
+  .mat-history-body {
+    padding: 18px;
+  }
+
+  .mat-history-tournament-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .mat-history-result-count {
+    align-self: flex-start;
+  }
+}

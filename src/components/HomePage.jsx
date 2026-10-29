@@ -1,3 +1,4 @@
+import './HomePage.css'
 import {
   AlertTriangle,
   ArrowRight,

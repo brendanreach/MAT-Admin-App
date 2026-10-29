@@ -1,0 +1,447 @@
+/* Athlete Tournaments: extracted from global styles. */
+/* =========================================================
+   ATHLETE VIEW - MOBILE
+========================================================= */
+
+@media (max-width: 700px) {
+
+  .mat-athlete-welcome {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .mat-athlete-summary-grid,
+  .mat-athlete-home-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .mat-athlete-welcome-badge {
+    flex-direction: row;
+  }
+
+  .mat-account-name-wrap {
+    display: none;
+  }
+
+  .mat-account-dropdown {
+    right: 0;
+    width: 230px;
+  }
+}
+   ATHLETE READ-ONLY PAGES
+========================================================= */
+
+.mat-athlete-page {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.mat-athlete-page-hero {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+
+  padding: 24px;
+
+  border: 1px solid #dfeaf0;
+  border-radius: 16px;
+
+  background: linear-gradient(
+    135deg,
+    #ffffff,
+    #f1f9fd
+  );
+}
+
+.mat-athlete-page-hero h1 {
+  margin: 2px 0 4px;
+
+  color: #244e68;
+}
+
+.mat-athlete-page-hero p {
+  margin: 0;
+
+  color: #748995;
+}
+
+.mat-athlete-page-icon {
+  width: 48px;
+  height: 48px;
+
+  flex: 0 0 48px;
+
+  display: grid;
+  place-items: center;
+
+  border-radius: 13px;
+
+  background: #dff3fc;
+  color: #168fc8;
+}
+
+.mat-athlete-page-section {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.mat-athlete-page-section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.mat-athlete-page-section-heading h2 {
+  margin: 0;
+
+  color: #2c5269;
+  font-size: 18px;
+}
+
+.mat-athlete-page-section-heading p {
+  margin: 3px 0 0;
+
+  color: #82939d;
+  font-size: 12px;
+}
+
+.mat-athlete-page-section-heading > span {
+  min-width: 34px;
+  height: 34px;
+
+  display: grid;
+  place-items: center;
+
+  border-radius: 10px;
+
+  background: #e9f6fc;
+  color: #168cc5;
+
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.mat-athlete-empty-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  padding: 38px 20px;
+
+  border: 1px dashed #cfdde5;
+  border-radius: 14px;
+
+  background: #fbfdfe;
+
+  text-align: center;
+  color: #81929d;
+}
+
+.mat-athlete-empty-card h3 {
+  margin: 12px 0 4px;
+
+  color: #365d74;
+}
+
+.mat-athlete-empty-card p {
+  margin: 0;
+}
+
+
+/* Tournaments */
+
+.mat-athlete-tournament-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.mat-athlete-tournament-card {
+  padding: 20px;
+
+  border: 1px solid #dde7ec;
+  border-radius: 15px;
+
+  background: #ffffff;
+}
+
+.mat-athlete-tournament-card.registered {
+  border-color: #bcdced;
+}
+
+.mat-athlete-tournament-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.mat-athlete-tournament-header h2 {
+  margin: 6px 0 0;
+
+  color: #294f67;
+  font-size: 18px;
+}
+
+.mat-athlete-tournament-icon {
+  width: 42px;
+  height: 42px;
+
+  display: grid;
+  place-items: center;
+
+  border-radius: 11px;
+
+  background: #e9f6fc;
+  color: #148bc5;
+}
+
+.mat-athlete-registration-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+
+  padding: 5px 8px;
+
+  border-radius: 999px;
+
+  background: #f1f4f6;
+  color: #81909a;
+
+  font-size: 9px;
+  font-weight: 800;
+
+  text-transform: uppercase;
+}
+
+.mat-athlete-registration-badge.registered {
+  background: #e9f8ef;
+  color: #3b8d5d;
+}
+
+.mat-athlete-tournament-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+
+  margin-top: 15px;
+  padding-bottom: 15px;
+
+  border-bottom: 1px solid #e7edf0;
+}
+
+.mat-athlete-tournament-meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  color: #728893;
+  font-size: 11px;
+}
+
+.mat-athlete-tournament-meta .deadline-passed {
+  color: #a48e76;
+}
+
+.mat-athlete-tournament-entry {
+  margin-top: 16px;
+}
+
+.mat-athlete-tournament-entry-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+
+  margin-bottom: 10px;
+}
+
+.mat-athlete-tournament-entry-heading > div {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+
+  color: #238f61;
+}
+
+.mat-athlete-tournament-entry-heading strong {
+  color: #315a6f;
+}
+
+.mat-athlete-tournament-entry-heading > span {
+  color: #80919a;
+  font-size: 10px;
+}
+
+.mat-athlete-tournament-events {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mat-athlete-tournament-event {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+
+  padding: 10px 12px;
+
+  border-radius: 9px;
+
+  background: #f7fafc;
+}
+
+.mat-athlete-tournament-event > div {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.mat-athlete-tournament-event strong {
+  color: #436377;
+  font-size: 11px;
+}
+
+.mat-athlete-tournament-event > div > span {
+  color: #8a9aa3;
+  font-size: 9px;
+}
+
+.mat-athlete-result-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+
+  padding: 5px 8px;
+
+  border-radius: 999px;
+
+  background: #eaf1f5;
+  color: #627a89;
+
+  font-size: 9px;
+  font-weight: 800;
+}
+
+.mat-athlete-result-badge.gold {
+  background: #fff7d9;
+  color: #a87f09;
+}
+
+.mat-athlete-result-badge.silver {
+  background: #edf2f4;
+  color: #697a84;
+}
+
+.mat-athlete-result-badge.bronze {
+  background: #f7eee6;
+  color: #94623e;
+}
+
+.mat-athlete-tournament-note {
+  margin-top: 12px;
+  padding: 11px 12px;
+
+  border-radius: 9px;
+
+  background: #f6fafc;
+}
+
+.mat-athlete-tournament-note strong {
+  color: #536f7f;
+  font-size: 10px;
+}
+
+.mat-athlete-tournament-note p {
+  margin: 5px 0 0;
+
+  color: #728692;
+  font-size: 11px;
+}
+
+
+/* Mobile */
+
+@media (max-width: 700px) {
+
+  .mat-athlete-page-hero {
+    align-items: flex-start;
+    padding: 18px;
+  }
+
+  .mat-athlete-announcement-top {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .mat-athlete-calendar-card {
+    gap: 11px;
+    padding: 13px;
+  }
+
+  .mat-athlete-calendar-date-box {
+    width: 48px;
+    min-width: 48px;
+  }
+
+  .mat-athlete-tournament-card {
+    padding: 15px;
+  }
+
+  .mat-athlete-tournament-meta {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .mat-athlete-tournament-entry-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .mat-athlete-tournament-event {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+
+/* Athlete tournaments */
+:root[data-theme='dark'] .mat-athlete-tournament-card,
+:root[data-theme='dark'] .mat-athlete-tournament-entry,
+:root[data-theme='dark'] .mat-athlete-tournament-event,
+:root[data-theme='dark'] .mat-athlete-empty-card,
+:root[data-theme='dark'] .mat-athlete-link-missing {
+  color: #e7f1f7 !important;
+  border-color: #46677a !important;
+  background: #132938 !important;
+  box-shadow: none !important;
+}
+:root[data-theme='dark'] .mat-athlete-tournament-card h3,
+:root[data-theme='dark'] .mat-athlete-tournament-entry h3,
+:root[data-theme='dark'] .mat-athlete-tournament-header h3,
+:root[data-theme='dark'] .mat-athlete-tournament-event strong,
+:root[data-theme='dark'] .mat-athlete-link-missing h2 {
+  color: #fff !important;
+}
+:root[data-theme='dark'] .mat-athlete-tournament-meta,
+:root[data-theme='dark'] .mat-athlete-tournament-note,
+:root[data-theme='dark'] .mat-athlete-link-missing p {
+  color: #b8cbd8 !important;
+}
+:root[data-theme='dark'] .mat-athlete-tournament-label { color: #70c9fa !important; }
+:root[data-theme='dark'] .mat-athlete-registration-badge {
+  color: #d7e4ec !important;
+  background: #294959 !important;
+}
+:root[data-theme='dark'] .mat-athlete-registration-badge.registered {
+  color: #bff3d2 !important;
+  background: #1b503c !important;
+}
+:root[data-theme='dark'] .mat-athlete-result-badge {
+  color: #dff3ff !important;
+  background: #23546e !important;
+}
+

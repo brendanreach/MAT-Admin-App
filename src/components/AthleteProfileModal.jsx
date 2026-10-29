@@ -1,3 +1,4 @@
+import './AthleteProfileModal.css'
 import {
   useEffect,
   useMemo,

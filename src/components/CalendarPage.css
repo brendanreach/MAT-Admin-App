@@ -1,0 +1,748 @@
+/* Admin Calendar: extracted from global styles. */
+/* =========================================================
+   ROSTER ATHLETE PROFILE LINK
+========================================================= */
+
+.mat-athlete-profile-link {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #123b61;
+  font-size: 14px;
+  font-weight: 800;
+  cursor: pointer;
+  text-align: left;
+}
+
+.mat-athlete-profile-link:hover {
+  color: #0782d3;
+  text-decoration: underline;
+}
+
+.mat-athlete-profile-hint {
+  margin-top: 3px;
+  color: #8a99a8;
+  font-size: 10px;
+}
+   CALENDAR LAYOUT
+========================================================= */
+
+.mat-calendar-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 20px;
+  align-items: start;
+}
+
+.mat-calendar-panel {
+  background: #ffffff;
+  border: 1px solid #dce6ee;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 6px 20px rgba(20, 47, 78, 0.06);
+}
+
+.mat-calendar-toolbar {
+  padding: 20px 22px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  border-bottom: 1px solid #e3ebf1;
+  background: linear-gradient(135deg, #f9fcff, #f0f8fd);
+}
+
+.mat-calendar-toolbar h2 {
+  margin: 0;
+  color: #153755;
+  font-size: 22px;
+}
+
+.mat-calendar-navigation {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.mat-calendar-navigation .mat-secondary-button {
+  min-width: 38px;
+  min-height: 38px;
+  padding: 0 11px;
+}
+
+.mat-calendar-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  background: #f6f9fb;
+  border-bottom: 1px solid #dce6ee;
+}
+
+.mat-calendar-weekdays > div {
+  padding: 11px 6px;
+  text-align: center;
+  color: #708396;
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.mat-calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+}
+
+.mat-calendar-day {
+  min-height: 125px;
+  padding: 9px;
+  border: 0;
+  border-right: 1px solid #e5ecf1;
+  border-bottom: 1px solid #e5ecf1;
+  background: #ffffff;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.mat-calendar-day:nth-child(7n) {
+  border-right: 0;
+}
+
+.mat-calendar-day:hover {
+  background: #f8fcff;
+}
+
+.mat-calendar-day.empty {
+  background: #f8fafb;
+  cursor: default;
+}
+
+.mat-calendar-day.selected {
+  background: #f1f9fe;
+  box-shadow: inset 0 0 0 2px #73bde9;
+}
+
+.mat-calendar-day.today {
+  background: #f7fbff;
+}
+
+.mat-calendar-day-number {
+  width: 27px;
+  height: 27px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 7px;
+  border-radius: 999px;
+  color: #51677b;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.mat-calendar-day.today .mat-calendar-day-number {
+  background: #0b84d1;
+  color: #ffffff;
+}
+
+.mat-calendar-day-events {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.mat-calendar-more {
+  margin-top: 2px;
+  color: #778a9c;
+  font-size: 9px;
+  font-weight: 700;
+}
+/* =========================================================
+   CALENDAR EVENT COLORS
+========================================================= */
+
+.mat-calendar-chip {
+  width: 100%;
+  padding: 5px 7px;
+  overflow: hidden;
+  border-radius: 6px;
+  border-left: 3px solid currentColor;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 9px;
+  font-weight: 800;
+}
+
+/* Training - MAT Blue */
+
+.mat-calendar-chip.training,
+.mat-calendar-event-type.training {
+  background: #e8f5fd;
+  color: #087bc7;
+}
+
+/* Tournament - Gold */
+
+.mat-calendar-chip.tournament,
+.mat-calendar-event-type.tournament {
+  background: #fff6d9;
+  color: #9a7100;
+}
+
+/* Testing - Purple */
+
+.mat-calendar-chip.testing,
+.mat-calendar-event-type.testing {
+  background: #f0eafd;
+  color: #7048b6;
+}
+
+/* Seminar - Teal */
+
+.mat-calendar-chip.seminar,
+.mat-calendar-event-type.seminar {
+  background: #e4f8f4;
+  color: #197b70;
+}
+
+/* Team Event - Green */
+
+.mat-calendar-chip.team-event,
+.mat-calendar-event-type.team-event {
+  background: #e9f8ed;
+  color: #337c4c;
+}
+
+/* Deadline - Orange */
+
+.mat-calendar-chip.deadline,
+.mat-calendar-event-type.deadline {
+  background: #fff0df;
+  color: #b45c10;
+}
+
+/* Closed / Holiday - Red */
+
+.mat-calendar-chip.closed,
+.mat-calendar-event-type.closed {
+  background: #fdeaea;
+  color: #b24646;
+}
+
+/* Other - Gray */
+
+.mat-calendar-chip.other,
+.mat-calendar-event-type.other {
+  background: #edf1f4;
+  color: #617383;
+}
+
+.mat-calendar-event-type {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  padding: 0 9px;
+  border-radius: 999px;
+  font-size: 9px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+/* =========================================================
+   CALENDAR SIDEBAR
+========================================================= */
+
+.mat-calendar-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.mat-calendar-side-card {
+  background: #ffffff;
+  border: 1px solid #dce6ee;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 5px 18px rgba(20, 47, 78, 0.05);
+}
+
+.mat-calendar-side-header {
+  padding: 15px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border-bottom: 1px solid #e3ebf1;
+  background: #f8fbfd;
+  color: #1686ce;
+}
+
+.mat-calendar-side-header > div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.mat-calendar-side-header span {
+  color: #8495a6;
+  font-size: 9px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.mat-calendar-side-header strong {
+  color: #173957;
+  font-size: 13px;
+}
+
+.mat-calendar-side-header .mat-primary-button {
+  width: 34px;
+  height: 34px;
+  min-height: 34px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+}
+
+.mat-calendar-event-list,
+.mat-calendar-upcoming-list {
+  padding: 11px;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.mat-calendar-event-card {
+  padding: 12px;
+  border: 1px solid #e1e8ee;
+  border-radius: 9px;
+  background: #ffffff;
+}
+
+.mat-calendar-event-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.mat-calendar-event-card > strong {
+  display: block;
+  margin-bottom: 6px;
+  color: #173957;
+  font-size: 12px;
+}
+
+.mat-calendar-event-card > span {
+  margin-top: 4px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #718599;
+  font-size: 10px;
+}
+
+.mat-calendar-event-card p {
+  margin: 8px 0 0;
+  padding-top: 8px;
+  border-top: 1px solid #edf1f4;
+  color: #718599;
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.mat-calendar-event-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.mat-calendar-event-actions button {
+  width: 29px;
+  height: 29px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  border: 1px solid #dce6ee;
+  border-radius: 7px;
+  background: #ffffff;
+  color: #64798d;
+  cursor: pointer;
+}
+
+.mat-calendar-event-actions button:hover {
+  background: #eef7fc;
+  color: #087bc7;
+}
+
+.mat-calendar-empty {
+  padding: 24px 15px;
+  text-align: center;
+  color: #8292a1;
+  font-size: 11px;
+}
+
+.mat-calendar-upcoming {
+  width: 100%;
+  padding: 9px;
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid #e2e9ef;
+  border-radius: 9px;
+  background: #ffffff;
+  text-align: left;
+  cursor: pointer;
+}
+
+.mat-calendar-upcoming:hover {
+  background: #f6fbfe;
+  border-color: #cbe3f2;
+}
+
+.mat-calendar-upcoming-date {
+  width: 40px;
+  min-height: 43px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background: #edf7fd;
+}
+
+.mat-calendar-upcoming-date strong {
+  color: #087bc7;
+  font-size: 16px;
+  line-height: 1;
+}
+
+.mat-calendar-upcoming-date span {
+  margin-top: 3px;
+  color: #74889b;
+  font-size: 8px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.mat-calendar-upcoming > div:nth-child(2) {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.mat-calendar-upcoming > div:nth-child(2) strong {
+  overflow: hidden;
+  color: #173957;
+  font-size: 11px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.mat-calendar-upcoming > div:nth-child(2) span {
+  color: #8191a1;
+  font-size: 9px;
+}
+/* =========================================================
+   CALENDAR RESPONSIVE
+========================================================= */
+
+@media (max-width: 1100px) {
+  .mat-calendar-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .mat-calendar-sidebar {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 700px) {
+  .mat-calendar-toolbar {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .mat-calendar-navigation {
+    width: 100%;
+  }
+
+  .mat-calendar-navigation .mat-secondary-button:nth-child(2) {
+    flex: 1;
+  }
+
+  .mat-calendar-weekdays > div {
+    padding: 8px 2px;
+    font-size: 8px;
+  }
+
+  .mat-calendar-day {
+    min-height: 78px;
+    padding: 5px;
+  }
+
+  .mat-calendar-day-number {
+    width: 22px;
+    height: 22px;
+    margin-bottom: 4px;
+    font-size: 10px;
+  }
+
+  .mat-calendar-chip {
+    padding: 4px;
+    border-left-width: 2px;
+    font-size: 7px;
+  }
+
+  .mat-calendar-sidebar {
+    display: flex;
+  }
+
+  .mat-calendar-upcoming {
+    grid-template-columns: 38px minmax(0, 1fr) auto;
+  }
+}
+/* =========================================================
+   CALENDAR EDIT ACTIONS
+========================================================= */
+
+.mat-calendar-event-actions {
+  margin-top: 12px;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.mat-calendar-edit-button,
+.mat-calendar-delete-button {
+  min-height: 32px;
+  padding: 0 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border-radius: 7px;
+  font-size: 10px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.mat-calendar-edit-button {
+  border: 1px solid #bcdcf0;
+  background: #eef8fe;
+  color: #0879c8;
+}
+
+.mat-calendar-edit-button:hover {
+  background: #dff2fc;
+}
+
+.mat-calendar-delete-button {
+  border: 1px solid #e7cccc;
+  background: #fffafa;
+  color: #ad4545;
+}
+
+.mat-calendar-delete-button:hover {
+  background: #fff0f0;
+}
+
+.mat-calendar-chip {
+  cursor: pointer;
+}
+
+.mat-calendar-chip:hover {
+  filter: brightness(0.96);
+}
+/* =========================================================
+   RECURRING CALENDAR EVENTS
+========================================================= */
+
+.mat-recurring-box {
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  border: 1px solid #cfe3f1;
+  border-radius: 10px;
+  background: #f6fbfe;
+}
+
+.mat-recurring-summary {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  color: #087bc7;
+}
+
+.mat-recurring-summary > div {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.mat-recurring-summary strong {
+  color: #173957;
+  font-size: 12px;
+}
+
+.mat-recurring-summary span,
+.mat-recurring-help {
+  color: #74889b;
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.mat-calendar-recurring-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: #668093;
+  font-size: 9px;
+  font-weight: 800;
+}
+
+.mat-calendar-chip {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.mat-calendar-chip span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* =========================================================
+   CALENDAR EVENT CHIP WRAPPING
+========================================================= */
+
+.mat-calendar-day {
+  height: 125px;
+  overflow: hidden;
+}
+
+.mat-calendar-day-events {
+  min-width: 0;
+}
+
+.mat-calendar-chip {
+  min-width: 0;
+  white-space: normal;
+  line-height: 1.25;
+  max-height: 30px;
+  overflow: hidden;
+}
+
+.mat-calendar-chip span {
+  white-space: normal;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Mobile calendar sizing */
+
+@media (max-width: 700px) {
+  .mat-calendar-day {
+    height: 78px;
+  }
+
+  .mat-calendar-chip {
+    max-height: 25px;
+  }
+}
+
+/* Dark theme formerly in calendar-theme.css. */
+/* Calendar-specific theme overrides. Loaded after theme.css. */
+:root[data-theme='dark'] .mat-calendar-panel,
+:root[data-theme='dark'] .mat-calendar-side-card,
+:root[data-theme='dark'] .mat-calendar-toolbar,
+:root[data-theme='dark'] .mat-calendar-event-card,
+:root[data-theme='dark'] .mat-calendar-upcoming,
+:root[data-theme='dark'] .mat-athlete-page-hero,
+:root[data-theme='dark'] .mat-athlete-calendar-card,
+:root[data-theme='dark'] .mat-athlete-empty-card {
+  color: var(--theme-text) !important;
+  border-color: var(--theme-border) !important;
+  background: var(--theme-surface) !important;
+}
+:root[data-theme='dark'] .mat-calendar-toolbar,
+:root[data-theme='dark'] .mat-calendar-side-header {
+  border-color: var(--theme-border) !important;
+  background: var(--theme-surface-alt) !important;
+}
+:root[data-theme='dark'] .mat-calendar-toolbar h2,
+:root[data-theme='dark'] .mat-calendar-side-header strong,
+:root[data-theme='dark'] .mat-calendar-event-card > strong,
+:root[data-theme='dark'] .mat-calendar-upcoming > div:nth-child(2) strong,
+:root[data-theme='dark'] .mat-athlete-page-hero h1,
+:root[data-theme='dark'] .mat-athlete-page-section-heading h2,
+:root[data-theme='dark'] .mat-athlete-calendar-heading h3 {
+  color: var(--theme-heading) !important;
+}
+:root[data-theme='dark'] .mat-calendar-side-header span,
+:root[data-theme='dark'] .mat-calendar-event-card > span,
+:root[data-theme='dark'] .mat-calendar-event-card p,
+:root[data-theme='dark'] .mat-calendar-upcoming > div:nth-child(2) span,
+:root[data-theme='dark'] .mat-calendar-empty,
+:root[data-theme='dark'] .mat-athlete-page-hero p,
+:root[data-theme='dark'] .mat-athlete-page-section-heading p,
+:root[data-theme='dark'] .mat-athlete-calendar-meta span,
+:root[data-theme='dark'] .mat-athlete-calendar-content p {
+  color: var(--theme-muted) !important;
+}
+:root[data-theme='dark'] .mat-calendar-weekdays,
+:root[data-theme='dark'] .mat-calendar-weekdays > div {
+  color: #9fc9df !important;
+  border-color: var(--theme-border) !important;
+  background: var(--theme-surface-alt) !important;
+}
+:root[data-theme='dark'] .mat-calendar-day,
+:root[data-theme='dark'] .mat-calendar-day.empty {
+  color: var(--theme-text) !important;
+  border-color: var(--theme-border) !important;
+  background: #102838 !important;
+}
+:root[data-theme='dark'] .mat-calendar-day:hover,
+:root[data-theme='dark'] .mat-calendar-day.today {
+  background: #173747 !important;
+}
+:root[data-theme='dark'] .mat-calendar-day.selected {
+  background: #173f57 !important;
+  box-shadow: inset 0 0 0 2px #70c9fa !important;
+}
+:root[data-theme='dark'] .mat-calendar-day-number { color: #fff !important; }
+:root[data-theme='dark'] .mat-calendar-upcoming:hover { background: #203e51 !important; }
+:root[data-theme='dark'] .mat-calendar-upcoming-date,
+:root[data-theme='dark'] .mat-athlete-calendar-date-box {
+  border: 1px solid #4f7185 !important;
+  background: #193f54 !important;
+}
+:root[data-theme='dark'] .mat-calendar-upcoming-date strong,
+:root[data-theme='dark'] .mat-athlete-calendar-date-box strong { color: #fff !important; }
+:root[data-theme='dark'] .mat-calendar-upcoming-date span,
+:root[data-theme='dark'] .mat-athlete-calendar-date-box span { color: #9fc9df !important; }
+:root[data-theme='dark'] .mat-calendar-edit-button,
+:root[data-theme='dark'] .mat-calendar-delete-button,
+:root[data-theme='dark'] .mat-calendar-event-actions button {
+  color: var(--theme-text) !important;
+  border-color: var(--theme-border) !important;
+  background: #193f54 !important;
+}
+:root[data-theme='dark'] .mat-calendar-edit-button:hover,
+:root[data-theme='dark'] .mat-calendar-event-actions button:hover {
+  color: #fff !important;
+  border-color: #70c9fa !important;
+  background: #23546e !important;
+}
+:root[data-theme='dark'] .mat-calendar-delete-button { color: #ffadb4 !important; background: #452a31 !important; }
+:root[data-theme='dark'] .mat-calendar-chip { filter: brightness(.9) saturate(.9); }
+:root[data-theme='dark'] .mat-calendar-event-type { filter: brightness(.95) saturate(.9); }
+:root[data-theme='dark'] .mat-athlete-calendar-repeat,
+:root[data-theme='dark'] .mat-athlete-calendar-heading { color: #70c9fa !important; }

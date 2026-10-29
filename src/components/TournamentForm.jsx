@@ -1,3 +1,4 @@
+import './TournamentsPage.css'
 import {
   useEffect,
   useState,

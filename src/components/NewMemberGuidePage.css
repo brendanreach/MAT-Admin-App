@@ -1,0 +1,1176 @@
+/* New Member Guide component styling extracted from global CSS. */
+/* =========================================================
+   NEW MEMBER GUIDE
+========================================================= */
+
+.mat-guide {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.mat-guide-back {
+  align-self: flex-start;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 0;
+  background: transparent;
+  color: #087bc7;
+  font-size: 10px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.mat-guide-hero {
+  padding: 27px 30px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  border: 1px solid #d9e7f0;
+  border-radius: 16px;
+  background: linear-gradient(
+    135deg,
+    #ffffff,
+    #eef8fd
+  );
+}
+
+.mat-guide-hero-icon {
+  width: 58px;
+  height: 58px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  border-radius: 14px;
+  background: #e4f4fd;
+  color: #087bc7;
+}
+
+.mat-guide-hero h1 {
+  margin: 4px 0 7px;
+  color: #173957;
+  font-size: 25px;
+}
+
+.mat-guide-hero p {
+  max-width: 760px;
+  margin: 0;
+  color: #71869a;
+  font-size: 11px;
+  line-height: 1.6;
+}
+/* =========================================================
+   NEW MEMBER GUIDE - QUICK LINKS
+========================================================= */
+
+.mat-guide-jump-grid {
+  display: grid;
+  grid-template-columns:
+    repeat(4, 1fr);
+  gap: 10px;
+}
+
+.mat-guide-jump-card {
+  padding: 14px;
+  display: grid;
+  grid-template-columns:
+    auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid #dfe8ee;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #087bc7;
+  text-decoration: none;
+}
+
+.mat-guide-jump-card:hover {
+  background: #f6fbfe;
+  border-color: #beddeb;
+}
+
+.mat-guide-jump-card div {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.mat-guide-jump-card strong {
+  color: #294b67;
+  font-size: 10px;
+}
+
+.mat-guide-jump-card span {
+  color: #8899a7;
+  font-size: 8px;
+}
+/* =========================================================
+   NEW MEMBER GUIDE - SECTIONS
+========================================================= */
+
+.mat-guide-section {
+  padding: 22px;
+  border: 1px solid #dfe8ee;
+  border-radius: 14px;
+  background: #ffffff;
+}
+
+.mat-guide-section-heading {
+  margin-bottom: 17px;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+
+.mat-guide-section-icon {
+  width: 39px;
+  height: 39px;
+  display: grid;
+  place-items: center;
+  border-radius: 9px;
+  background: #eaf6fd;
+  color: #087bc7;
+}
+
+.mat-guide-section-heading span {
+  color: #8a9aa8;
+  font-size: 8px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+
+.mat-guide-section-heading h2 {
+  margin: 2px 0 0;
+  color: #173957;
+  font-size: 16px;
+}
+
+.mat-guide-section-description {
+  margin: -5px 0 18px;
+  color: #73889a;
+  font-size: 10px;
+  line-height: 1.6;
+}
+/* =========================================================
+   NEW MEMBER GUIDE - CONTENT
+========================================================= */
+
+.mat-guide-step-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.mat-guide-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+}
+
+.mat-guide-step-number {
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  border-radius: 999px;
+  background: #eaf6fd;
+  color: #087bc7;
+  font-size: 9px;
+  font-weight: 900;
+}
+
+.mat-guide-step strong {
+  color: #294b67;
+  font-size: 10px;
+}
+
+.mat-guide-step p {
+  margin: 3px 0 0;
+  color: #74899a;
+  font-size: 9px;
+  line-height: 1.5;
+}
+
+.mat-guide-note {
+  margin-top: 17px;
+  padding: 12px 13px;
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  border-radius: 9px;
+  background: #f3f9fd;
+  color: #087bc7;
+}
+
+.mat-guide-note div {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.mat-guide-note strong {
+  color: #355c78;
+  font-size: 9px;
+}
+
+.mat-guide-note span {
+  color: #74899a;
+  font-size: 8px;
+  line-height: 1.5;
+}
+
+.mat-guide-rules-placeholder {
+  min-height: 150px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: 1px dashed #c8dbe7;
+  border-radius: 11px;
+  background: #fbfdfe;
+  color: #087bc7;
+  text-align: center;
+}
+
+.mat-guide-rules-placeholder strong {
+  color: #355c78;
+  font-size: 11px;
+}
+
+.mat-guide-rules-placeholder p {
+  margin: 0;
+  color: #74899a;
+  font-size: 9px;
+}
+
+.mat-guide-rules-placeholder span {
+  color: #9aa7b2;
+  font-size: 8px;
+}
+/* =========================================================
+   NEW MEMBER GUIDE - CHECKLIST, TERMS, MOBILE
+========================================================= */
+
+.mat-guide-checklist {
+  display: grid;
+  grid-template-columns:
+    repeat(2, 1fr);
+  gap: 9px;
+}
+
+.mat-guide-check-item {
+  padding: 10px 11px;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  border-radius: 8px;
+  background: #f8fbfd;
+  color: #668093;
+  font-size: 9px;
+  line-height: 1.5;
+}
+
+.mat-guide-check-item svg {
+  flex-shrink: 0;
+  color: #29926a;
+}
+
+.mat-guide-terms {
+  display: grid;
+  grid-template-columns:
+    repeat(2, 1fr);
+  gap: 9px;
+}
+
+.mat-guide-term {
+  padding: 12px;
+  border: 1px solid #e4ebf0;
+  border-radius: 8px;
+}
+
+.mat-guide-term strong {
+  color: #294b67;
+  font-size: 10px;
+}
+
+.mat-guide-term p {
+  margin: 4px 0 0;
+  color: #74899a;
+  font-size: 9px;
+  line-height: 1.5;
+}
+
+@media (max-width: 900px) {
+  .mat-guide-jump-grid {
+    grid-template-columns:
+      repeat(2, 1fr);
+  }
+
+  .mat-hub-start-card {
+    grid-template-columns:
+      auto minmax(0, 1fr);
+  }
+
+  .mat-hub-start-action {
+    grid-column: 2;
+  }
+}
+
+@media (max-width: 700px) {
+  .mat-hub-start-card {
+    grid-template-columns: 1fr;
+  }
+
+  .mat-hub-start-action {
+    grid-column: 1;
+  }
+
+  .mat-guide-hero {
+    padding: 21px;
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .mat-guide-hero h1 {
+    font-size: 21px;
+  }
+
+  .mat-guide-jump-grid,
+  .mat-guide-checklist,
+  .mat-guide-terms {
+    grid-template-columns: 1fr;
+  }
+
+  .mat-guide-section {
+    padding: 17px;
+  }
+}
+/* =========================================================
+   NEW MEMBER GUIDE - RULE LOOKUPS
+========================================================= */
+
+.mat-guide-version {
+  padding: 11px 13px;
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  border: 1px solid #d7e7ef;
+  border-radius: 9px;
+  background: #f6fbfe;
+  color: #087bc7;
+}
+
+.mat-guide-version div {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.mat-guide-version strong {
+  color: #355c78;
+  font-size: 9px;
+}
+
+.mat-guide-version span {
+  color: #74899a;
+  font-size: 8px;
+  line-height: 1.5;
+}
+
+.mat-guide-rule-controls,
+.mat-guide-weight-controls {
+  margin-bottom: 15px;
+  display: grid;
+  gap: 10px;
+}
+
+.mat-guide-rule-controls {
+  grid-template-columns:
+    minmax(180px, 0.7fr)
+    minmax(220px, 1.3fr);
+}
+
+.mat-guide-weight-controls {
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+}
+
+.mat-guide-rule-controls label,
+.mat-guide-weight-controls label {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  color: #61798c;
+  font-size: 8px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.mat-guide-rule-controls select,
+.mat-guide-rule-controls input,
+.mat-guide-weight-controls select {
+  width: 100%;
+  padding: 10px 11px;
+  border: 1px solid #d9e4eb;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #294b67;
+  font: inherit;
+  font-size: 10px;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.mat-guide-info-box {
+  margin-bottom: 14px;
+  padding: 10px 12px;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  border-radius: 8px;
+  background: #f8fbfd;
+  color: #71869a;
+  font-size: 8px;
+  line-height: 1.55;
+}
+
+.mat-guide-info-box svg {
+  flex-shrink: 0;
+  color: #087bc7;
+}
+
+.mat-guide-rule-grid {
+  display: grid;
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.mat-guide-rule-card {
+  padding: 14px;
+  border: 1px solid #dfe8ee;
+  border-radius: 10px;
+  background: #ffffff;
+}
+
+.mat-guide-rule-card-heading {
+  margin-bottom: 11px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.mat-guide-rule-card-heading div {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.mat-guide-rule-card-heading span {
+  color: #8b9aa7;
+  font-size: 7px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.mat-guide-rule-card-heading strong {
+  color: #294b67;
+  font-size: 11px;
+}
+
+.mat-guide-rule-card-heading small {
+  color: #8093a2;
+  font-size: 8px;
+}
+
+.mat-guide-form-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.mat-guide-form-chips span {
+  padding: 5px 7px;
+  border-radius: 999px;
+  background: #eaf6fd;
+  color: #28759f;
+  font-size: 8px;
+  font-weight: 700;
+}
+
+.mat-guide-weight-result {
+  padding: 17px;
+  border: 1px solid #d9e7ef;
+  border-radius: 11px;
+  background: #fbfdfe;
+}
+
+.mat-guide-weight-heading span {
+  color: #899aa8;
+  font-size: 7px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+
+.mat-guide-weight-heading h3 {
+  margin: 4px 0;
+  color: #173957;
+  font-size: 14px;
+}
+
+.mat-guide-weight-heading p {
+  margin: 0;
+  color: #8093a2;
+  font-size: 8px;
+}
+
+.mat-guide-weight-chips {
+  margin-top: 14px;
+  display: grid;
+  grid-template-columns:
+    repeat(5, minmax(0, 1fr));
+  gap: 7px;
+}
+
+.mat-guide-weight-chip {
+  padding: 10px 6px;
+  border-radius: 8px;
+  background: #eaf6fd;
+  color: #176e9f;
+  font-size: 10px;
+  font-weight: 800;
+  text-align: center;
+}
+
+@media (max-width: 800px) {
+  .mat-guide-rule-grid,
+  .mat-guide-rule-controls,
+  .mat-guide-weight-controls {
+    grid-template-columns: 1fr;
+  }
+
+  .mat-guide-weight-chips {
+    grid-template-columns:
+      repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 500px) {
+  .mat-guide-weight-chips {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+}
+/* =========================================================
+   NEW MEMBER GUIDE - EXTERNAL LINK
+========================================================= */
+
+.mat-guide-step-link {
+  margin-top: 8px;
+  padding: 7px 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid #bcdff2;
+  border-radius: 7px;
+  background: #f2faff;
+  color: #087bc7;
+  font-size: 9px;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.mat-guide-step-link:hover {
+  border-color: #8fc9e8;
+  background: #e8f7ff;
+}
+/* =========================================================
+   NEW MEMBER GUIDE - READABILITY & RESPONSIVE TEXT
+   Keep this section at the VERY BOTTOM of index.css
+========================================================= */
+
+.mat-guide {
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+/* ---------------------------------------------------------
+   BACK BUTTON
+--------------------------------------------------------- */
+
+.mat-guide-back {
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+/* ---------------------------------------------------------
+   HERO
+--------------------------------------------------------- */
+
+.mat-guide-hero h1 {
+  font-size: clamp(28px, 4vw, 40px);
+  line-height: 1.15;
+}
+
+.mat-guide-hero p {
+  max-width: 760px;
+  font-size: clamp(15px, 1.8vw, 17px);
+  line-height: 1.65;
+}
+
+.mat-guide-hero .mat-eyebrow {
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+/* ---------------------------------------------------------
+   RULE VERSION NOTICE
+--------------------------------------------------------- */
+
+.mat-guide-version strong {
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.mat-guide-version span {
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+/* ---------------------------------------------------------
+   QUICK NAVIGATION CARDS
+--------------------------------------------------------- */
+
+.mat-guide-jump-card {
+  min-height: 58px;
+}
+
+.mat-guide-jump-card span {
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+/* ---------------------------------------------------------
+   SECTION HEADINGS
+--------------------------------------------------------- */
+
+.mat-guide-section-heading span {
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.mat-guide-section-heading h2 {
+  font-size: clamp(22px, 3vw, 28px);
+  line-height: 1.2;
+}
+
+.mat-guide-section-heading p {
+  max-width: 800px;
+  font-size: 15px;
+  line-height: 1.65;
+}
+
+/* ---------------------------------------------------------
+   REGISTRATION STEPS
+--------------------------------------------------------- */
+
+.mat-guide-step {
+  align-items: flex-start;
+}
+
+.mat-guide-step-number {
+  min-width: 34px;
+  min-height: 34px;
+  font-size: 14px;
+  line-height: 34px;
+}
+
+.mat-guide-step strong {
+  display: block;
+  font-size: 16px;
+  line-height: 1.4;
+}
+
+.mat-guide-step p {
+  margin-top: 6px;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+/* ---------------------------------------------------------
+   SPORT:80 / EXTERNAL LINK
+--------------------------------------------------------- */
+
+.mat-guide-step-link {
+  margin-top: 10px;
+  padding: 9px 12px;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+
+  border: 1px solid #bcdff2;
+  border-radius: 8px;
+
+  background: #f2faff;
+  color: #087bc7;
+
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1.4;
+
+  text-decoration: none;
+}
+
+.mat-guide-step-link:hover {
+  border-color: #8fc9e8;
+  background: #e8f7ff;
+}
+
+.mat-guide-step-link:focus-visible {
+  outline: 3px solid rgba(8, 123, 199, 0.25);
+  outline-offset: 2px;
+}
+
+/* ---------------------------------------------------------
+   FORM / WEIGHT LOOKUP CONTROLS
+--------------------------------------------------------- */
+
+.mat-guide-rule-controls label,
+.mat-guide-weight-controls label {
+  gap: 6px;
+
+  font-size: 12px;
+  font-weight: 800;
+
+  line-height: 1.4;
+}
+
+.mat-guide-rule-controls select,
+.mat-guide-rule-controls input,
+.mat-guide-weight-controls select {
+  min-height: 44px;
+
+  padding: 10px 12px;
+
+  font-size: 15px;
+  line-height: 1.4;
+}
+
+/* ---------------------------------------------------------
+   INFORMATION BOXES
+--------------------------------------------------------- */
+
+.mat-guide-info-box {
+  padding: 13px 14px;
+  gap: 10px;
+
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+/* ---------------------------------------------------------
+   POOMSAE RULE CARDS
+--------------------------------------------------------- */
+
+.mat-guide-rule-card {
+  padding: 16px;
+}
+
+.mat-guide-rule-card-heading span {
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.mat-guide-rule-card-heading strong {
+  font-size: 16px;
+  line-height: 1.4;
+}
+
+.mat-guide-rule-card-heading small {
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.mat-guide-form-chips {
+  gap: 7px;
+}
+
+.mat-guide-form-chips span {
+  padding: 7px 10px;
+
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+/* ---------------------------------------------------------
+   SPARRING WEIGHT RESULTS
+--------------------------------------------------------- */
+
+.mat-guide-weight-result {
+  padding: 18px;
+}
+
+.mat-guide-weight-heading span {
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.mat-guide-weight-heading h3 {
+  font-size: 20px;
+  line-height: 1.3;
+}
+
+.mat-guide-weight-heading p {
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.mat-guide-weight-chip {
+  min-height: 42px;
+
+  padding: 10px 8px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 14px;
+  line-height: 1.3;
+}
+
+/* ---------------------------------------------------------
+   TOURNAMENT DAY CHECKLIST
+--------------------------------------------------------- */
+
+.mat-guide-check-item {
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.mat-guide-check-item span {
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+/* ---------------------------------------------------------
+   TERMINOLOGY
+--------------------------------------------------------- */
+
+.mat-guide-term {
+  padding: 15px;
+}
+
+.mat-guide-term strong {
+  font-size: 16px;
+  line-height: 1.4;
+}
+
+.mat-guide-term p {
+  margin-top: 5px;
+
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+/* =========================================================
+   TABLETS
+========================================================= */
+
+@media (max-width: 900px) {
+  .mat-guide-rule-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .mat-guide-weight-chips {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* =========================================================
+   PHONES
+========================================================= */
+
+@media (max-width: 700px) {
+  .mat-guide {
+    font-size: 16px;
+  }
+
+  .mat-guide-hero {
+    padding: 22px 18px;
+  }
+
+  .mat-guide-hero h1 {
+    font-size: 28px;
+  }
+
+  .mat-guide-hero p {
+    font-size: 16px;
+    line-height: 1.65;
+  }
+
+  .mat-guide-hero .mat-eyebrow {
+    font-size: 12px;
+  }
+
+  .mat-guide-version {
+    padding: 13px;
+  }
+
+  .mat-guide-version strong {
+    font-size: 14px;
+  }
+
+  .mat-guide-version span {
+    font-size: 13px;
+  }
+
+  .mat-guide-jump-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .mat-guide-jump-card {
+    min-height: 60px;
+    padding: 12px;
+  }
+
+  .mat-guide-jump-card span {
+    font-size: 14px;
+  }
+
+  .mat-guide-section {
+    padding: 18px 15px;
+  }
+
+  .mat-guide-section-heading h2 {
+    font-size: 23px;
+  }
+
+  .mat-guide-section-heading p {
+    font-size: 15px;
+  }
+
+  .mat-guide-step {
+    gap: 11px;
+  }
+
+  .mat-guide-step strong {
+    font-size: 16px;
+  }
+
+  .mat-guide-step p {
+    font-size: 15px;
+  }
+
+  .mat-guide-step-link {
+    font-size: 14px;
+  }
+
+  .mat-guide-rule-controls,
+  .mat-guide-weight-controls {
+    grid-template-columns: 1fr;
+  }
+
+  .mat-guide-rule-controls label,
+  .mat-guide-weight-controls label {
+    font-size: 12px;
+  }
+
+  .mat-guide-rule-controls select,
+  .mat-guide-rule-controls input,
+  .mat-guide-weight-controls select {
+    min-height: 46px;
+    font-size: 16px;
+  }
+
+  .mat-guide-info-box {
+    font-size: 14px;
+  }
+
+  .mat-guide-rule-card-heading strong {
+    font-size: 16px;
+  }
+
+  .mat-guide-rule-card-heading small {
+    font-size: 14px;
+  }
+
+  .mat-guide-form-chips span {
+    font-size: 14px;
+  }
+
+  .mat-guide-weight-heading h3 {
+    font-size: 19px;
+  }
+
+  .mat-guide-weight-heading p {
+    font-size: 14px;
+  }
+
+  .mat-guide-weight-chip {
+    font-size: 14px;
+  }
+
+  .mat-guide-check-item span {
+    font-size: 15px;
+  }
+
+  .mat-guide-term strong {
+    font-size: 16px;
+  }
+
+  .mat-guide-term p {
+    font-size: 15px;
+  }
+}
+
+/* =========================================================
+   SMALL PHONES
+========================================================= */
+
+@media (max-width: 480px) {
+  .mat-guide-jump-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .mat-guide-jump-card {
+    min-height: 54px;
+  }
+
+  .mat-guide-weight-chips {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .mat-guide-section {
+    padding: 16px 13px;
+  }
+
+  .mat-guide-section-heading {
+    gap: 10px;
+  }
+
+  .mat-guide-section-heading h2 {
+    font-size: 22px;
+  }
+
+  .mat-guide-step {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .mat-guide-step-number {
+    min-width: 32px;
+    min-height: 32px;
+    line-height: 32px;
+  }
+
+  .mat-guide-rule-card {
+    padding: 14px;
+  }
+
+  .mat-guide-weight-result {
+    padding: 15px;
+  }
+}
+
+/* New Member Guide */
+:root[data-theme='dark'] .mat-guide {
+  color: var(--theme-text) !important;
+}
+
+:root[data-theme='dark'] .mat-guide-hero,
+:root[data-theme='dark'] .mat-guide-section,
+:root[data-theme='dark'] .mat-guide-info-box,
+:root[data-theme='dark'] .mat-guide-weight-result {
+  color: var(--theme-text) !important;
+  border-color: var(--theme-border) !important;
+  background: var(--theme-surface) !important;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, .18) !important;
+}
+
+:root[data-theme='dark'] .mat-guide-hero :is(h1, h2, h3, strong),
+:root[data-theme='dark'] .mat-guide-section-heading :is(h2, h3, strong),
+:root[data-theme='dark'] .mat-guide-weight-heading :is(h2, h3, strong),
+:root[data-theme='dark'] .mat-guide-rule-card-heading :is(h2, h3, strong) {
+  color: var(--theme-heading) !important;
+}
+
+:root[data-theme='dark'] .mat-guide-hero :is(p, span),
+:root[data-theme='dark'] .mat-guide-section :is(p, small),
+:root[data-theme='dark'] .mat-guide-version {
+  color: var(--theme-muted) !important;
+}
+
+:root[data-theme='dark'] .mat-guide-hero-icon,
+:root[data-theme='dark'] .mat-guide-section-icon,
+:root[data-theme='dark'] .mat-guide-step-number {
+  color: #65c3f5 !important;
+  background: #173f57 !important;
+}
+
+:root[data-theme='dark'] .mat-guide-jump-card,
+:root[data-theme='dark'] .mat-guide-rule-card,
+:root[data-theme='dark'] .mat-guide-check-item,
+:root[data-theme='dark'] .mat-guide-step,
+:root[data-theme='dark'] .mat-guide-term {
+  color: var(--theme-text) !important;
+  border-color: var(--theme-border) !important;
+  background: var(--theme-surface-alt) !important;
+}
+
+:root[data-theme='dark'] .mat-guide-jump-card:hover,
+:root[data-theme='dark'] .mat-guide-step-link:hover {
+  border-color: #5aa9d2 !important;
+  background: #203e51 !important;
+}
+
+:root[data-theme='dark'] .mat-guide-jump-card :is(h2, h3, strong),
+:root[data-theme='dark'] .mat-guide-rule-card :is(h2, h3, strong),
+:root[data-theme='dark'] .mat-guide-check-item strong,
+:root[data-theme='dark'] .mat-guide-step strong,
+:root[data-theme='dark'] .mat-guide-term strong,
+:root[data-theme='dark'] .mat-guide-weight-result strong {
+  color: var(--theme-heading) !important;
+}
+
+:root[data-theme='dark'] .mat-guide-jump-card :is(p, span),
+:root[data-theme='dark'] .mat-guide-rule-card p,
+:root[data-theme='dark'] .mat-guide-check-item span,
+:root[data-theme='dark'] .mat-guide-step p,
+:root[data-theme='dark'] .mat-guide-term p,
+:root[data-theme='dark'] .mat-guide-weight-result :is(p, span) {
+  color: var(--theme-muted) !important;
+}
+
+:root[data-theme='dark'] .mat-guide-back,
+:root[data-theme='dark'] .mat-guide-step-link {
+  color: #70c9fa !important;
+}
+
+:root[data-theme='dark'] .mat-guide-weight-chip,
+:root[data-theme='dark'] .mat-guide-form-chips button,
+:root[data-theme='dark'] .mat-guide-rule-controls button {
+  color: var(--theme-text) !important;
+  border-color: var(--theme-border) !important;
+  background: var(--theme-surface-alt) !important;
+}
+
+:root[data-theme='dark'] .mat-guide-weight-chip:hover,
+:root[data-theme='dark'] .mat-guide-weight-chip.active,
+:root[data-theme='dark'] .mat-guide-form-chips button.active,
+:root[data-theme='dark'] .mat-guide-rule-controls button.active {
+  color: #ffffff !important;
+  border-color: #1598dc !important;
+  background: #0875c7 !important;
+}
+

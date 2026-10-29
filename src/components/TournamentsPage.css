@@ -1,3 +1,1735 @@
+/* Admin Tournaments feature styles consolidated from index.css, theme.css, and the existing component stylesheet. */
+/* =========================================================
+   ADMIN TOURNAMENT PAGE
+========================================================= */
+
+.mat-tournament-page-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 28px;
+}
+
+.mat-tournament-page-header .mat-section-title {
+  font-size: clamp(38px, 4vw, 54px);
+  margin-bottom: 9px;
+}
+
+/* Tournament tiles */
+
+.mat-tournament-grid {
+  display: grid;
+  grid-template-columns:
+    repeat(
+      auto-fill,
+      minmax(290px, 1fr)
+    );
+  gap: 18px;
+  margin-bottom: 34px;
+}
+
+.mat-tournament-tile {
+  appearance: none;
+  width: 100%;
+
+  border:
+    1px solid #d9e5ed;
+
+  border-radius: 16px;
+
+  background: white;
+  color: #10294f;
+
+  padding: 20px;
+
+  text-align: left;
+
+  box-shadow:
+    0 8px 24px
+    rgba(18, 55, 88, 0.07);
+
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease,
+    border-color 0.18s ease;
+
+  cursor: pointer;
+}
+
+.mat-tournament-tile:hover {
+  transform:
+    translateY(-3px);
+
+  border-color:
+    #93c8e8;
+
+  box-shadow:
+    0 14px 34px
+    rgba(18, 70, 110, 0.13);
+}
+
+.mat-tournament-tile.selected {
+  border-color:
+    #118bd5;
+
+  box-shadow:
+    0 0 0 3px
+      rgba(17, 139, 213, 0.12),
+    0 14px 34px
+      rgba(18, 70, 110, 0.13);
+}
+
+.mat-tournament-tile-top {
+  display: flex;
+  align-items: center;
+  justify-content:
+    space-between;
+  gap: 12px;
+}
+
+.mat-tournament-icon {
+  width: 44px;
+  height: 44px;
+
+  display: grid;
+  place-items: center;
+
+  border-radius: 12px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #e2f3fd,
+      #cceafb
+    );
+
+  color: #0877c5;
+}
+
+.mat-tournament-status {
+  display: inline-flex;
+  align-items: center;
+
+  border-radius: 999px;
+
+  padding: 6px 10px;
+
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.mat-tournament-status.upcoming {
+  background: #d9f5e7;
+  color: #176747;
+}
+
+.mat-tournament-status.completed {
+  background: #e8edf2;
+  color: #52657b;
+}
+
+.mat-tournament-status.closed {
+  background: #fff0cf;
+  color: #8a6200;
+}
+
+.mat-tournament-status.neutral {
+  background: #e8eff6;
+  color: #50677e;
+}
+
+.mat-tournament-name {
+  margin:
+    18px 0 14px;
+
+  font-size: 21px;
+  line-height: 1.25;
+
+  color: #10294f;
+}
+
+.mat-tournament-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+
+  color: #637892;
+  font-size: 13px;
+}
+
+.mat-tournament-meta > div {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.mat-tournament-meta svg {
+  color: #1588cf;
+  flex: 0 0 auto;
+}
+
+.mat-tournament-tile-divider {
+  height: 1px;
+
+  background: #e5ebf0;
+
+  margin: 18px 0;
+}
+
+.mat-tournament-tile-stats {
+  display: grid;
+  grid-template-columns:
+    1fr 1fr;
+  gap: 12px;
+}
+
+.mat-tournament-tile-stats > div {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.mat-tournament-tile-stats strong {
+  color: #112b50;
+  font-size: 18px;
+}
+
+.mat-tournament-tile-stats span {
+  color: #74859a;
+  font-size: 11px;
+}
+
+.mat-tournament-view {
+  margin-top: 18px;
+
+  padding-top: 14px;
+
+  border-top:
+    1px solid #e5ebf0;
+
+  display: flex;
+  justify-content:
+    space-between;
+  align-items: center;
+
+  color: #0878c6;
+
+  font-size: 13px;
+  font-weight: 800;
+}
+
+/* Empty state */
+
+.mat-tournament-empty {
+  background: white;
+
+  border:
+    1px solid #dbe5ed;
+
+  border-radius: 16px;
+
+  box-shadow:
+    0 10px 30px
+    rgba(18, 55, 88, 0.07);
+
+  padding: 55px 25px;
+
+  text-align: center;
+}
+
+.mat-tournament-empty-icon {
+  width: 65px;
+  height: 65px;
+
+  display: grid;
+  place-items: center;
+
+  margin:
+    0 auto 15px;
+
+  border-radius: 18px;
+
+  color: #0879c7;
+
+  background:
+    #e3f3fc;
+}
+
+.mat-tournament-empty h2 {
+  margin:
+    0 0 8px;
+
+  color: #10294f;
+}
+
+.mat-tournament-empty p {
+  color: #71839a;
+
+  margin:
+    0 auto 22px;
+}
+
+/* Detail area */
+
+.mat-tournament-detail {
+  background: white;
+
+  border:
+    1px solid #d9e5ed;
+
+  border-radius: 18px;
+
+  box-shadow:
+    0 14px 38px
+    rgba(15, 49, 81, 0.09);
+
+  overflow: hidden;
+
+  margin-bottom: 30px;
+}
+
+.mat-tournament-detail-hero {
+  padding: 28px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #f8fcff 0%,
+      #eaf6fd 100%
+    );
+
+  border-bottom:
+    1px solid #dce7ee;
+
+  display: flex;
+
+  justify-content:
+    space-between;
+
+  align-items:
+    flex-end;
+
+  gap: 30px;
+}
+
+.mat-tournament-close-detail {
+  border: 0;
+  background: transparent;
+  color: #657a91;
+  padding: 0;
+  margin-bottom: 18px;
+
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.mat-tournament-close-detail:hover {
+  color: #0879c7;
+}
+
+.mat-tournament-detail-title-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.mat-tournament-detail-icon {
+  width: 53px;
+  height: 53px;
+
+  border-radius: 14px;
+
+  display: grid;
+  place-items: center;
+
+  background:
+    linear-gradient(
+      135deg,
+      #1393dc,
+      #066cb9
+    );
+
+  color: white;
+
+  box-shadow:
+    0 7px 18px
+    rgba(6, 108, 185, 0.2);
+}
+
+.mat-tournament-detail-label {
+  color: #1184cd;
+
+  font-size: 11px;
+  font-weight: 800;
+
+  letter-spacing:
+    0.12em;
+
+  text-transform:
+    uppercase;
+}
+
+.mat-tournament-detail-title-row h2 {
+  margin:
+    3px 0 0;
+
+  color: #10294f;
+
+  font-size:
+    clamp(
+      25px,
+      3vw,
+      36px
+    );
+}
+
+.mat-tournament-detail-meta {
+  margin-top: 20px;
+
+  display: flex;
+  flex-wrap: wrap;
+
+  gap: 12px 22px;
+
+  color: #596f89;
+
+  font-size: 13px;
+}
+
+.mat-tournament-detail-meta > div {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.mat-tournament-detail-meta svg {
+  color: #1387cf;
+}
+
+.mat-tournament-fee-box {
+  min-width: 200px;
+
+  background: white;
+
+  border:
+    1px solid #d4e1ea;
+
+  border-radius: 14px;
+
+  padding: 17px 20px;
+
+  display: flex;
+  flex-direction: column;
+
+  box-shadow:
+    0 8px 22px
+    rgba(15, 49, 81, 0.06);
+}
+
+.mat-tournament-fee-box span {
+  color: #6c7f95;
+  font-size: 12px;
+}
+
+.mat-tournament-fee-box strong {
+  margin: 4px 0;
+
+  color: #10294f;
+  font-size: 28px;
+}
+
+.mat-tournament-fee-box small {
+  color: #8a98a8;
+  font-size: 10px;
+}
+
+/* Detail stats */
+
+.mat-tournament-detail-stats {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, 1fr);
+
+  border-bottom:
+    1px solid #e0e8ee;
+}
+
+.mat-tournament-detail-stat {
+  min-height: 105px;
+
+  display: flex;
+  align-items: center;
+  gap: 13px;
+
+  padding: 20px 28px;
+
+  border-right:
+    1px solid #e0e8ee;
+}
+
+.mat-tournament-detail-stat:last-child {
+  border-right: 0;
+}
+
+.mat-tournament-detail-stat > div:last-child {
+  display: flex;
+  flex-direction: column;
+}
+
+.mat-tournament-detail-stat strong {
+  color: #10294f;
+  font-size: 23px;
+}
+
+.mat-tournament-detail-stat span {
+  color: #6b7e94;
+  font-size: 12px;
+}
+
+.mat-tournament-small-icon {
+  width: 42px;
+  height: 42px;
+
+  display: grid;
+  place-items: center;
+
+  border-radius: 11px;
+}
+
+.mat-tournament-small-icon.athletes {
+  background: #dceeff;
+  color: #0876c4;
+}
+
+.mat-tournament-small-icon.paid {
+  background: #dbf5e8;
+  color: #23865e;
+}
+
+.mat-tournament-small-icon.outstanding {
+  background: #fff0d8;
+  color: #b87512;
+}
+
+/* Sections */
+
+.mat-tournament-section {
+  padding: 28px;
+}
+
+.mat-tournament-section +
+.mat-tournament-section {
+  border-top:
+    1px solid #e2e9ef;
+}
+
+.mat-tournament-section-heading {
+  display: flex;
+
+  align-items:
+    flex-start;
+
+  justify-content:
+    space-between;
+
+  gap: 15px;
+
+  margin-bottom: 20px;
+}
+
+.mat-tournament-section-heading h3 {
+  margin:
+    0 0 5px;
+
+  color: #10294f;
+  font-size: 20px;
+}
+
+.mat-tournament-section-heading p {
+  margin: 0;
+
+  color: #74869b;
+  font-size: 13px;
+}
+
+.mat-tournament-section-heading > svg {
+  color: #1588cf;
+}
+
+.mat-tournament-count {
+  min-width: 35px;
+  height: 35px;
+
+  display: grid;
+  place-items: center;
+
+  background: #e4f2fb;
+  color: #0876c4;
+
+  border-radius: 10px;
+
+  font-weight: 800;
+}
+
+/* Registered athletes */
+
+.mat-tournament-athlete-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.mat-tournament-athlete-card {
+  border:
+    1px solid #dce5ec;
+
+  border-radius: 13px;
+
+  background: #fbfdfe;
+
+  overflow: hidden;
+}
+
+.mat-tournament-athlete-header {
+  display: flex;
+
+  align-items: center;
+
+  gap: 13px;
+
+  padding: 16px 18px;
+}
+
+.mat-tournament-athlete-avatar,
+.mat-tournament-add-avatar {
+  width: 42px;
+  height: 42px;
+
+  flex: 0 0 auto;
+
+  border-radius: 50%;
+
+  display: grid;
+  place-items: center;
+
+  background:
+    linear-gradient(
+      135deg,
+      #dceefe,
+      #c4e4f9
+    );
+
+  color: #076ab6;
+
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.mat-tournament-athlete-name-area {
+  flex: 1;
+  min-width: 0;
+}
+
+.mat-tournament-athlete-name-area strong {
+  display: block;
+  color: #10294f;
+}
+
+.mat-tournament-athlete-name-area div {
+  margin-top: 3px;
+
+  color: #77889c;
+
+  font-size: 12px;
+}
+
+.mat-tournament-athlete-name-area div span {
+  margin:
+    0 7px;
+}
+
+.mat-tournament-remove {
+  border:
+    1px solid #e6c4c4;
+
+  background:
+    #fff8f8;
+
+  color: #a84b4b;
+
+  border-radius: 7px;
+
+  padding:
+    7px 11px;
+
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.mat-tournament-events-label {
+  border-top:
+    1px solid #e1e8ee;
+
+  padding:
+    14px 18px 8px;
+
+  color: #5d728b;
+
+  font-size: 11px;
+  font-weight: 800;
+
+  text-transform:
+    uppercase;
+
+  letter-spacing:
+    0.08em;
+}
+
+.mat-tournament-events {
+  padding:
+    0 18px 17px;
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      auto-fit,
+      minmax(
+        180px,
+        1fr
+      )
+    );
+
+  gap: 8px;
+}
+
+.mat-tournament-event-option {
+  min-height: 42px;
+
+  border:
+    1px solid #d9e2e9;
+
+  border-radius: 8px;
+
+  padding:
+    9px 11px;
+
+  background: white;
+
+  color: #485e77;
+
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+
+  font-size: 12px;
+
+  cursor: pointer;
+}
+
+.mat-tournament-event-option.selected {
+  border-color:
+    #8ec5e7;
+
+  background:
+    #ebf7fe;
+
+  color: #0874bd;
+
+  font-weight: 700;
+}
+
+.mat-tournament-payment-row {
+  border-top:
+    1px solid #e1e8ee;
+
+  background: white;
+
+  padding:
+    14px 18px;
+
+  display: flex;
+
+  justify-content:
+    space-between;
+
+  align-items:
+    center;
+
+  gap: 15px;
+}
+
+.mat-tournament-payment-row > div {
+  display: flex;
+  flex-direction: column;
+}
+
+.mat-tournament-payment-label {
+  color: #718399;
+  font-size: 11px;
+}
+
+.mat-tournament-payment-amount {
+  color: #10294f;
+  font-size: 17px;
+  font-weight: 800;
+}
+
+.mat-tournament-payment-toggle {
+  border:
+    1px solid #d3dde5;
+
+  background:
+    #f5f8fa;
+
+  color: #5b7087;
+
+  border-radius: 999px;
+
+  padding:
+    8px 12px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 7px;
+
+  font-size: 12px;
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+.mat-tournament-payment-toggle input {
+  display: none;
+}
+
+.mat-tournament-payment-toggle.paid {
+  border-color:
+    #aee1c7;
+
+  background:
+    #ddf5e9;
+
+  color: #176849;
+}
+
+/* No registered athletes */
+
+.mat-tournament-no-athletes {
+  border:
+    1px dashed #cfdce6;
+
+  border-radius: 11px;
+
+  padding: 35px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  gap: 7px;
+
+  color: #778a9f;
+
+  background: #f9fbfc;
+}
+
+.mat-tournament-no-athletes svg {
+  color: #7abbe3;
+}
+
+.mat-tournament-no-athletes strong {
+  color: #385471;
+}
+
+/* Add athlete */
+
+.mat-tournament-add-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      auto-fill,
+      minmax(
+        225px,
+        1fr
+      )
+    );
+
+  gap: 10px;
+}
+
+.mat-tournament-add-athlete {
+  border:
+    1px solid #d8e3eb;
+
+  border-radius: 10px;
+
+  background: white;
+
+  min-height: 64px;
+
+  padding:
+    10px 12px;
+
+  color: #10294f;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  text-align: left;
+
+  transition:
+    border-color 0.15s ease,
+    background 0.15s ease;
+}
+
+.mat-tournament-add-athlete:hover {
+  border-color: #8fc7e9;
+  background: #f4faff;
+}
+
+.mat-tournament-add-athlete > div:nth-child(2) {
+  flex: 1;
+
+  display: flex;
+  flex-direction: column;
+
+  min-width: 0;
+}
+
+.mat-tournament-add-athlete strong {
+  font-size: 13px;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mat-tournament-add-athlete span {
+  color: #7a8b9e;
+
+  margin-top: 2px;
+
+  font-size: 11px;
+}
+
+.mat-tournament-add-athlete > svg {
+  color: #1889cf;
+}
+
+.mat-tournament-all-added {
+  padding: 20px;
+
+  border:
+    1px solid #d9e6dd;
+
+  background: #f3faf6;
+
+  border-radius: 10px;
+
+  color: #367054;
+}
+
+.mat-tournament-error {
+  width: auto;
+
+  margin:
+    20px 28px 0;
+}
+
+/* Responsive */
+
+@media (max-width: 850px) {
+  .mat-tournament-page-header {
+    align-items:
+      flex-start;
+
+    flex-direction:
+      column;
+  }
+
+  .mat-tournament-detail-hero {
+    align-items:
+      stretch;
+
+    flex-direction:
+      column;
+  }
+
+  .mat-tournament-fee-box {
+    min-width: 0;
+  }
+
+  .mat-tournament-detail-stats {
+    grid-template-columns:
+      1fr;
+  }
+
+  .mat-tournament-detail-stat {
+    border-right: 0;
+
+    border-bottom:
+      1px solid #e0e8ee;
+  }
+
+  .mat-tournament-detail-stat:last-child {
+    border-bottom: 0;
+  }
+}
+
+@media (max-width: 600px) {
+  .mat-tournament-grid {
+    grid-template-columns:
+      1fr;
+  }
+
+  .mat-tournament-detail-hero,
+  .mat-tournament-section {
+    padding: 20px;
+  }
+
+  .mat-tournament-detail-meta {
+    flex-direction:
+      column;
+
+    gap: 9px;
+  }
+
+  .mat-tournament-athlete-header {
+    align-items:
+      flex-start;
+
+    flex-wrap: wrap;
+  }
+
+  .mat-tournament-remove {
+    margin-left: 55px;
+  }
+
+  .mat-tournament-events {
+    grid-template-columns:
+      1fr;
+  }
+
+  .mat-tournament-payment-row {
+    align-items:
+      flex-start;
+
+    flex-direction:
+      column;
+  }
+
+  .mat-tournament-add-grid {
+    grid-template-columns:
+      1fr;
+  }
+}
+/* =========================================================
+   CREATE TOURNAMENT MODAL
+========================================================= */
+
+.mat-tournament-form-modal {
+  width: min(720px, 100%);
+  max-height: 92vh;
+  overflow-y: auto;
+
+  background: #ffffff;
+
+  border:
+    1px solid #d9e4ec;
+
+  border-radius: 18px;
+
+  box-shadow:
+    0 28px 80px
+    rgba(10, 31, 54, 0.3);
+
+  color: #10294f;
+}
+
+.mat-tournament-form-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding:
+    28px 30px 18px;
+}
+
+.mat-tournament-form-header h2 {
+  margin: 0;
+
+  color: #10294f;
+
+  font-size:
+    clamp(
+      27px,
+      3vw,
+      36px
+    );
+
+  line-height: 1.1;
+
+  letter-spacing:
+    -0.025em;
+}
+
+.mat-tournament-form-close {
+  width: 40px;
+  height: 40px;
+
+  border: 0;
+
+  border-radius: 50%;
+
+  background: transparent;
+
+  color: #10294f;
+
+  display: grid;
+  place-items: center;
+
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
+}
+
+.mat-tournament-form-close:hover {
+  background: #edf4f8;
+  color: #0879c7;
+}
+
+.mat-tournament-form {
+  padding:
+    10px 30px 30px;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 22px;
+}
+
+.mat-tournament-form-field {
+  display: flex;
+  flex-direction: column;
+
+  gap: 9px;
+}
+
+.mat-tournament-form-field label {
+  display: flex;
+  align-items: center;
+
+  gap: 9px;
+
+  color: #10294f;
+
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.mat-tournament-form-label-icon {
+  width: 27px;
+  height: 27px;
+
+  display: inline-grid;
+  place-items: center;
+
+  color: #0879c7;
+
+  flex: 0 0 auto;
+}
+
+.mat-tournament-form-input {
+  width: 100%;
+  min-height: 52px;
+
+  border:
+    1px solid #cbd9e4;
+
+  border-radius: 9px;
+
+  background: #ffffff;
+
+  color: #10294f;
+
+  padding:
+    0 15px;
+
+  font-size: 15px;
+
+  outline: none;
+
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    background 0.15s ease;
+}
+
+.mat-tournament-form-input::placeholder {
+  color: #8b99aa;
+}
+
+.mat-tournament-form-input:hover {
+  border-color: #aec5d6;
+}
+
+.mat-tournament-form-input:focus {
+  border-color: #1288d0;
+
+  box-shadow:
+    0 0 0 3px
+    rgba(18, 136, 208, 0.12);
+}
+
+/* Helps date fields stay readable */
+
+.mat-tournament-form-input[type="date"] {
+  color: #10294f;
+  color-scheme: light;
+}
+
+.mat-tournament-form-input[type="date"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  opacity: 0.7;
+}
+
+/* Information box */
+
+.mat-tournament-form-info {
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+
+  padding:
+    14px 16px;
+
+  border:
+    1px solid #bcdcf2;
+
+  border-radius: 9px;
+
+  background: #eef8fe;
+
+  color: #274f73;
+}
+
+.mat-tournament-form-info-icon {
+  width: 31px;
+  height: 31px;
+
+  flex: 0 0 auto;
+
+  border-radius: 50%;
+
+  display: grid;
+  place-items: center;
+
+  background: #0b83d1;
+
+  color: white;
+}
+
+.mat-tournament-form-info p {
+  margin: 0;
+
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+/* Error */
+
+.mat-tournament-form-error {
+  border:
+    1px solid #efb5b5;
+
+  background: #fff3f3;
+
+  color: #9f2525;
+
+  border-radius: 8px;
+
+  padding:
+    11px 13px;
+
+  font-size: 13px;
+}
+
+/* Buttons */
+
+.mat-tournament-form-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  gap: 12px;
+
+  padding-top: 4px;
+}
+
+.mat-tournament-form-cancel,
+.mat-tournament-form-submit {
+  min-height: 48px;
+
+  border-radius: 9px;
+
+  padding:
+    0 19px;
+
+  font-size: 14px;
+  font-weight: 800;
+
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    transform 0.15s ease;
+}
+
+.mat-tournament-form-cancel {
+  border:
+    1px solid #c6d3de;
+
+  background: #ffffff;
+
+  color: #10294f;
+}
+
+.mat-tournament-form-cancel:hover {
+  background: #f4f8fa;
+
+  border-color: #aebfcd;
+}
+
+.mat-tournament-form-submit {
+  border: 0;
+
+  background:
+    linear-gradient(
+      180deg,
+      #118de0,
+      #0571c8
+    );
+
+  color: #ffffff;
+
+  box-shadow:
+    0 8px 18px
+    rgba(5, 113, 200, 0.2);
+}
+
+.mat-tournament-form-submit:hover:not(:disabled) {
+  background:
+    linear-gradient(
+      180deg,
+      #087ecc,
+      #0565b2
+    );
+
+  transform:
+    translateY(-1px);
+}
+
+.mat-tournament-form-submit:disabled,
+.mat-tournament-form-cancel:disabled {
+  opacity: 0.6;
+
+  cursor: not-allowed;
+}
+
+/* Improve modal background */
+
+.mat-modal-backdrop {
+  background:
+    rgba(18, 32, 48, 0.68);
+
+  backdrop-filter:
+    blur(4px);
+}
+
+/* Mobile */
+
+@media (max-width: 600px) {
+
+  .mat-tournament-form-modal {
+    max-height: 94vh;
+
+    border-radius: 14px;
+  }
+
+  .mat-tournament-form-header {
+    padding:
+      22px 20px 14px;
+  }
+
+  .mat-tournament-form {
+    padding:
+      8px 20px 22px;
+
+    gap: 19px;
+  }
+
+  .mat-tournament-form-actions {
+    flex-direction: column-reverse;
+
+    align-items: stretch;
+  }
+
+  .mat-tournament-form-cancel,
+  .mat-tournament-form-submit {
+    width: 100%;
+  }
+
+  .mat-tournament-form-info {
+    align-items: flex-start;
+  }
+
+}
+/* =========================================================
+   TOURNAMENT ARCHIVE TABS
+========================================================= */
+
+.mat-tournament-tabs {
+  display: inline-flex;
+  gap: 6px;
+  padding: 5px;
+  margin-bottom: 24px;
+  background: #ffffff;
+  border: 1px solid #d9e4ec;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(15, 49, 81, 0.05);
+}
+
+.mat-tournament-tabs button {
+  border: 0;
+  background: transparent;
+  color: #647990;
+  min-height: 42px;
+  padding: 0 16px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.mat-tournament-tabs button:hover {
+  background: #f1f7fb;
+}
+
+.mat-tournament-tabs button.active {
+  background: linear-gradient(180deg, #118de0, #0571c8);
+  color: #ffffff;
+  box-shadow: 0 5px 14px rgba(5, 113, 200, 0.2);
+}
+
+.mat-tournament-tabs button span {
+  min-width: 23px;
+  height: 23px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: rgba(112, 136, 158, 0.12);
+  font-size: 10px;
+}
+
+.mat-tournament-tabs button.active span {
+  background: rgba(255, 255, 255, 0.2);
+}
+/* =========================================================
+   TOURNAMENT ARCHIVE SUMMARY + RESULTS
+========================================================= */
+
+.mat-archive-summary {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border-bottom: 1px solid #e0e8ee;
+}
+
+.mat-archive-summary > div {
+  min-height: 105px;
+  padding: 18px 22px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  border-right: 1px solid #e1e8ee;
+  color: #1686ce;
+}
+
+.mat-archive-summary > div:last-child {
+  border-right: 0;
+}
+
+.mat-archive-summary strong {
+  color: #10294f;
+  font-size: 25px;
+}
+
+.mat-archive-summary span {
+  color: #74869a;
+  font-size: 11px;
+}
+
+.mat-archive-summary .gold {
+  color: #d09a13;
+}
+
+.mat-archive-summary .silver {
+  color: #8f9dab;
+}
+
+.mat-archive-summary .bronze {
+  color: #aa6b3d;
+}
+
+.mat-tournament-message {
+  margin: 20px 28px 0;
+  padding: 11px 14px;
+  border: 1px solid #bfe1cf;
+  background: #eef9f3;
+  color: #2b6d4d;
+  border-radius: 9px;
+  font-size: 12px;
+}
+
+.mat-results-athlete-list {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.mat-results-athlete-card {
+  border: 1px solid #d9e4ec;
+  border-radius: 14px;
+  background: #fbfdfe;
+  overflow: hidden;
+}
+
+.mat-results-athlete-header {
+  padding: 17px 19px;
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  border-bottom: 1px solid #e1e8ee;
+  background: linear-gradient(135deg, #f8fcff, #f0f8fd);
+}
+
+.mat-results-athlete-header > div:last-child {
+  display: flex;
+  flex-direction: column;
+}
+
+.mat-results-athlete-header strong {
+  color: #10294f;
+  font-size: 15px;
+}
+
+.mat-results-athlete-header span {
+  margin-top: 3px;
+  color: #78899d;
+  font-size: 11px;
+}
+
+.mat-results-no-events {
+  padding: 20px;
+  color: #7b8d9f;
+  font-size: 12px;
+}
+
+.mat-results-event-list {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mat-result-event-card {
+  padding: 16px;
+  border: 1px solid #dfe7ed;
+  border-radius: 11px;
+  background: #ffffff;
+}
+
+.mat-result-event-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.mat-result-event-title > div {
+  display: flex;
+  flex-direction: column;
+}
+
+.mat-result-event-title strong {
+  color: #163654;
+  font-size: 14px;
+}
+
+.mat-result-event-title > div > span {
+  color: #8a99a9;
+  margin-top: 2px;
+  font-size: 10px;
+}
+
+.mat-result-form-grid {
+  display: grid;
+  grid-template-columns: 150px 170px 1fr;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.mat-medal-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.mat-medal-badge.gold {
+  background: #fff3c9;
+  color: #a16d00;
+  border: 1px solid #ecd587;
+}
+
+.mat-medal-badge.silver {
+  background: #edf1f4;
+  color: #5c6b78;
+  border: 1px solid #d1d9df;
+}
+
+.mat-medal-badge.bronze {
+  background: #f7e7da;
+  color: #87502d;
+  border: 1px solid #e4c3aa;
+}
+
+.mat-result-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  margin-top: 14px;
+  padding-top: 13px;
+  border-top: 1px solid #e5ebf0;
+}
+
+.mat-result-footer > div {
+  color: #60758c;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.mat-result-save {
+  min-height: 40px;
+  height: 40px;
+  padding: 0 15px;
+  font-size: 12px;
+}
+/* =========================================================
+   TOURNAMENT ARCHIVE RESPONSIVE
+========================================================= */
+
+@media (max-width: 850px) {
+  .mat-archive-summary {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .mat-archive-summary > div:nth-child(2) {
+    border-right: 0;
+  }
+
+  .mat-archive-summary > div:nth-child(-n + 2) {
+    border-bottom: 1px solid #e1e8ee;
+  }
+
+  .mat-result-form-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .mat-result-form-grid > div:last-child {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 600px) {
+  .mat-tournament-tabs {
+    width: 100%;
+  }
+
+  .mat-tournament-tabs button {
+    flex: 1;
+    justify-content: center;
+  }
+
+  .mat-archive-summary {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .mat-result-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .mat-result-form-grid > div:last-child {
+    grid-column: auto;
+  }
+
+  .mat-result-event-title {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .mat-result-footer {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .mat-result-save {
+    width: 100%;
+  }
+}
+/* Tournament event groups */
+
+.mat-tournament-event-groups {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.mat-tournament-event-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mat-tournament-event-group
+  .mat-tournament-events-label {
+  margin: 0;
+  font-weight: 700;
+}
+
 /* Searchable competitor picker and tournament-history theme refinements. */
 .mat-competitor-picker{margin-top:18px;padding:18px;border:1px solid #d9e5ee;border-radius:14px;background:#f8fbfd}
 .mat-competitor-search-row{display:flex;align-items:center;gap:14px}
@@ -338,4 +2070,154 @@ html[data-theme='dark'] body #root .mat-page .mat-tournament-detail .mat-tournam
 
 :root[data-theme='dark'] .mat-tournament-form-cancel:hover {
   background: #23485c !important;
+}
+
+/* Tournaments */
+:root[data-theme='dark'] :is(.mat-tournament-tabs,.mat-tournament-tile,.mat-tournament-detail,.mat-tournament-athlete-card,.mat-history-athlete-card,.mat-history-inline-result,.mat-history-event-editor,.mat-tournament-add-athlete,.mat-archive-summary){color:var(--theme-text)!important;border-color:var(--theme-border)!important;background:var(--theme-surface)!important}
+:root[data-theme='dark'] :is(.mat-tournament-name,.mat-tournament-detail-title-row h2,.mat-tournament-section-heading h2,.mat-tournament-athlete-name-area strong,.mat-history-editor-heading h3){color:var(--theme-heading)!important}
+:root[data-theme='dark'] :is(.mat-tournament-meta,.mat-tournament-detail-meta,.mat-tournament-detail-label,.mat-tournament-payment-label,.mat-tournament-events-label,.mat-tournament-empty){color:var(--theme-muted)!important}
+:root[data-theme='dark'] :is(.mat-tournament-event-option,.mat-history-event-block,.mat-tournament-detail-stat){color:var(--theme-text)!important;border-color:var(--theme-border)!important;background:var(--theme-surface-alt)!important}
+:root[data-theme='dark'] .mat-tournament-tabs button:not(.active){color:var(--theme-text)!important;background:var(--theme-surface-alt)!important}
+
+
+/* Archived tournament athlete history editor extracted from index.css. */
+/* =========================================================
+   ARCHIVED TOURNAMENT ATHLETE HISTORY DROPDOWN
+========================================================= */
+
+.mat-history-athlete-card {
+  overflow: hidden;
+}
+
+.mat-history-athlete-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.mat-history-expand-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+
+  padding: 8px 12px;
+
+  border: 1px solid #b8d8ea;
+  border-radius: 8px;
+
+  background: #eef8fd;
+  color: #087bc7;
+
+  font-size: 12px;
+  font-weight: 800;
+
+  cursor: pointer;
+}
+
+.mat-history-expand-button:hover {
+  background: #e3f4fc;
+}
+
+.mat-history-expanded-content {
+  padding: 20px 18px;
+
+  border-top: 1px solid #dce8ef;
+
+  background: #fbfdfe;
+}
+
+.mat-history-editor-heading {
+  margin-bottom: 20px;
+}
+
+.mat-history-editor-heading > div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.mat-history-editor-heading strong {
+  color: #173957;
+  font-size: 15px;
+}
+
+.mat-history-editor-heading span {
+  color: #71879a;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.mat-history-event-editor {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.mat-history-event-block {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.mat-history-inline-result {
+  margin-left: 18px;
+  padding: 16px;
+
+  border: 1px solid #d7e6ef;
+  border-radius: 10px;
+
+  background: #ffffff;
+}
+
+.mat-history-inline-result-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+
+  margin-bottom: 14px;
+}
+
+.mat-history-inline-result-header > div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.mat-history-inline-result-header strong {
+  color: #294b67;
+  font-size: 14px;
+}
+
+.mat-history-inline-result-header span:not(.mat-medal-badge) {
+  color: #8495a2;
+  font-size: 11px;
+}
+
+@media (max-width: 700px) {
+
+  .mat-history-athlete-actions {
+    width: 100%;
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .mat-history-expand-button {
+    width: 100%;
+  }
+
+  .mat-history-expanded-content {
+    padding: 15px 12px;
+  }
+
+  .mat-history-inline-result {
+    margin-left: 0;
+    padding: 13px;
+  }
+
+  .mat-history-inline-result-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
 }

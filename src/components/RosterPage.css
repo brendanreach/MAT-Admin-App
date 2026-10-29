@@ -1,0 +1,408 @@
+
+/* Roster page component styles */
+.mat-roster-page .mat-stats-card{display:grid;grid-template-columns:repeat(4,1fr);background:rgba(255,255,255,.96);border:1px solid #dfe8ef;border-radius:14px;box-shadow:0 12px 28px rgba(22,55,91,.08);overflow:hidden}
+.mat-roster-page .mat-stat{min-height:130px;padding:20px 14px;text-align:center;display:flex;flex-direction:column;justify-content:center;border-right:1px solid #e2e9ef}.mat-roster-page .mat-stat:last-child{border-right:0}.mat-roster-page .mat-stat-icon{margin:0 auto 5px;width:27px;height:27px;color:#178dd0}.mat-roster-page .mat-stat-icon.active{color:#48bd83}.mat-roster-page .mat-stat-icon.inactive{color:#aeb9c5}.mat-roster-page .mat-stat-icon.black-belt{color:#172c4e}.mat-roster-page .mat-stat-number{font-size:30px;font-weight:800;line-height:1;color:#10294f}.mat-roster-page .mat-stat-label{margin-top:7px;color:#385170;font-size:14px}
+.mat-roster-page .mat-panel{background:rgba(255,255,255,.96);border:1px solid #dae5ed;border-radius:15px;box-shadow:0 12px 32px rgba(23,57,91,.08);overflow:hidden}.mat-roster-page .mat-toolbar{padding:20px;display:flex;gap:14px;justify-content:space-between;align-items:center;flex-wrap:wrap}.mat-roster-page .mat-search{position:relative;flex:1;min-width:260px;max-width:620px}.mat-roster-page .mat-search svg{position:absolute;left:16px;top:50%;transform:translateY(-50%);color:#304a6e}.mat-roster-page .mat-search input{width:100%;height:52px;padding:0 18px 0 49px;border:1px solid #c9d7e3;border-radius:9px;background:#fff;color:#10294f;outline:none}.mat-roster-page .mat-toolbar-actions{display:flex;gap:12px}.mat-roster-page .mat-select{min-width:150px;height:52px;padding:0 14px;border-radius:9px;border:1px solid #c9d7e3;background:#fff;color:#10294f;outline:none}
+.mat-roster-page .mat-table-container{overflow-x:auto;padding:0 20px 20px}.mat-roster-page .mat-table{width:100%;min-width:1080px;border-collapse:separate;border-spacing:0;border:1px solid #dce5ec;border-radius:11px;overflow:hidden}.mat-roster-page .mat-table th{background:#edf4f8;color:#445a78;font-size:12px;letter-spacing:.035em;text-transform:uppercase;padding:15px;text-align:left;border-bottom:1px solid #dbe4eb;white-space:nowrap}.mat-roster-page .mat-table td{color:#173054;padding:13px 15px;border-bottom:1px solid #e1e8ee;vertical-align:middle}.mat-roster-page .mat-table tbody tr:last-child td{border-bottom:0}.mat-roster-page .mat-table tbody tr:nth-child(even){background:#fbfdfe}.mat-roster-page .mat-table tbody tr:hover{background:#f4f9fc}
+.mat-roster-page .mat-athlete-profile-link{padding:0;border:0;background:transparent;color:#10294f;font-weight:800;text-align:left}.mat-roster-page .mat-athlete-profile-hint{margin-top:3px;color:#8a99a8;font-size:10px}
+.mat-roster-page .mat-pill{display:inline-flex;align-items:center;justify-content:center;border-radius:999px;font-size:12px;font-weight:700;padding:6px 11px;line-height:1;white-space:nowrap}.mat-roster-page .mat-discipline-list{display:flex;flex-wrap:wrap;gap:6px}.mat-roster-page .mat-poomsae{background:#d8ebff;color:#0065be}.mat-roster-page .mat-sparring{background:#ffe0e2;color:#d11f2d}.mat-roster-page .mat-breaking{background:#e5dfff;color:#5139c9}.mat-roster-page .mat-active-pill{min-width:78px;background:#d2f3e1;color:#136542}.mat-roster-page .mat-inactive-pill{min-width:78px;background:#e4e9ef;color:#344a65}.mat-roster-page .mat-belt{min-width:82px;border:1px solid transparent}.mat-roster-page .mat-belt-white{background:#fff;border-color:#d6dee6;color:#2a3c55}.mat-roster-page .mat-belt-yellow{background:#fff5d2;border-color:#f3dda0;color:#735100}.mat-roster-page .mat-belt-green{background:#dff5ea;border-color:#bce5cf;color:#136544}.mat-roster-page .mat-belt-blue{background:#d8ebff;border-color:#b2d6f9;color:#075ca8}.mat-roster-page .mat-belt-red{background:#ffe0e0;border-color:#f5baba;color:#b31f28}.mat-roster-page .mat-belt-black{background:#d9dee5;border-color:#bac3cf;color:#0c1728}
+
+/* =========================================================
+   ROSTER ACTION BUTTONS
+========================================================= */
+
+.mat-roster-actions {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  white-space: nowrap;
+}
+
+.mat-history-button,
+.mat-edit-button {
+  min-height: 36px;
+  padding: 0 11px;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 800;
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.15s ease;
+}
+
+/* Competition History */
+
+.mat-history-button {
+  border: 1px solid #c9e2f2;
+  background: #eef8fe;
+  color: #0879c8;
+}
+
+.mat-history-button:hover {
+  background: #dff2fc;
+  border-color: #9fd1ee;
+  color: #0569ae;
+  box-shadow: 0 4px 10px rgba(8, 121, 200, 0.1);
+  transform: translateY(-1px);
+}
+
+/* Edit Athlete */
+
+.mat-edit-button {
+  border: 1px solid #d8e2e9;
+  background: #ffffff;
+  color: #526b82;
+}
+
+.mat-edit-button:hover {
+  background: #f3f7fa;
+  border-color: #bdccd8;
+  color: #173d60;
+  box-shadow: 0 4px 10px rgba(20, 47, 78, 0.08);
+  transform: translateY(-1px);
+}
+
+.mat-history-button:active,
+.mat-edit-button:active {
+  transform: translateY(0);
+}
+
+.mat-history-button:focus-visible,
+.mat-edit-button:focus-visible {
+  outline: 3px solid rgba(17, 141, 224, 0.2);
+  outline-offset: 2px;
+}
+
+/* Mobile */
+
+@media (max-width: 700px) {
+  .mat-roster-actions {
+    flex-direction: column;
+    align-items: stretch;
+    min-width: 90px;
+  }
+
+  .mat-history-button,
+  .mat-edit-button {
+    width: 100%;
+  }
+}
+
+/* =========================================================
+   MOBILE TEAM ROSTER
+   Desktop keeps the existing roster table.
+   Phones receive dedicated athlete cards.
+   ========================================================= */
+
+.mat-roster-mobile {
+  display: none;
+}
+
+.mat-roster-empty {
+  padding: 35px;
+  text-align: center;
+  color: #718198;
+}
+
+@media (max-width: 700px) {
+  .mat-roster-desktop {
+    display: none;
+  }
+
+  .mat-roster-mobile {
+    display: block;
+  }
+
+  .mat-roster-mobile-list {
+    display: grid;
+    gap: 12px;
+  }
+
+  .mat-roster-mobile-card {
+    overflow: hidden;
+    background: var(
+      --mat-card,
+      #ffffff
+    );
+    border: 1px solid
+      var(
+        --mat-border,
+        #d8e4ed
+      );
+    border-radius: 16px;
+    box-shadow:
+      0 4px 14px
+      rgba(10, 34, 55, 0.06);
+  }
+
+  .mat-roster-mobile-card.inactive {
+    opacity: 0.82;
+  }
+
+  .mat-roster-mobile-card-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 16px 16px 13px;
+  }
+
+  .mat-roster-mobile-name-area {
+    min-width: 0;
+  }
+
+  .mat-roster-mobile-name {
+    display: block;
+    max-width: 100%;
+    padding: 0;
+    overflow: hidden;
+    color: var(
+      --mat-heading,
+      #123557
+    );
+    background: transparent;
+    border: 0;
+    font-size: 17px;
+    font-weight: 800;
+    line-height: 1.25;
+    text-align: left;
+    text-overflow: ellipsis;
+  }
+
+  .mat-roster-mobile-meta {
+    margin-top: 5px;
+    color: var(
+      --mat-muted,
+      #718198
+    );
+    font-size: 12px;
+  }
+
+  .mat-roster-mobile-meta strong {
+    color: var(
+      --mat-text,
+      #173957
+    );
+  }
+
+  .mat-roster-mobile-details {
+    display: grid;
+    gap: 13px;
+    padding: 14px 16px 16px;
+    border-top: 1px solid
+      var(
+        --mat-border,
+        #e1e9ef
+      );
+  }
+
+  .mat-roster-mobile-detail-group {
+    display: grid;
+    gap: 7px;
+  }
+
+  .mat-roster-mobile-label {
+    color: var(
+      --mat-muted,
+      #718198
+    );
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+  }
+
+  .mat-roster-mobile-card
+    .mat-discipline-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .mat-roster-mobile-actions {
+    display: grid;
+    grid-template-columns:
+      minmax(0, 1fr)
+      minmax(0, 0.7fr);
+    gap: 8px;
+    padding: 12px 16px 16px;
+    border-top: 1px solid
+      var(
+        --mat-border,
+        #e1e9ef
+      );
+  }
+
+  .mat-roster-mobile-profile-button,
+  .mat-roster-mobile-edit-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    min-height: 44px;
+    padding: 9px 12px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 800;
+  }
+
+  .mat-roster-mobile-profile-button {
+    color: #ffffff;
+    background:
+      linear-gradient(
+        135deg,
+        #1698dc,
+        #0875c7
+      );
+    border: 1px solid #0875c7;
+  }
+
+  .mat-roster-mobile-edit-button {
+    color: var(
+      --mat-heading,
+      #123557
+    );
+    background: var(
+      --mat-soft,
+      #edf5fa
+    );
+    border: 1px solid
+      var(
+        --mat-border,
+        #cbdbe5
+      );
+  }
+
+  .mat-roster-empty {
+    padding: 30px 15px;
+  }
+
+  /*
+   * Roster toolbar:
+   * search on top, filter + Add Athlete below.
+   */
+  .mat-toolbar {
+    gap: 10px;
+  }
+
+  .mat-toolbar
+    .mat-search {
+    width: 100%;
+  }
+
+  .mat-toolbar
+    .mat-toolbar-actions {
+    display: grid;
+    grid-template-columns:
+      minmax(0, 1fr)
+      minmax(0, 1fr);
+    width: 100%;
+    gap: 8px;
+  }
+
+  .mat-toolbar
+    .mat-toolbar-actions
+    .mat-select,
+  .mat-toolbar
+    .mat-toolbar-actions
+    .mat-primary-button {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .mat-toolbar
+    .mat-toolbar-actions
+    .mat-primary-button {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 380px) {
+  .mat-roster-mobile-actions {
+    grid-template-columns: 1fr;
+  }
+}
+/* Roster summary and content surfaces */
+:root[data-theme='dark'] .mat-stats-card,
+:root[data-theme='dark'] .mat-panel,
+:root[data-theme='dark'] .mat-table-container {
+  color: var(--theme-text) !important;
+  border-color: var(--theme-border) !important;
+  background: var(--theme-surface) !important;
+}
+
+:root[data-theme='dark'] .mat-stat {
+  border-color: var(--theme-border) !important;
+}
+
+:root[data-theme='dark'] .mat-stat-number,
+:root[data-theme='dark'] .mat-stat-label {
+  color: var(--theme-heading) !important;
+}
+
+:root[data-theme='dark'] .mat-toolbar {
+  border-color: var(--theme-border) !important;
+  background: var(--theme-surface) !important;
+}
+
+:root[data-theme='dark'] .mat-search,
+:root[data-theme='dark'] .mat-search input,
+:root[data-theme='dark'] .mat-select {
+  color: var(--theme-text) !important;
+  border-color: var(--theme-border) !important;
+  background: var(--theme-input) !important;
+}
+
+:root[data-theme='dark'] .mat-search input::placeholder {
+  color: #9fb8c8 !important;
+  opacity: 1;
+}
+
+/* Roster table */
+:root[data-theme='dark'] .mat-table {
+  color: var(--theme-text) !important;
+  border-color: var(--theme-border) !important;
+  background: var(--theme-surface) !important;
+}
+
+:root[data-theme='dark'] .mat-table thead,
+:root[data-theme='dark'] .mat-table th {
+  color: var(--theme-heading) !important;
+  border-color: var(--theme-border) !important;
+  background: var(--theme-surface-alt) !important;
+}
+
+:root[data-theme='dark'] .mat-table td {
+  color: var(--theme-text) !important;
+  border-color: var(--theme-border) !important;
+  background: var(--theme-surface) !important;
+}
+
+:root[data-theme='dark'] .mat-table tbody tr:nth-child(even) td,
+:root[data-theme='dark'] .mat-table tbody tr:hover td {
+  background: var(--theme-surface-alt) !important;
+}
+
+:root[data-theme='dark'] .mat-athlete-profile-link {
+  color: var(--theme-heading) !important;
+}
+
+:root[data-theme='dark'] .mat-athlete-profile-hint {
+  color: var(--theme-muted) !important;
+}
+
+:root[data-theme='dark'] .mat-edit-button,
+:root[data-theme='dark'] .mat-secondary-button {
+  color: var(--theme-heading) !important;
+  border-color: var(--theme-border) !important;
+  background: var(--theme-surface-alt) !important;
+}
+

@@ -1,1249 +1,301 @@
 import {
   Award,
-  Bell,
-  CalendarDays,
+  ChevronLeft,
   ChevronRight,
+  MapPin,
   Medal,
-  Megaphone,
-  Sparkles,
+  MessageCircle,
+  Pin,
   Target,
   Trophy,
-  UserRound,
 } from 'lucide-react'
+import { useEffect, useMemo, useState } from 'react'
+import { supabase } from '../lib/supabase.js'
+import './AthleteHomePage.css'
 
-const MILESTONE_CHECKPOINTS = [
-  1,
-  5,
-  10,
-  25,
-  50,
-  100,
+const HERO_IMAGES = [
+  '/home-hero-competition.png',
+  '/home-hero-training.png',
+  '/home-hero-team.png',
 ]
 
-function AthleteHomePage({
+function parseDate(value) {
+  return value ? new Date(`${value}T00:00:00`) : null
+}
+
+function formatDate(value, includeYear = true) {
+  const date = parseDate(value)
+  if (!date) return 'Date TBD'
+  return date.toLocaleDateString(undefined, {
+    month: 'short',
+    day: 'numeric',
+    ...(includeYear ? { year: 'numeric' } : {}),
+  })
+}
+
+function formatDateRange(startDate, endDate) {
+  if (!startDate) return 'Date TBD'
+  if (!endDate || endDate === startDate) return formatDate(startDate)
+  const start = parseDate(startDate)
+  const end = parseDate(endDate)
+  if (!start || !end) return formatDate(startDate)
+  if (start.getFullYear() === end.getFullYear() && start.getMonth() === end.getMonth()) {
+    return `${start.toLocaleDateString(undefined, { month: 'short' })} ${start.getDate()}–${end.getDate()}, ${end.getFullYear()}`
+  }
+  return `${formatDate(startDate, false)} – ${formatDate(endDate)}`
+}
+
+function getMedalType(result) {
+  if (!result) return ''
+  if (result.result_stage === 'Gold' || result.medal === 'Gold' || Number(result.placement) === 1) return 'Gold'
+  if (result.result_stage === 'Silver' || result.medal === 'Silver' || Number(result.placement) === 2) return 'Silver'
+  if (result.result_stage === 'Bronze' || result.medal === 'Bronze' || Number(result.placement) === 3) return 'Bronze'
+  return ''
+}
+
+function truncate(value, length = 120) {
+  const text = String(value || '').trim()
+  return text.length > length ? `${text.slice(0, length).trim()}…` : text
+}
+
+export default function AthleteHomePage({
   member,
   tournaments = [],
   tournamentEntries = [],
   tournamentResults = [],
-  announcements = [],
   onNavigate,
 }) {
-  function getTodayString() {
-    const now =
-      new Date()
+  const [topics, setTopics] = useState([])
+  const [slideIndex, setSlideIndex] = useState(0)
+  const [paused, setPaused] = useState(false)
 
-    const year =
-      now.getFullYear()
-
-    const month =
-      String(
-        now.getMonth() + 1
-      ).padStart(
-        2,
-        '0'
-      )
-
-    const day =
-      String(
-        now.getDate()
-      ).padStart(
-        2,
-        '0'
-      )
-
-    return `${year}-${month}-${day}`
-  }
-
-  function parseDate(
-    dateString
-  ) {
-    if (!dateString) {
-      return null
+  useEffect(() => {
+    let active = true
+    async function loadTopics() {
+      const { data, error } = await supabase
+        .from('discussion_topics')
+        .select('id,title,body,is_pinned,created_at,last_activity_at,discussion_comments(count)')
+        .eq('is_archived', false)
+        .order('is_pinned', { ascending: false })
+        .order('last_activity_at', { ascending: false })
+        .limit(5)
+      if (active && !error) setTopics(data || [])
     }
+    loadTopics()
+    return () => { active = false }
+  }, [])
 
-    return new Date(
-      `${dateString}T00:00:00`
-    )
-  }
+  const today = useMemo(() => {
+    const now = new Date()
+    return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`
+  }, [])
 
-  function formatDate(
-    dateString
-  ) {
-    const date =
-      parseDate(
-        dateString
-      )
+  const athleteEntryIds = useMemo(
+    () => tournamentEntries.map((entry) => entry.id),
+    [tournamentEntries]
+  )
+  const athleteResults = useMemo(
+    () => tournamentResults.filter((result) => athleteEntryIds.includes(result.tournament_entry_id)),
+    [tournamentResults, athleteEntryIds]
+  )
+  const goldCount = athleteResults.filter((result) => getMedalType(result) === 'Gold').length
+  const totalMedals = athleteResults.filter((result) => getMedalType(result)).length
+  const totalEventsEntered = tournamentEntries.reduce((total, entry) => total + (entry.events?.length || 0), 0)
 
-    if (!date) {
-      return '—'
+  const upcomingTournaments = useMemo(
+    () => tournaments
+      .filter((tournament) => (tournament.end_date || tournament.event_date || '') >= today)
+      .sort((a, b) => String(a.event_date || '').localeCompare(String(b.event_date || ''))),
+    [tournaments, today]
+  )
+
+  const nextTournament = upcomingTournaments[0] || null
+  const nextEntry = nextTournament
+    ? tournamentEntries.find((entry) => entry.tournament_id === nextTournament.id) || null
+    : null
+
+  const slides = useMemo(() => {
+    const result = []
+    if (nextTournament) {
+      result.push({
+        id: `tournament-${nextTournament.id}`,
+        kicker: 'Upcoming Tournament',
+        title: nextTournament.name,
+        body: nextTournament.location || 'Your next team competition is coming up.',
+        meta: formatDateRange(nextTournament.event_date, nextTournament.end_date),
+        action: 'View Tournament',
+        target: 'tournaments',
+        image: HERO_IMAGES[0],
+      })
     }
-
-    return date.toLocaleDateString(
-      undefined,
-      {
-        month: 'short',
-        day: 'numeric',
-        year: 'numeric',
-      }
-    )
-  }
-
-  function getDaysUntil(
-    dateString
-  ) {
-    const targetDate =
-      parseDate(
-        dateString
-      )
-
-    if (!targetDate) {
-      return null
+    if (topics[0]) {
+      result.push({
+        id: `topic-${topics[0].id}`,
+        kicker: topics[0].is_pinned ? 'Pinned Team Discussion' : 'Team Discussion',
+        title: topics[0].title,
+        body: truncate(topics[0].body, 145),
+        meta: `${topics[0].discussion_comments?.[0]?.count || 0} comments`,
+        action: 'View Messages',
+        target: 'messages',
+        image: HERO_IMAGES[1],
+      })
     }
+    result.push({
+      id: 'team-portal',
+      kicker: 'Competition Team',
+      title: member ? `Welcome, ${member.first_name}` : 'Michigan Academy of Taekwondo',
+      body: 'Stay connected with your team, coaches, tournaments, and competition progress.',
+      meta: member?.belt_rank ? `${member.belt_rank} Belt` : 'MAT Team Portal',
+      action: 'My Profile',
+      target: 'my-profile',
+      image: HERO_IMAGES[2],
+    })
+    return result
+  }, [nextTournament, topics, member])
 
-    const now =
-      new Date()
+  useEffect(() => {
+    if (paused || slides.length < 2) return undefined
+    const timer = window.setInterval(() => {
+      setSlideIndex((current) => (current + 1) % slides.length)
+    }, 9000)
+    return () => window.clearInterval(timer)
+  }, [paused, slides.length])
 
-    now.setHours(
-      0,
-      0,
-      0,
-      0
-    )
-
-    const difference =
-      targetDate.getTime() -
-      now.getTime()
-
-    return Math.ceil(
-      difference /
-        (
-          1000 *
-          60 *
-          60 *
-          24
-        )
-    )
-  }
-
-  function getCountdownLabel(
-    days
-  ) {
-    if (
-      days === null
-    ) {
-      return ''
-    }
-
-    if (days === 0) {
-      return 'Today'
-    }
-
-    if (days === 1) {
-      return 'Tomorrow'
-    }
-
-    if (days > 1) {
-      return `${days} days away`
-    }
-
-    return ''
-  }
-
-  function getEventDisplayName(
-    eventName
-  ) {
-    if (
-      eventName ===
-      'World Class Poomsae - Individual'
-    ) {
-      return 'World Class Poomsae — Individual'
-    }
-
-    if (
-      eventName ===
-      'World Class Poomsae - Mixed Pairs'
-    ) {
-      return 'World Class Poomsae — Mixed Pairs'
-    }
-
-    if (
-      eventName ===
-      'World Class Poomsae - Team'
-    ) {
-      return 'World Class Poomsae — Team'
-    }
-
-    return eventName
-  }
-
-  function getMedalType(
-    result
-  ) {
-    if (!result) {
-      return ''
-    }
-
-    if (
-      result.result_stage ===
-        'Gold' ||
-      result.medal ===
-        'Gold' ||
-      Number(
-        result.placement
-      ) === 1
-    ) {
-      return 'Gold'
-    }
-
-    if (
-      result.result_stage ===
-        'Silver' ||
-      result.medal ===
-        'Silver' ||
-      Number(
-        result.placement
-      ) === 2
-    ) {
-      return 'Silver'
-    }
-
-    if (
-      result.result_stage ===
-        'Bronze' ||
-      result.medal ===
-        'Bronze' ||
-      Number(
-        result.placement
-      ) === 3
-    ) {
-      return 'Bronze'
-    }
-
-    return ''
-  }
-
-  const today =
-    getTodayString()
-
-  const athleteEntryIds =
-    tournamentEntries.map(
-      (entry) =>
-        entry.id
-    )
-
-  const athleteResults =
-    tournamentResults.filter(
-      (result) =>
-        athleteEntryIds.includes(
-          result.tournament_entry_id
-        )
-    )
-
-  const goldCount =
-    athleteResults.filter(
-      (result) =>
-        getMedalType(
-          result
-        ) ===
-        'Gold'
-    ).length
-
-  const silverCount =
-    athleteResults.filter(
-      (result) =>
-        getMedalType(
-          result
-        ) ===
-        'Silver'
-    ).length
-
-  const bronzeCount =
-    athleteResults.filter(
-      (result) =>
-        getMedalType(
-          result
-        ) ===
-        'Bronze'
-    ).length
-
-  const totalMedals =
-    goldCount +
-    silverCount +
-    bronzeCount
-
-  const totalEventsEntered =
-    tournamentEntries.reduce(
-      (
-        total,
-        entry
-      ) =>
-        total +
-        (
-          entry.events
-            ?.length ||
-          0
-        ),
-      0
-    )
-
-  const upcomingEntries =
-    tournamentEntries
-      .map(
-        (
-          entry
-        ) => {
-          const tournament =
-            tournaments.find(
-              (item) =>
-                item.id ===
-                entry.tournament_id
-            )
-
-          if (!tournament) {
-            return null
-          }
-
-          return {
-            entry,
-            tournament,
-          }
-        }
-      )
-      .filter(Boolean)
-      .filter(
-        ({
-          tournament,
-        }) =>
-          (
-            tournament.end_date ||
-            tournament.event_date
-          ) >= today
-      )
-      .sort(
-        (
-          a,
-          b
-        ) =>
-          String(
-            a.tournament.event_date ||
-              ''
-          ).localeCompare(
-            String(
-              b.tournament.event_date ||
-                ''
-            )
-          )
-      )
-
-  const nextTournamentRecord =
-    upcomingEntries[0] ||
-    null
-
-  const nextTournament =
-    nextTournamentRecord
-      ?.tournament ||
-    null
-
-  const nextTournamentEntry =
-    nextTournamentRecord
-      ?.entry ||
-    null
-
-  const tournamentCountdown =
-    nextTournament
-      ? getDaysUntil(
-          nextTournament.event_date
-        )
-      : null
-
-  const currentAnnouncements =
-    announcements
-      .filter(
-        (
-          announcement
-        ) =>
-          announcement.is_active !==
-          false
-      )
-      .filter(
-        (
-          announcement
-        ) =>
-          !announcement.publish_date ||
-          announcement.publish_date <=
-            today
-      )
-      .filter(
-        (
-          announcement
-        ) =>
-          !announcement.expiration_date ||
-          announcement.expiration_date >=
-            today
-      )
-
-  const priorityOrder = {
-    urgent: 3,
-    important: 2,
-    normal: 1,
-  }
-
-  const importantAnnouncement =
-    [
-      ...currentAnnouncements,
-    ]
-      .sort(
-        (
-          a,
-          b
-        ) => {
-          if (
-            Boolean(
-              a.featured
-            ) !==
-            Boolean(
-              b.featured
-            )
-          ) {
-            return a.featured
-              ? -1
-              : 1
-          }
-
-          const priorityDifference =
-            (
-              priorityOrder[
-                b.priority
-              ] ||
-              0
-            ) -
-            (
-              priorityOrder[
-                a.priority
-              ] ||
-              0
-            )
-
-          if (
-            priorityDifference !==
-            0
-          ) {
-            return priorityDifference
-          }
-
-          return String(
-            b.publish_date ||
-              ''
-          ).localeCompare(
-            String(
-              a.publish_date ||
-                ''
-            )
-          )
-        }
-      )[0] ||
-    null
-
-  const tournamentCount =
-    tournamentEntries.length
-
-  const nextTournamentMilestone =
-    MILESTONE_CHECKPOINTS.find(
-      (checkpoint) =>
-        checkpoint >
-        tournamentCount
-    ) ||
-    null
-
-  const nextMedalMilestone =
-    MILESTONE_CHECKPOINTS.find(
-      (checkpoint) =>
-        checkpoint >
-        totalMedals
-    ) ||
-    null
-
-  const nextGoldMilestone =
-    MILESTONE_CHECKPOINTS.find(
-      (checkpoint) =>
-        checkpoint >
-        goldCount
-    ) ||
-    null
-
-  const milestoneOptions = [
-    nextTournamentMilestone
-      ? {
-          id:
-            'tournaments',
-
-          label:
-            'Tournament Experience',
-
-          current:
-            tournamentCount,
-
-          goal:
-            nextTournamentMilestone,
-
-          unit:
-            'tournaments',
-
-          icon:
-            Trophy,
-        }
-      : null,
-
-    nextMedalMilestone
-      ? {
-          id:
-            'medals',
-
-          label:
-            'Medal Collection',
-
-          current:
-            totalMedals,
-
-          goal:
-            nextMedalMilestone,
-
-          unit:
-            'medals',
-
-          icon:
-            Medal,
-        }
-      : null,
-
-    nextGoldMilestone
-      ? {
-          id:
-            'gold',
-
-          label:
-            'Gold Medal Collection',
-
-          current:
-            goldCount,
-
-          goal:
-            nextGoldMilestone,
-
-          unit:
-            'gold medals',
-
-          icon:
-            Award,
-        }
-      : null,
-  ].filter(Boolean)
-
-  const nextMilestone =
-    milestoneOptions
-      .sort(
-        (
-          a,
-          b
-        ) =>
-          (
-            a.goal -
-            a.current
-          ) -
-          (
-            b.goal -
-            b.current
-          )
-      )[0] ||
-    null
-
-  const milestonePercentage =
-    nextMilestone
-      ? Math.min(
-          100,
-          Math.round(
-            (
-              nextMilestone.current /
-              nextMilestone.goal
-            ) *
-              100
-          )
-        )
-      : 100
+  useEffect(() => {
+    if (slideIndex >= slides.length) setSlideIndex(0)
+  }, [slideIndex, slides.length])
 
   if (!member) {
     return (
-      <div className="mat-athlete-home">
-
-        <section className="mat-athlete-welcome">
-
-          <div>
-
-            <span className="mat-athlete-eyebrow">
-              Athlete View
-            </span>
-
-            <h1>
-              Athlete Profile Not Linked
-            </h1>
-
-            <p>
-              Your login has the Athlete
-              role, but it is not yet
-              linked to a member record.
-            </p>
-
-          </div>
-
-          <UserRound
-            size={48}
-          />
-
-        </section>
-
+      <div className="mat-new-home-empty">
+        <h1>Athlete Profile Not Linked</h1>
+        <p>Your login has the Athlete role, but it is not linked to a member record yet.</p>
       </div>
     )
   }
 
+  const currentSlide = slides[slideIndex] || slides[0]
+
   return (
-    <div className="mat-athlete-home">
-
-      <section className="mat-athlete-welcome mat-athlete-dashboard-welcome">
-
-        <div>
-
-          <span className="mat-athlete-eyebrow">
-            My Competition Dashboard
-          </span>
-
-          <h1>
-            Welcome,{' '}
-            {member.first_name}
-          </h1>
-
-          <p>
-            Stay current on your next
-            competition, team updates
-            and competition progress.
-          </p>
-
+    <div className="mat-new-home">
+      <section
+        className="mat-new-home-hero"
+        onMouseEnter={() => setPaused(true)}
+        onMouseLeave={() => setPaused(false)}
+      >
+        <img src={currentSlide.image} alt="" className="mat-new-home-hero-image" />
+        <div className="mat-new-home-hero-shade" />
+        <div className="mat-new-home-hero-copy">
+          <span>{currentSlide.kicker}</span>
+          <h1>{currentSlide.title}</h1>
+          <p>{currentSlide.body}</p>
+          <small>{currentSlide.meta}</small>
+          <button type="button" onClick={() => onNavigate(currentSlide.target)}>
+            {currentSlide.action}
+            <ChevronRight size={18} />
+          </button>
         </div>
 
-        <div className="mat-athlete-welcome-badge">
-
-          <Award
-            size={28}
-          />
-
-          <span>
-            {member.belt_rank ||
-              'Belt Rank'}
-          </span>
-
-        </div>
-
+        {slides.length > 1 && (
+          <>
+            <button
+              type="button"
+              className="mat-new-home-hero-arrow previous"
+              aria-label="Previous feature"
+              onClick={() => setSlideIndex((slideIndex - 1 + slides.length) % slides.length)}
+            >
+              <ChevronLeft size={24} />
+            </button>
+            <button
+              type="button"
+              className="mat-new-home-hero-arrow next"
+              aria-label="Next feature"
+              onClick={() => setSlideIndex((slideIndex + 1) % slides.length)}
+            >
+              <ChevronRight size={24} />
+            </button>
+            <div className="mat-new-home-dots" aria-label="Featured content slides">
+              {slides.map((slide, index) => (
+                <button
+                  key={slide.id}
+                  type="button"
+                  className={index === slideIndex ? 'active' : ''}
+                  aria-label={`Show slide ${index + 1}`}
+                  aria-current={index === slideIndex ? 'true' : undefined}
+                  onClick={() => setSlideIndex(index)}
+                />
+              ))}
+            </div>
+          </>
+        )}
       </section>
 
-      <section className="mat-athlete-dashboard-stats">
-
-        <button
-          type="button"
-          className="mat-athlete-dashboard-stat"
-          onClick={() =>
-            onNavigate(
-              'my-profile'
-            )
-          }
-        >
-          <Trophy
-            size={20}
-          />
-
-          <div>
-            <strong>
-              {tournamentCount}
-            </strong>
-
-            <span>
-              Tournaments
-            </span>
-          </div>
+      <section className="mat-new-home-stats" aria-label="Competition statistics">
+        <button type="button" onClick={() => onNavigate('my-profile')}>
+          <Trophy size={25} /><strong>{tournamentEntries.length}</strong><span>Tournaments</span>
         </button>
-
-        <button
-          type="button"
-          className="mat-athlete-dashboard-stat"
-          onClick={() =>
-            onNavigate(
-              'my-profile'
-            )
-          }
-        >
-          <Target
-            size={20}
-          />
-
-          <div>
-            <strong>
-              {totalEventsEntered}
-            </strong>
-
-            <span>
-              Events Entered
-            </span>
-          </div>
+        <button type="button" onClick={() => onNavigate('my-profile')}>
+          <Target size={25} /><strong>{totalEventsEntered}</strong><span>Events Entered</span>
         </button>
-
-        <button
-          type="button"
-          className="mat-athlete-dashboard-stat"
-          onClick={() =>
-            onNavigate(
-              'my-profile'
-            )
-          }
-        >
-          <Medal
-            size={20}
-          />
-
-          <div>
-            <strong>
-              {totalMedals}
-            </strong>
-
-            <span>
-              Total Medals
-            </span>
-          </div>
+        <button type="button" onClick={() => onNavigate('my-profile')}>
+          <Medal size={25} /><strong>{totalMedals}</strong><span>Total Medals</span>
         </button>
-
-        <button
-          type="button"
-          className="mat-athlete-dashboard-stat"
-          onClick={() =>
-            onNavigate(
-              'my-profile'
-            )
-          }
-        >
-          <Award
-            size={20}
-          />
-
-          <div>
-            <strong>
-              {goldCount}
-            </strong>
-
-            <span>
-              Gold Medals
-            </span>
-          </div>
+        <button type="button" onClick={() => onNavigate('my-profile')}>
+          <Award size={25} /><strong>{goldCount}</strong><span>Gold Medals</span>
         </button>
-
       </section>
 
-      <section className="mat-athlete-dashboard-main">
-
-        <article className="mat-athlete-dashboard-feature mat-athlete-next-tournament">
-
-          <div className="mat-athlete-dashboard-card-top">
-
-            <div>
-
-              <span className="mat-athlete-dashboard-card-label">
-                Next Competition
-              </span>
-
-              <h2>
-                {nextTournament
-                  ? nextTournament.name
-                  : 'No Tournament Scheduled'}
-              </h2>
-
-            </div>
-
-            <div className="mat-athlete-dashboard-card-icon">
-              <Trophy
-                size={23}
-              />
-            </div>
-
-          </div>
-
+      <section className="mat-new-home-grid">
+        <article className="mat-new-home-card mat-new-home-up-next">
+          <header>
+            <div><Trophy size={20} /><span>Up Next</span></div>
+            <button type="button" onClick={() => onNavigate('tournaments')}>View All <ChevronRight size={15} /></button>
+          </header>
           {nextTournament ? (
-            <>
-              <div className="mat-athlete-tournament-countdown">
-
-                <strong>
-                  {getCountdownLabel(
-                    tournamentCountdown
-                  )}
-                </strong>
-
-                <span>
-                  {formatDate(
-                    nextTournament.event_date
-                  )}
+            <div className="mat-new-home-next-content">
+              <img src={HERO_IMAGES[0]} alt="" />
+              <div>
+                <span className={`mat-new-home-status ${nextEntry ? 'registered' : ''}`}>
+                  {nextEntry ? 'Registered' : 'Not Registered'}
                 </span>
-
-              </div>
-
-              <div className="mat-athlete-dashboard-detail-list">
-
-                {nextTournament.location && (
-                  <div>
-                    <span>
-                      Location
-                    </span>
-
-                    <strong>
-                      {
-                        nextTournament.location
-                      }
-                    </strong>
-                  </div>
-                )}
-
+                <h2>{nextTournament.name}</h2>
+                <p><Trophy size={15} /> {formatDateRange(nextTournament.event_date, nextTournament.end_date)}</p>
+                {nextTournament.location && <p><MapPin size={15} /> {nextTournament.location}</p>}
                 {nextTournament.registration_deadline && (
-                  <div>
-                    <span>
-                      Registration Deadline
-                    </span>
-
-                    <strong>
-                      {formatDate(
-                        nextTournament.registration_deadline
-                      )}
-                    </strong>
-                  </div>
+                  <p className="deadline">Registration closes {formatDate(nextTournament.registration_deadline)}</p>
                 )}
-
               </div>
-
-              {nextTournamentEntry
-                ?.events
-                ?.length >
-                0 && (
-                <div className="mat-athlete-home-events">
-
-                  <span>
-                    My Events
-                  </span>
-
-                  <div>
-
-                    {nextTournamentEntry.events.map(
-                      (
-                        eventName
-                      ) => (
-                        <span
-                          key={
-                            eventName
-                          }
-                          className="mat-athlete-home-event-pill"
-                        >
-                          {getEventDisplayName(
-                            eventName
-                          )}
-                        </span>
-                      )
-                    )}
-
-                  </div>
-
-                </div>
-              )}
-
-              <button
-                type="button"
-                className="mat-athlete-dashboard-link"
-                onClick={() =>
-                  onNavigate(
-                    'tournaments'
-                  )
-                }
-              >
-                View Tournaments
-
-                <ChevronRight
-                  size={17}
-                />
-              </button>
-            </>
+            </div>
           ) : (
-            <>
-              <p className="mat-athlete-dashboard-empty-text">
-                You are not currently
-                entered in an upcoming
-                tournament.
-              </p>
-
-              <button
-                type="button"
-                className="mat-athlete-dashboard-link"
-                onClick={() =>
-                  onNavigate(
-                    'tournaments'
-                  )
-                }
-              >
-                View Tournament Schedule
-
-                <ChevronRight
-                  size={17}
-                />
-              </button>
-            </>
+            <div className="mat-new-home-card-empty">No upcoming tournament is currently scheduled.</div>
           )}
-
+          <div className="mat-new-home-card-actions">
+            <button type="button" className="primary" onClick={() => onNavigate('tournaments')}>Tournament Details</button>
+            <button type="button" onClick={() => onNavigate('messages')}><MessageCircle size={16} /> Team Discussion</button>
+          </div>
         </article>
 
-        <article className="mat-athlete-dashboard-feature">
-
-          <div className="mat-athlete-dashboard-card-top">
-
-            <div>
-              <span className="mat-athlete-dashboard-card-label">
-                Team Update
-              </span>
-
-              <h2>
-                {importantAnnouncement
-                  ? importantAnnouncement.title
-                  : 'No Current Announcements'}
-              </h2>
-            </div>
-
-            <div className="mat-athlete-dashboard-card-icon">
-              <Megaphone
-                size={22}
-              />
-            </div>
-
-          </div>
-
-          {importantAnnouncement ? (
-            <>
-              <div className="mat-athlete-home-announcement-meta">
-
-                {importantAnnouncement.featured && (
-                  <span>
-                    Featured
-                  </span>
-                )}
-
-                {importantAnnouncement.priority ===
-                  'urgent' && (
-                  <span className="urgent">
-                    Urgent
-                  </span>
-                )}
-
-                {importantAnnouncement.priority ===
-                  'important' && (
-                  <span className="important">
-                    Important
-                  </span>
-                )}
-
-                <small>
-                  {formatDate(
-                    importantAnnouncement.publish_date
-                  )}
-                </small>
-
-              </div>
-
-              <p className="mat-athlete-dashboard-message">
-                {
-                  importantAnnouncement.message
-                }
-              </p>
-            </>
-          ) : (
-            <p className="mat-athlete-dashboard-empty-text">
-              There are no active team
-              announcements right now.
-            </p>
-          )}
-
-          <button
-            type="button"
-            className="mat-athlete-dashboard-link"
-            onClick={() =>
-              onNavigate(
-                'announcements'
-              )
-            }
-          >
-            View Announcements
-
-            <ChevronRight
-              size={17}
-            />
-          </button>
-
-        </article>
-
-      </section>
-
-      <section className="mat-athlete-dashboard-lower">
-
-        <article className="mat-athlete-milestone-card">
-
-          <div className="mat-athlete-dashboard-card-top">
-
-            <div>
-              <span className="mat-athlete-dashboard-card-label">
-                Next Milestone
-              </span>
-
-              <h2>
-                {nextMilestone
-                  ? nextMilestone.label
-                  : 'Milestones Complete'}
-              </h2>
-            </div>
-
-            <div className="mat-athlete-dashboard-card-icon">
-              <Sparkles
-                size={22}
-              />
-            </div>
-
-          </div>
-
-          {nextMilestone ? (
-            <>
-              <div className="mat-athlete-home-milestone-count">
-
-                <strong>
-                  {
-                    nextMilestone.current
-                  }
-                </strong>
-
-                <span>
-                  of{' '}
-                  {
-                    nextMilestone.goal
-                  }{' '}
-                  {
-                    nextMilestone.unit
-                  }
+        <article className="mat-new-home-card mat-new-home-messages">
+          <header>
+            <div><MessageCircle size={20} /><span>Team Messages</span></div>
+            <button type="button" onClick={() => onNavigate('messages')}>View All <ChevronRight size={15} /></button>
+          </header>
+          <div className="mat-new-home-message-list">
+            {topics.length === 0 ? (
+              <div className="mat-new-home-card-empty">No recent team discussions.</div>
+            ) : topics.slice(0, 4).map((topic) => (
+              <button key={topic.id} type="button" onClick={() => onNavigate('messages')}>
+                <span className="mat-new-home-message-icon">{topic.is_pinned ? <Pin size={17} /> : <MessageCircle size={17} />}</span>
+                <span className="mat-new-home-message-copy">
+                  <strong>{topic.title}</strong>
+                  <span>{truncate(topic.body, 100)}</span>
                 </span>
-
-              </div>
-
-              <div className="mat-athlete-home-progress">
-
-                <div
-                  className="mat-athlete-home-progress-fill"
-                  style={{
-                    width:
-                      `${milestonePercentage}%`,
-                  }}
-                />
-
-              </div>
-
-              <p>
-                {nextMilestone.goal -
-                  nextMilestone.current}{' '}
-                more{' '}
-                {
-                  nextMilestone.unit
-                }{' '}
-                to reach your next
-                checkpoint.
-              </p>
-            </>
-          ) : (
-            <p>
-              You have reached all
-              currently configured
-              progress checkpoints.
-            </p>
-          )}
-
-          <button
-            type="button"
-            className="mat-athlete-dashboard-link"
-            onClick={() =>
-              onNavigate(
-                'my-profile'
-              )
-            }
-          >
-            View My Progress
-
-            <ChevronRight
-              size={17}
-            />
-          </button>
-
-        </article>
-
-        <article className="mat-athlete-quick-card">
-
-          <div className="mat-athlete-dashboard-card-top">
-
-            <div>
-              <span className="mat-athlete-dashboard-card-label">
-                Quick Access
-              </span>
-
-              <h2>
-                Team Resources
-              </h2>
-            </div>
-
-            <div className="mat-athlete-dashboard-card-icon">
-              <CalendarDays
-                size={22}
-              />
-            </div>
-
+                <span className="mat-new-home-message-count">{topic.discussion_comments?.[0]?.count || 0}</span>
+              </button>
+            ))}
           </div>
-
-          <div className="mat-athlete-home-quick-links">
-
-            <button
-              type="button"
-              onClick={() =>
-                onNavigate(
-                  'my-profile'
-                )
-              }
-            >
-              <UserRound
-                size={18}
-              />
-
-              <span>
-                My Profile
-              </span>
-
-              <ChevronRight
-                size={16}
-              />
-            </button>
-
-            <button
-              type="button"
-              onClick={() =>
-                onNavigate(
-                  'coaches'
-                )
-              }
-            >
-              <UserRound
-                size={18}
-              />
-
-              <span>
-                Coaches
-              </span>
-
-              <ChevronRight
-                size={16}
-              />
-            </button>
-
-            <button
-              type="button"
-              onClick={() =>
-                onNavigate(
-                  'tournaments'
-                )
-              }
-            >
-              <Trophy
-                size={18}
-              />
-
-              <span>
-                Tournaments
-              </span>
-
-              <ChevronRight
-                size={16}
-              />
-            </button>
-
-            <button
-              type="button"
-              onClick={() =>
-                onNavigate(
-                  'calendar'
-                )
-              }
-            >
-              <CalendarDays
-                size={18}
-              />
-
-              <span>
-                Calendar
-              </span>
-
-              <ChevronRight
-                size={16}
-              />
-            </button>
-
-            <button
-              type="button"
-              onClick={() =>
-                onNavigate(
-                  'announcements'
-                )
-              }
-            >
-              <Bell
-                size={18}
-              />
-
-              <span>
-                Announcements
-              </span>
-
-              <ChevronRight
-                size={16}
-              />
-            </button>
-
-            <button
-              type="button"
-              onClick={() =>
-                onNavigate(
-                  'new-member-guide'
-                )
-              }
-            >
-              <Award
-                size={18}
-              />
-
-              <span>
-                Team Guide
-              </span>
-
-              <ChevronRight
-                size={16}
-              />
-            </button>
-
-          </div>
-
         </article>
-
       </section>
-
     </div>
   )
 }
-
-export default AthleteHomePage

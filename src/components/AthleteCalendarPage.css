@@ -1,0 +1,342 @@
+/* Athlete Calendar: extracted from global styles. */
+/* =========================================================
+   ATHLETE VIEW - MOBILE
+========================================================= */
+
+@media (max-width: 700px) {
+
+  .mat-athlete-welcome {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .mat-athlete-summary-grid,
+  .mat-athlete-home-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .mat-athlete-welcome-badge {
+    flex-direction: row;
+  }
+
+  .mat-account-name-wrap {
+    display: none;
+  }
+
+  .mat-account-dropdown {
+    right: 0;
+    width: 230px;
+  }
+}
+   ATHLETE READ-ONLY PAGES
+========================================================= */
+
+.mat-athlete-page {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.mat-athlete-page-hero {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+
+  padding: 24px;
+
+  border: 1px solid #dfeaf0;
+  border-radius: 16px;
+
+  background: linear-gradient(
+    135deg,
+    #ffffff,
+    #f1f9fd
+  );
+}
+
+.mat-athlete-page-hero h1 {
+  margin: 2px 0 4px;
+
+  color: #244e68;
+}
+
+.mat-athlete-page-hero p {
+  margin: 0;
+
+  color: #748995;
+}
+
+.mat-athlete-page-icon {
+  width: 48px;
+  height: 48px;
+
+  flex: 0 0 48px;
+
+  display: grid;
+  place-items: center;
+
+  border-radius: 13px;
+
+  background: #dff3fc;
+  color: #168fc8;
+}
+
+.mat-athlete-page-section {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.mat-athlete-page-section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.mat-athlete-page-section-heading h2 {
+  margin: 0;
+
+  color: #2c5269;
+  font-size: 18px;
+}
+
+.mat-athlete-page-section-heading p {
+  margin: 3px 0 0;
+
+  color: #82939d;
+  font-size: 12px;
+}
+
+.mat-athlete-page-section-heading > span {
+  min-width: 34px;
+  height: 34px;
+
+  display: grid;
+  place-items: center;
+
+  border-radius: 10px;
+
+  background: #e9f6fc;
+  color: #168cc5;
+
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.mat-athlete-empty-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  padding: 38px 20px;
+
+  border: 1px dashed #cfdde5;
+  border-radius: 14px;
+
+  background: #fbfdfe;
+
+  text-align: center;
+  color: #81929d;
+}
+
+.mat-athlete-empty-card h3 {
+  margin: 12px 0 4px;
+
+  color: #365d74;
+}
+
+.mat-athlete-empty-card p {
+  margin: 0;
+}
+
+
+/* Calendar */
+
+.mat-athlete-calendar-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.mat-athlete-calendar-card {
+  display: flex;
+  gap: 16px;
+
+  padding: 17px;
+
+  border: 1px solid #e0e8ed;
+  border-radius: 13px;
+
+  background: #ffffff;
+}
+
+.mat-athlete-calendar-tournament {
+  border-left: 4px solid #168dc6;
+}
+
+.mat-athlete-calendar-deadline {
+  border-left: 4px solid #e2a22a;
+}
+
+.mat-athlete-calendar-past {
+  opacity: 0.76;
+}
+
+.mat-athlete-calendar-date-box {
+  width: 56px;
+  min-width: 56px;
+  height: 62px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 11px;
+
+  background: #eef8fc;
+
+  color: #1788bf;
+}
+
+.mat-athlete-calendar-date-box span {
+  font-size: 10px;
+  font-weight: 800;
+
+  text-transform: uppercase;
+}
+
+.mat-athlete-calendar-date-box strong {
+  font-size: 22px;
+}
+
+.mat-athlete-calendar-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.mat-athlete-calendar-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+
+  color: #1689c3;
+}
+
+.mat-athlete-calendar-heading h3 {
+  margin: 3px 0 0;
+
+  color: #31566c;
+}
+
+.mat-athlete-event-type {
+  color: #8798a2;
+
+  font-size: 9px;
+  font-weight: 800;
+
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.mat-athlete-calendar-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+
+  margin-top: 9px;
+}
+
+.mat-athlete-calendar-meta span,
+.mat-athlete-calendar-repeat {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+
+  color: #778c98;
+  font-size: 11px;
+}
+
+.mat-athlete-calendar-repeat {
+  margin-top: 10px;
+
+  color: #168bc5;
+}
+
+.mat-athlete-calendar-content p {
+  margin: 11px 0 0;
+
+  color: #687d89;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+
+/* Mobile */
+
+@media (max-width: 700px) {
+
+  .mat-athlete-page-hero {
+    align-items: flex-start;
+    padding: 18px;
+  }
+
+  .mat-athlete-announcement-top {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .mat-athlete-calendar-card {
+    gap: 11px;
+    padding: 13px;
+  }
+
+  .mat-athlete-calendar-date-box {
+    width: 48px;
+    min-width: 48px;
+  }
+
+  .mat-athlete-tournament-card {
+    padding: 15px;
+  }
+
+  .mat-athlete-tournament-meta {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .mat-athlete-tournament-entry-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .mat-athlete-tournament-event {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+
+/* Athlete calendar */
+:root[data-theme='dark'] .mat-athlete-calendar-card {
+  color: #e7f1f7 !important;
+  border-color: #46677a !important;
+  background: #132938 !important;
+  box-shadow: none !important;
+}
+:root[data-theme='dark'] .mat-athlete-calendar-heading h3 { color: #fff !important; }
+:root[data-theme='dark'] .mat-athlete-calendar-heading,
+:root[data-theme='dark'] .mat-athlete-calendar-repeat { color: #70c9fa !important; }
+:root[data-theme='dark'] .mat-athlete-calendar-meta,
+:root[data-theme='dark'] .mat-athlete-calendar-content p { color: #b8cbd8 !important; }
+:root[data-theme='dark'] .mat-athlete-calendar-date-box {
+  color: #fff !important;
+  border-color: #4f7185 !important;
+  background: #193f54 !important;
+}
+:root[data-theme='dark'] .mat-athlete-calendar-date-box span { color: #9fc9df !important; }
+:root[data-theme='dark'] .mat-athlete-event-type {
+  color: #dff3ff !important;
+  background: #23546e !important;
+}
