@@ -1,889 +1,353 @@
-import './HomePage.css'
 import {
   AlertTriangle,
-  ArrowRight,
-  BookOpen,
   CalendarDays,
-  GraduationCap,
+  CheckCircle2,
+  ChevronRight,
+  Clock,
+  ImagePlus,
   MapPin,
-  Megaphone,
   Trophy,
+  UserRound,
+  Users,
 } from 'lucide-react'
+import { useMemo, useState } from 'react'
+import {
+  DEFAULT_SLIDE_IMAGES,
+  buildCarouselSlides,
+  formatDate,
+  formatDateRange,
+  getTodayString,
+  useHomeCarouselRows,
+  useRecentTopics,
+} from '../lib/homeCarousel.js'
+import HomeCarousel from './HomeCarousel.jsx'
+import HomeCarouselManager from './HomeCarouselManager.jsx'
+import TeamMessagesCard from './TeamMessagesCard.jsx'
+import './HomeLayout.css'
 
-import { useMemo } from 'react'
+const DEADLINE_WINDOW_DAYS = 14
+const EVENTS_WINDOW_DAYS = 7
 
-function getTodayString() {
-  const today = new Date()
-
-  const year = today.getFullYear()
-
-  const month = String(
-    today.getMonth() + 1
-  ).padStart(2, '0')
-
-  const day = String(
-    today.getDate()
-  ).padStart(2, '0')
-
-  return `${year}-${month}-${day}`
-}
-
-function stringToDate(dateString) {
-  if (!dateString) {
-    return null
-  }
-
-  return new Date(
-    `${dateString}T00:00:00`
-  )
+function stringToDate(value) {
+  return value ? new Date(`${value}T00:00:00`) : null
 }
 
 function dateToString(date) {
-  const year =
-    date.getFullYear()
-
-  const month = String(
-    date.getMonth() + 1
-  ).padStart(2, '0')
-
-  const day = String(
-    date.getDate()
-  ).padStart(2, '0')
-
-  return `${year}-${month}-${day}`
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
 }
 
-function formatDate(dateString) {
-  if (!dateString) {
-    return '—'
-  }
-
-  const date =
-    stringToDate(dateString)
-
-  if (
-    !date ||
-    Number.isNaN(
-      date.getTime()
-    )
-  ) {
-    return '—'
-  }
-
-  return date.toLocaleDateString(
-    undefined,
-    {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric',
-    }
-  )
+function addDays(value, days) {
+  const date = stringToDate(value)
+  date.setDate(date.getDate() + days)
+  return dateToString(date)
 }
 
-function formatShortDate(
-  dateString
-) {
-  if (!dateString) {
-    return ''
-  }
-
-  const date =
-    stringToDate(dateString)
-
-  if (!date) {
-    return ''
-  }
-
-  return date.toLocaleDateString(
-    undefined,
-    {
-      month: 'short',
-      day: 'numeric',
-    }
-  )
+function daysBetween(fromValue, toValue) {
+  return Math.round((stringToDate(toValue) - stringToDate(fromValue)) / 86400000)
 }
 
-function formatDateRange(
-  startDate,
-  endDate
-) {
-  if (
-    !endDate ||
-    startDate === endDate
-  ) {
-    return formatDate(
-      startDate
-    )
-  }
-
-  const start =
-    stringToDate(startDate)
-
-  const end =
-    stringToDate(endDate)
-
-  if (!start || !end) {
-    return formatDate(
-      startDate
-    )
-  }
-
-  if (
-    start.getFullYear() ===
-      end.getFullYear() &&
-    start.getMonth() ===
-      end.getMonth()
-  ) {
-    const month =
-      start.toLocaleDateString(
-        undefined,
-        {
-          month: 'short',
-        }
-      )
-
-    return `${month} ${start.getDate()}–${end.getDate()}, ${end.getFullYear()}`
-  }
-
-  return `${formatShortDate(
-    startDate
-  )} – ${formatDate(
-    endDate
-  )}`
+function formatTime(value) {
+  if (!value) return ''
+  const [hours, minutes] = value.split(':')
+  const date = new Date()
+  date.setHours(Number(hours), Number(minutes), 0, 0)
+  return date.toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' })
 }
 
-function formatTime(
-  timeString
-) {
-  if (!timeString) {
-    return ''
+function getNextOccurrence(event, today) {
+  if (event.recurrence_type !== 'weekly') {
+    return event.event_date >= today ? event.event_date : null
   }
 
-  const [
-    hours,
-    minutes,
-  ] =
-    timeString.split(':')
+  const occurrence = stringToDate(event.event_date)
+  const todayDate = stringToDate(today)
+  if (!occurrence || !todayDate) return null
 
-  const date =
-    new Date()
-
-  date.setHours(
-    Number(hours),
-    Number(minutes),
-    0,
-    0
-  )
-
-  return date.toLocaleTimeString(
-    undefined,
-    {
-      hour: 'numeric',
-      minute: '2-digit',
-    }
-  )
-}
-
-function getNextWeeklyOccurrence(
-  event,
-  today
-) {
-  if (
-    event.recurrence_type !==
-    'weekly'
-  ) {
-    return event.event_date >=
-      today
-      ? event.event_date
-      : null
+  while (occurrence < todayDate) {
+    occurrence.setDate(occurrence.getDate() + 7)
   }
 
-  const firstDate =
-    stringToDate(
-      event.event_date
-    )
-
-  const todayDate =
-    stringToDate(
-      today
-    )
-
-  if (
-    !firstDate ||
-    !todayDate
-  ) {
-    return null
-  }
-
-  let occurrence =
-    new Date(firstDate)
-
-  while (
-    occurrence <
-    todayDate
-  ) {
-    occurrence.setDate(
-      occurrence.getDate() +
-        7
-    )
-  }
-
-  const occurrenceString =
-    dateToString(
-      occurrence
-    )
-
-  if (
-    event.recurrence_end_date &&
-    occurrenceString >
-      event.recurrence_end_date
-  ) {
-    return null
-  }
-
+  const occurrenceString = dateToString(occurrence)
+  if (event.recurrence_end_date && occurrenceString > event.recurrence_end_date) return null
   return occurrenceString
 }
 
+function plural(count, word) {
+  return `${count} ${word}${count === 1 ? '' : 's'}`
+}
+
 function HomePage({
-  members,
-  tournaments,
-  calendarEvents,
-  announcements,
+  members = [],
+  tournaments = [],
+  allTournamentEntries = [],
+  calendarEvents = [],
+  accountName,
   onNavigate,
 }) {
-  const today =
-    getTodayString()
+  const topics = useRecentTopics()
+  const { rows: carouselRows, configured: carouselConfigured, reload: reloadCarousel } = useHomeCarouselRows()
+  const [managingSlides, setManagingSlides] = useState(false)
+  const today = useMemo(() => getTodayString(), [])
+  const deadlineCutoff = addDays(today, DEADLINE_WINDOW_DAYS)
+  const eventsCutoff = addDays(today, EVENTS_WINDOW_DAYS)
 
-  const upcomingTournaments =
-    useMemo(() => {
-      return (
-        tournaments || []
-      )
-        .filter(
-          (tournament) => {
-            const lastDate =
-              tournament.end_date ||
-              tournament.event_date
+  const activeMembers = useMemo(
+    () => members.filter((member) => member.is_active !== false),
+    [members]
+  )
 
-            return (
-              lastDate >= today
-            )
-          }
-        )
-        .sort(
-          (a, b) =>
-            a.event_date.localeCompare(
-              b.event_date
-            )
-        )
-    }, [
-      tournaments,
-      today,
-    ])
+  const upcomingTournaments = useMemo(
+    () => tournaments
+      .filter((tournament) => (tournament.end_date || tournament.event_date || '') >= today)
+      .sort((a, b) => String(a.event_date || '').localeCompare(String(b.event_date || ''))),
+    [tournaments, today]
+  )
 
-  const nextTournament =
-    upcomingTournaments[0] ||
-    null
+  const nextTournament = upcomingTournaments[0] || null
 
-  const currentAnnouncements =
-    useMemo(() => {
-      return (
-        announcements || []
-      )
-        .filter(
-          (announcement) => {
-            const published =
-              announcement.publish_date <=
-              today
+  const entryCountByTournament = useMemo(() => {
+    const counts = {}
+    allTournamentEntries.forEach((entry) => {
+      counts[entry.tournament_id] = (counts[entry.tournament_id] || 0) + 1
+    })
+    return counts
+  }, [allTournamentEntries])
 
-            const active =
-              announcement.is_active
+  const closingSoon = useMemo(
+    () => upcomingTournaments
+      .filter((tournament) => tournament.registration_deadline
+        && tournament.registration_deadline >= today
+        && tournament.registration_deadline <= deadlineCutoff)
+      .sort((a, b) => a.registration_deadline.localeCompare(b.registration_deadline)),
+    [upcomingTournaments, today, deadlineCutoff]
+  )
 
-            const notExpired =
-              !announcement.expiration_date ||
-              announcement.expiration_date >=
-                today
+  const upcomingItems = useMemo(() => {
+    const items = []
 
-            return (
-              published &&
-              active &&
-              notExpired
-            )
-          }
-        )
-        .sort(
-          (a, b) => {
-            const priorityOrder = {
-              urgent: 3,
-              important: 2,
-              normal: 1,
-            }
+    calendarEvents.forEach((event) => {
+      const nextDate = getNextOccurrence(event, today)
+      if (!nextDate) return
+      items.push({
+        id: `calendar-${event.id}-${nextDate}`,
+        title: event.title,
+        date: nextDate,
+        detail: [event.event_type, event.all_day ? 'All day' : formatTime(event.start_time)].filter(Boolean).join(' · '),
+        target: 'calendar',
+      })
+    })
 
-            const priorityDifference =
-              priorityOrder[
-                b.priority
-              ] -
-              priorityOrder[
-                a.priority
-              ]
+    upcomingTournaments.forEach((tournament) => {
+      if (tournament.event_date >= today) {
+        items.push({
+          id: `tournament-${tournament.id}`,
+          title: tournament.name,
+          date: tournament.event_date,
+          detail: ['Tournament', tournament.location].filter(Boolean).join(' · '),
+          target: 'tournaments',
+        })
+      }
+      if (tournament.registration_deadline && tournament.registration_deadline >= today) {
+        items.push({
+          id: `deadline-${tournament.id}`,
+          title: `${tournament.name} registration closes`,
+          date: tournament.registration_deadline,
+          detail: 'Registration deadline',
+          target: 'tournaments',
+        })
+      }
+    })
 
-            if (
-              priorityDifference !==
-              0
-            ) {
-              return priorityDifference
-            }
+    return items.sort((a, b) => a.date.localeCompare(b.date))
+  }, [calendarEvents, upcomingTournaments, today])
 
-            return b.publish_date.localeCompare(
-              a.publish_date
-            )
-          }
-        )
-    }, [
-      announcements,
-      today,
-    ])
+  const eventsThisWeek = upcomingItems.filter((item) => item.date <= eventsCutoff).length
 
-  const importantAnnouncements =
-    currentAnnouncements.filter(
-      (announcement) =>
-        announcement.featured ||
-        announcement.priority ===
-          'urgent' ||
-        announcement.priority ===
-          'important'
-    )
+  const attentionItems = useMemo(() => {
+    const items = closingSoon.map((tournament) => {
+      const daysLeft = daysBetween(today, tournament.registration_deadline)
+      const entered = entryCountByTournament[tournament.id] || 0
+      return {
+        id: `deadline-${tournament.id}`,
+        title: `${tournament.name} registration closes ${daysLeft === 0 ? 'today' : `in ${plural(daysLeft, 'day')}`}`,
+        detail: `${plural(entered, 'athlete')} entered · Closes ${formatDate(tournament.registration_deadline)}`,
+        icon: Clock,
+        onClick: () => onNavigate('tournaments'),
+      }
+    })
 
-  const topAnnouncement =
-    importantAnnouncements[0] ||
-    currentAnnouncements[0] ||
-    null
+    const missingBirthdate = activeMembers.filter((member) => !member.birthdate).length
+    const missingBelt = activeMembers.filter((member) => !member.belt_rank).length
 
-  const upcomingItems =
-    useMemo(() => {
-      const items = []
+    if (missingBirthdate) {
+      items.push({
+        id: 'missing-birthdate',
+        title: `${plural(missingBirthdate, 'athlete')} missing a birthdate`,
+        detail: 'Needed for tournament age divisions',
+        icon: UserRound,
+        onClick: () => onNavigate('roster'),
+      })
+    }
 
-      ;(
-        calendarEvents || []
-      ).forEach(
-        (event) => {
-          const nextDate =
-            getNextWeeklyOccurrence(
-              event,
-              today
-            )
+    if (missingBelt) {
+      items.push({
+        id: 'missing-belt',
+        title: `${plural(missingBelt, 'athlete')} missing a belt rank`,
+        detail: 'Needed for tournament divisions',
+        icon: UserRound,
+        onClick: () => onNavigate('roster'),
+      })
+    }
 
-          if (!nextDate) {
-            return
-          }
+    if (!carouselConfigured) {
+      items.push({
+        id: 'carousel-setup',
+        title: 'Home page carousel isn’t set up yet',
+        detail: 'Run supabase/home-carousel.sql to enable custom slides',
+        icon: ImagePlus,
+        onClick: () => setManagingSlides(true),
+      })
+    }
 
-          items.push({
-            id:
-              `calendar-${event.id}-${nextDate}`,
+    return items
+  }, [closingSoon, activeMembers, entryCountByTournament, carouselConfigured, today, onNavigate])
 
-            title:
-              event.title,
+  const firstName = String(accountName || '').trim().split(/[\s@]/)[0]
 
-            date:
-              nextDate,
-
-            type:
-              event.event_type,
-
-            time:
-              event.all_day
-                ? ''
-                : formatTime(
-                    event.start_time
-                  ),
-          })
-        }
-      )
-
-      ;(
-        tournaments || []
-      ).forEach(
-        (tournament) => {
-          const lastDate =
-            tournament.end_date ||
-            tournament.event_date
-
-          if (
-            lastDate >= today
-          ) {
-            items.push({
-              id:
-                `tournament-${tournament.id}`,
-
-              title:
-                tournament.name,
-
-              date:
-                tournament.event_date,
-
-              type:
-                'Tournament',
-            })
-          }
-
-          if (
-            tournament.registration_deadline &&
-            tournament.registration_deadline >=
-              today
-          ) {
-            items.push({
-              id:
-                `deadline-${tournament.id}`,
-
-              title:
-                `${tournament.name} Registration Deadline`,
-
-              date:
-                tournament.registration_deadline,
-
-              type:
-                'Deadline',
-            })
-          }
-        }
-      )
-
-      return items
-        .sort(
-          (a, b) =>
-            a.date.localeCompare(
-              b.date
-            )
-        )
-        .slice(0, 4)
-    }, [
-      calendarEvents,
-      tournaments,
-      today,
-    ])
-
-  const nextCalendarItem =
-    upcomingItems[0] ||
-    null
+  const slides = useMemo(
+    () => buildCarouselSlides(carouselRows, {
+      view: 'admin',
+      nextTournament,
+      topic: topics[0],
+      welcome: {
+        kicker: 'Michigan Academy of Taekwondo',
+        title: firstName ? `Welcome, ${firstName}` : 'Welcome to MAT',
+        body: 'Here’s what’s happening across the competition team.',
+        meta: `${plural(activeMembers.length, 'active athlete')}`,
+        action: 'View Roster',
+        target: 'roster',
+      },
+    }),
+    [carouselRows, nextTournament, topics, firstName, activeMembers.length]
+  )
 
   return (
-    <div className="mat-hub">
+    <div className="mat-new-home">
+      <HomeCarousel slides={slides} onNavigate={onNavigate} onManage={() => setManagingSlides(true)} />
 
-      <section className="mat-hub-welcome">
-
-        <div className="mat-hub-welcome-content">
-
-          <div className="mat-eyebrow">
-            Michigan Academy of Taekwondo
-          </div>
-
-          <h1>
-            Welcome to MAT
-          </h1>
-
-          <p>
-            Everything you need for training,
-            tournaments and team updates is
-            right here.
-          </p>
-
-        </div>
-
+      <section className="mat-new-home-stats" aria-label="Team overview">
+        <button type="button" onClick={() => onNavigate('roster')}>
+          <Users size={25} /><strong>{activeMembers.length}</strong><span>Active Athletes</span>
+        </button>
+        <button type="button" onClick={() => onNavigate('tournaments')}>
+          <Trophy size={25} /><strong>{upcomingTournaments.length}</strong><span>Upcoming Tournaments</span>
+        </button>
+        <button type="button" onClick={() => onNavigate('tournaments')}>
+          <Clock size={25} /><strong>{closingSoon.length}</strong><span>Deadlines in {DEADLINE_WINDOW_DAYS} Days</span>
+        </button>
+        <button type="button" onClick={() => onNavigate('calendar')}>
+          <CalendarDays size={25} /><strong>{eventsThisWeek}</strong><span>Events This Week</span>
+        </button>
       </section>
 
-      <section className="mat-hub-tiles">
-
-        <button
-          type="button"
-          className="mat-hub-tile"
-          onClick={() =>
-            onNavigate(
-              'announcements'
-            )
-          }
-        >
-
-          <div className="mat-hub-tile-icon">
-            <Megaphone
-              size={22}
-            />
-          </div>
-
-          <div className="mat-hub-tile-label">
-            Announcements
-          </div>
-
-          <div className="mat-hub-tile-body">
-
-            {topAnnouncement ? (
-              <>
-                <div className="mat-hub-tile-highlight">
-
-                  {topAnnouncement.priority ===
-                    'urgent' && (
-                    <AlertTriangle
-                      size={14}
-                    />
-                  )}
-
-                  <strong>
-                    {
-                      topAnnouncement.title
-                    }
-                  </strong>
-
-                </div>
-
-                <p>
-                  {importantAnnouncements.length >
-                  0
-                    ? `${importantAnnouncements.length} important ${
-                        importantAnnouncements.length ===
-                        1
-                          ? 'update'
-                          : 'updates'
-                      }`
-                    : `${currentAnnouncements.length} current ${
-                        currentAnnouncements.length ===
-                        1
-                          ? 'announcement'
-                          : 'announcements'
-                      }`}
-                </p>
-              </>
-            ) : (
-              <>
-                <strong>
-                  You're all caught up
-                </strong>
-
-                <p>
-                  No current announcements.
-                </p>
-              </>
-            )}
-
-          </div>
-
-          <div className="mat-hub-tile-action">
-            Open announcements
-
-            <ArrowRight
-              size={14}
-            />
-          </div>
-
-        </button>
-
-        <button
-          type="button"
-          className="mat-hub-tile"
-          onClick={() =>
-            onNavigate(
-              'tournaments'
-            )
-          }
-        >
-
-          <div className="mat-hub-tile-icon">
-            <Trophy
-              size={22}
-            />
-          </div>
-
-          <div className="mat-hub-tile-label">
-            Next Tournament
-          </div>
-
-          <div className="mat-hub-tile-body">
-
-            {nextTournament ? (
-              <>
-                <strong>
-                  {
-                    nextTournament.name
-                  }
-                </strong>
-
-                <p>
-                  {formatDateRange(
-                    nextTournament.event_date,
-                    nextTournament.end_date
-                  )}
-                </p>
-
-                {nextTournament.location && (
-                  <span className="mat-hub-tile-detail">
-                    <MapPin
-                      size={13}
-                    />
-
-                    {
-                      nextTournament.location
-                    }
-                  </span>
-                )}
-              </>
-            ) : (
-              <>
-                <strong>
-                  No tournament scheduled
-                </strong>
-
-                <p>
-                  Your next tournament will
-                  appear here.
-                </p>
-              </>
-            )}
-
-          </div>
-
-          <div className="mat-hub-tile-action">
-            Open tournaments
-
-            <ArrowRight
-              size={14}
-            />
-          </div>
-
-        </button>
-
-        <button
-          type="button"
-          className="mat-hub-tile"
-          onClick={() =>
-            onNavigate(
-              'calendar'
-            )
-          }
-        >
-
-          <div className="mat-hub-tile-icon">
-            <CalendarDays
-              size={22}
-            />
-          </div>
-
-          <div className="mat-hub-tile-label">
-            Calendar
-          </div>
-
-          <div className="mat-hub-tile-body">
-
-            {nextCalendarItem ? (
-              <>
-                <strong>
-                  {
-                    nextCalendarItem.title
-                  }
-                </strong>
-
-                <p>
-                  {formatDate(
-                    nextCalendarItem.date
-                  )}
-
-                  {nextCalendarItem.time
-                    ? ` • ${nextCalendarItem.time}`
-                    : ''}
-                </p>
-
-                <span className="mat-hub-tile-detail">
-                  {
-                    nextCalendarItem.type
-                  }
+      <section className="mat-new-home-grid">
+        <article className="mat-new-home-card mat-new-home-up-next">
+          <header>
+            <div><Trophy size={20} /><span>Up Next</span></div>
+            <button type="button" onClick={() => onNavigate('tournaments')}>View All <ChevronRight size={15} /></button>
+          </header>
+          {nextTournament ? (
+            <div className="mat-new-home-next-content">
+              <img src={DEFAULT_SLIDE_IMAGES.next_tournament} alt="" />
+              <div>
+                <span className={`mat-new-home-status ${entryCountByTournament[nextTournament.id] ? 'registered' : ''}`}>
+                  {plural(entryCountByTournament[nextTournament.id] || 0, 'athlete')} entered
                 </span>
-              </>
-            ) : (
-              <>
-                <strong>
-                  Nothing coming up
-                </strong>
-
-                <p>
-                  Upcoming events will
-                  appear here.
-                </p>
-              </>
-            )}
-
+                <h2>{nextTournament.name}</h2>
+                <p><Trophy size={15} /> {formatDateRange(nextTournament.event_date, nextTournament.end_date)}</p>
+                {nextTournament.location && <p><MapPin size={15} /> {nextTournament.location}</p>}
+                {nextTournament.registration_deadline && (
+                  <p className="deadline">Registration closes {formatDate(nextTournament.registration_deadline)}</p>
+                )}
+              </div>
+            </div>
+          ) : (
+            <div className="mat-new-home-card-empty">No upcoming tournament is currently scheduled.</div>
+          )}
+          <div className="mat-new-home-card-actions">
+            <button type="button" className="primary" onClick={() => onNavigate('tournaments')}>Tournament Details</button>
+            <button type="button" onClick={() => onNavigate('calendar')}><CalendarDays size={16} /> Calendar</button>
           </div>
+        </article>
 
-          <div className="mat-hub-tile-action">
-            Open calendar
-
-            <ArrowRight
-              size={14}
-            />
-          </div>
-
-        </button>
-
-      </section>
-
-      <button
-        type="button"
-        className="mat-hub-start-card"
-        onClick={() =>
-          onNavigate(
-            'new-member-guide'
-          )
-        }
-      >
-
-        <div className="mat-hub-start-icon">
-          <GraduationCap
-            size={26}
-          />
-        </div>
-
-        <div className="mat-hub-start-content">
-
-          <span>
-            New to the Competition Team?
-          </span>
-
-          <strong>
-            Start Here
-          </strong>
-
-          <p>
-            Learn how tournament registration
-            works, find required forms and
-            sparring divisions, prepare for
-            tournament day, and review useful
-            Taekwondo terminology.
-          </p>
-
-        </div>
-
-        <div className="mat-hub-start-action">
-          <BookOpen
-            size={17}
-          />
-
-          Open New Member Guide
-
-          <ArrowRight
-            size={16}
-          />
-        </div>
-
-      </button>
-
-      <section className="mat-hub-upcoming">
-
-        <div className="mat-hub-section-header">
-
-          <div>
-            <span>
-              What's Next
-            </span>
-
-            <h2>
-              Coming Up
-            </h2>
-          </div>
-
-          <button
-            type="button"
-            onClick={() =>
-              onNavigate(
-                'calendar'
-              )
-            }
-          >
-            View Calendar
-
-            <ArrowRight
-              size={14}
-            />
-          </button>
-
-        </div>
-
-        {upcomingItems.length ===
-        0 ? (
-          <div className="mat-hub-upcoming-empty">
-
-            <CalendarDays
-              size={24}
-            />
-
-            <span>
-              Nothing is currently scheduled.
-            </span>
-
-          </div>
-        ) : (
-          <div className="mat-hub-upcoming-grid">
-
-            {upcomingItems.map(
-              (item) => {
-                const date =
-                  stringToDate(
-                    item.date
-                  )
-
+        <article className="mat-new-home-card">
+          <header>
+            <div><AlertTriangle size={20} /><span>Needs Attention</span></div>
+          </header>
+          {attentionItems.length === 0 ? (
+            <div className="mat-new-home-all-clear">
+              <CheckCircle2 size={28} />
+              <span>You’re all caught up.</span>
+            </div>
+          ) : (
+            <div className="mat-new-home-list">
+              {attentionItems.map((item) => {
+                const Icon = item.icon
                 return (
-                  <div
-                    key={
-                      item.id
-                    }
-                    className="mat-hub-upcoming-item"
-                  >
-
-                    <div className="mat-hub-upcoming-date">
-
-                      <span>
-                        {date.toLocaleDateString(
-                          undefined,
-                          {
-                            month:
-                              'short',
-                          }
-                        )}
-                      </span>
-
-                      <strong>
-                        {
-                          date.getDate()
-                        }
-                      </strong>
-
-                    </div>
-
-                    <div className="mat-hub-upcoming-content">
-
-                      <strong>
-                        {
-                          item.title
-                        }
-                      </strong>
-
-                      <span>
-                        {
-                          item.type
-                        }
-
-                        {item.time
-                          ? ` • ${item.time}`
-                          : ''}
-                      </span>
-
-                    </div>
-
-                  </div>
+                  <button key={item.id} type="button" onClick={item.onClick}>
+                    <span className="mat-new-home-list-icon warning"><Icon size={17} /></span>
+                    <span>
+                      <strong>{item.title}</strong>
+                      <span>{item.detail}</span>
+                    </span>
+                    <ChevronRight size={16} />
+                  </button>
                 )
-              }
-            )}
+              })}
+            </div>
+          )}
+        </article>
 
-          </div>
-        )}
+        <TeamMessagesCard topics={topics} onNavigate={onNavigate} />
 
+        <article className="mat-new-home-card">
+          <header>
+            <div><CalendarDays size={20} /><span>Coming Up</span></div>
+            <button type="button" onClick={() => onNavigate('calendar')}>View Calendar <ChevronRight size={15} /></button>
+          </header>
+          {upcomingItems.length === 0 ? (
+            <div className="mat-new-home-card-empty">Nothing is scheduled yet.</div>
+          ) : (
+            <div className="mat-new-home-list">
+              {upcomingItems.slice(0, 5).map((item) => {
+                const date = stringToDate(item.date)
+                return (
+                  <button key={item.id} type="button" onClick={() => onNavigate(item.target)}>
+                    <span className="mat-new-home-list-icon date">
+                      <small>{date.toLocaleDateString(undefined, { month: 'short' })}</small>
+                      <b>{date.getDate()}</b>
+                    </span>
+                    <span>
+                      <strong>{item.title}</strong>
+                      <span>{item.detail}</span>
+                    </span>
+                    {item.date === today && <span className="mat-new-home-list-tag">Today</span>}
+                  </button>
+                )
+              })}
+            </div>
+          )}
+        </article>
       </section>
 
+      {managingSlides && (
+        <HomeCarouselManager
+          rows={carouselRows}
+          configured={carouselConfigured}
+          onClose={() => setManagingSlides(false)}
+          onChanged={reloadCarousel}
+        />
+      )}
     </div>
   )
 }

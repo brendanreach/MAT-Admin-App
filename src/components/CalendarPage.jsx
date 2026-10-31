@@ -10,9 +10,11 @@ import {
   Repeat2,
   Trash2,
   Trophy,
+  User,
 } from 'lucide-react'
 
 import {
+  useEffect,
   useMemo,
   useState,
 } from 'react'
@@ -25,8 +27,11 @@ import TournamentForm from './TournamentForm.jsx'
 function CalendarPage({
   calendarEvents,
   tournaments,
+  members = [],
   onCalendarEventsChanged,
   onTournamentsChanged,
+  readOnly = false,
+  showPrivateLessons = false,
 }) {
   const today =
     new Date()
@@ -66,6 +71,88 @@ function CalendarPage({
     message,
     setMessage,
   ] = useState('')
+
+  const [
+    privateLessons,
+    setPrivateLessons,
+  ] = useState([])
+
+  const [
+    lessonCoaches,
+    setLessonCoaches,
+  ] = useState([])
+
+  /*
+    Private lessons only appear on the
+    coach calendar. The athlete calendar
+    is otherwise an exact mirror.
+  */
+
+  useEffect(() => {
+    if (!showPrivateLessons) {
+      return
+    }
+
+    let cancelled = false
+
+    async function loadPrivateLessons() {
+      const [
+        lessonsResult,
+        coachesResult,
+      ] =
+        await Promise.all([
+          supabase
+            .from(
+              'private_lesson_requests'
+            )
+            .select('*')
+            .in(
+              'status',
+              [
+                'approved',
+                'completed',
+              ]
+            ),
+
+          supabase
+            .from('coaches')
+            .select(
+              'id, display_name'
+            ),
+        ])
+
+      if (cancelled) {
+        return
+      }
+
+      if (
+        lessonsResult.error
+      ) {
+        setMessage(
+          lessonsResult.error.message
+        )
+        return
+      }
+
+      setPrivateLessons(
+        lessonsResult.data ||
+          []
+      )
+
+      setLessonCoaches(
+        coachesResult.data ||
+          []
+      )
+    }
+
+    loadPrivateLessons()
+
+    return () => {
+      cancelled = true
+    }
+  }, [
+    showPrivateLessons,
+  ])
 
   function dateToString(
     date
@@ -735,9 +822,106 @@ function CalendarPage({
         }
       }
 
+      const lessonEvents = []
+
+      for (const lesson of
+        privateLessons) {
+        if (
+          !lesson.requested_date
+        ) {
+          continue
+        }
+
+        const athlete =
+          members.find(
+            (member) =>
+              member.id ===
+              lesson.member_id
+          )
+
+        const coach =
+          lessonCoaches.find(
+            (item) =>
+              item.id ===
+              lesson.coach_id
+          )
+
+        const athleteName =
+          athlete
+            ? `${athlete.first_name} ${athlete.last_name}`
+            : 'Athlete'
+
+        lessonEvents.push({
+          id:
+            `lesson-${lesson.id}`,
+
+          source:
+            'lesson',
+
+          title:
+            `Private Lesson: ${athleteName}`,
+
+          eventType:
+            'Private Lesson',
+
+          date:
+            lesson.requested_date,
+
+          startDate:
+            lesson.requested_date,
+
+          endDate:
+            null,
+
+          occurrenceStart:
+            lesson.requested_date,
+
+          occurrenceEnd:
+            lesson.requested_date,
+
+          startTime:
+            lesson.requested_time,
+
+          endTime:
+            null,
+
+          allDay:
+            false,
+
+          location:
+            null,
+
+          notes:
+            lesson.lesson_focus,
+
+          coachName:
+            coach?.display_name ||
+            null,
+
+          lessonStatus:
+            lesson.status,
+
+          original:
+            lesson,
+
+          isFirstDay:
+            true,
+
+          isLastDay:
+            true,
+
+          isMultiDay:
+            false,
+
+          isRecurring:
+            false,
+        })
+      }
+
       return [
         ...manualEvents,
         ...tournamentEvents,
+        ...lessonEvents,
       ].sort(
         (a, b) => {
           const dateCompare =
@@ -777,6 +961,9 @@ function CalendarPage({
     }, [
       calendarEvents,
       tournaments,
+      privateLessons,
+      lessonCoaches,
+      members,
       recurrenceHorizon,
     ])
 
@@ -919,6 +1106,12 @@ function CalendarPage({
         ) {
           key =
             `tournament-${event.original.id}`
+        } else if (
+          event.source ===
+          'lesson'
+        ) {
+          key =
+            `lesson-${event.original.id}`
         } else {
           key =
             `deadline-${event.original.id}`
@@ -1190,6 +1383,10 @@ function CalendarPage({
       dateString
     )
 
+    if (readOnly) {
+      return
+    }
+
     if (
       event.source ===
       'calendar'
@@ -1268,6 +1465,9 @@ function CalendarPage({
       case 'Team Event':
         return 'team-event'
 
+      case 'Private Lesson':
+        return 'lesson'
+
       default:
         return 'other'
     }
@@ -1288,27 +1488,26 @@ function CalendarPage({
           </h1>
 
           <p className="mat-page-description">
-            Trainings,
-            tournaments,
-            registration
-            deadlines and
-            important team
-            dates.
+            {showPrivateLessons
+              ? 'Trainings, tournaments, registration deadlines, important team dates and private lessons.'
+              : 'Trainings, tournaments, registration deadlines and important team dates.'}
           </p>
         </div>
 
-        <button
-          type="button"
-          className="mat-primary-button"
-          onClick={() =>
-            openAddEvent(
-              selectedDate
-            )
-          }
-        >
-          <Plus size={19} />
-          Add Event
-        </button>
+        {!readOnly && (
+          <button
+            type="button"
+            className="mat-primary-button"
+            onClick={() =>
+              openAddEvent(
+                selectedDate
+              )
+            }
+          >
+            <Plus size={19} />
+            Add Event
+          </button>
+        )}
 
       </section>
 
@@ -1495,7 +1694,13 @@ function CalendarPage({
                                   clickEvent
                                 )
                               }
-                              title={`Edit ${event.title}`}
+                              title={
+                                readOnly ||
+                                event.source ===
+                                  'lesson'
+                                  ? event.title
+                                  : `Edit ${event.title}`
+                              }
                             >
                               {event.isRecurring && (
                                 <Repeat2
@@ -1552,20 +1757,22 @@ function CalendarPage({
                   </strong>
                 </div>
 
-                <button
-                  type="button"
-                  className="mat-primary-button"
-                  onClick={() =>
-                    openAddEvent(
-                      selectedDate
-                    )
-                  }
-                  aria-label="Add event on selected date"
-                >
-                  <Plus
-                    size={16}
-                  />
-                </button>
+                {!readOnly && (
+                  <button
+                    type="button"
+                    className="mat-primary-button"
+                    onClick={() =>
+                      openAddEvent(
+                        selectedDate
+                      )
+                    }
+                    aria-label="Add event on selected date"
+                  >
+                    <Plus
+                      size={16}
+                    />
+                  </button>
+                )}
 
               </div>
 
@@ -1659,6 +1866,18 @@ function CalendarPage({
                           </span>
                         ) : null}
 
+                        {event.source ===
+                          'lesson' &&
+                          !event.startTime && (
+                            <span>
+                              <Clock3
+                                size={13}
+                              />
+
+                              Flexible time
+                            </span>
+                          )}
+
                         {!event.allDay &&
                           event.startTime && (
                             <span>
@@ -1675,6 +1894,20 @@ function CalendarPage({
                                     event.endTime
                                   )}`
                                 : ''}
+                            </span>
+                          )}
+
+                        {event.source ===
+                          'lesson' &&
+                          event.coachName && (
+                            <span>
+                              <User
+                                size={13}
+                              />
+
+                              {
+                                event.coachName
+                              }
                             </span>
                           )}
 
@@ -1698,6 +1931,7 @@ function CalendarPage({
                           </p>
                         )}
 
+                        {!readOnly && (
                         <div className="mat-calendar-event-actions">
 
                           {event.source ===
@@ -1763,6 +1997,7 @@ function CalendarPage({
                           )}
 
                         </div>
+                        )}
 
                       </div>
                     )
@@ -1885,6 +2120,11 @@ function CalendarPage({
                         <Trophy
                           size={16}
                         />
+                      ) : event.source ===
+                        'lesson' ? (
+                        <User
+                          size={16}
+                        />
                       ) : null}
 
                     </button>
@@ -1900,7 +2140,8 @@ function CalendarPage({
 
       </div>
 
-      {showForm && (
+      {showForm &&
+        !readOnly && (
         <CalendarEventForm
           editingEvent={
             editingEvent
@@ -1917,7 +2158,8 @@ function CalendarPage({
         />
       )}
 
-      {editingTournament && (
+      {editingTournament &&
+        !readOnly && (
         <TournamentForm
           editingTournament={
             editingTournament

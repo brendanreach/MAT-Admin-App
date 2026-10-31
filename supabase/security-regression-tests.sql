@@ -44,6 +44,7 @@ where n.nspname in ('public', 'storage')
       'calendar_events',
       'announcements',
       'financial_transactions',
+      'home_carousel_slides',
       'objects'
   )
 order by
@@ -84,6 +85,7 @@ and tablename in (
     'calendar_events',
     'announcements',
     'financial_transactions',
+    'home_carousel_slides',
     'objects'
 )
 order by
@@ -123,6 +125,7 @@ where table_schema in ('public', 'storage')
       'calendar_events',
       'announcements',
       'financial_transactions',
+      'home_carousel_slides',
       'objects'
   )
   and grantee in ('anon', 'authenticated')
@@ -158,6 +161,7 @@ from information_schema.routine_privileges
 where routine_schema = 'public'
   and routine_name in (
       'has_account_role',
+      'has_approved_role',
       'is_admin',
       'is_linked_to_member',
       'can_access_member',
@@ -609,6 +613,103 @@ rollback;
 
 -- EXPECTED ERROR:
 -- Admin access required
+
+
+-- ============================================================
+-- 14. TEST ATHLETE: HOME CAROUSEL VISIBILITY
+-- ============================================================
+
+begin;
+
+do $$
+declare
+    test_user_id uuid;
+begin
+    select id
+    into test_user_id
+    from auth.users
+    where email = 'testathlete@yourdomain.com';
+
+    if test_user_id is null then
+        raise exception 'Test athlete account not found';
+    end if;
+
+    perform set_config(
+        'request.jwt.claims',
+        json_build_object(
+            'sub', test_user_id::text,
+            'role', 'authenticated'
+        )::text,
+        true
+    );
+end
+$$;
+
+set local role authenticated;
+
+select
+    slide_type,
+    title,
+    audience,
+    is_active
+from public.home_carousel_slides
+order by sort_order;
+
+rollback;
+
+
+-- EXPECTED:
+-- Only slides with audience = 'everyone' or 'athletes'.
+-- No 'admins' slides.
+
+
+-- ============================================================
+-- 15. TEST ATHLETE: HOME CAROUSEL WRITE
+--
+-- IMPORTANT:
+-- EXPECTED TO FAIL.
+-- Run separately.
+-- ============================================================
+
+/*
+
+begin;
+
+do $$
+declare
+    test_user_id uuid;
+begin
+    select id
+    into test_user_id
+    from auth.users
+    where email = 'testathlete@yourdomain.com';
+
+    if test_user_id is null then
+        raise exception 'Test athlete account not found';
+    end if;
+
+    perform set_config(
+        'request.jwt.claims',
+        json_build_object(
+            'sub', test_user_id::text,
+            'role', 'authenticated'
+        )::text,
+        true
+    );
+end
+$$;
+
+set local role authenticated;
+
+insert into public.home_carousel_slides (title)
+values ('Athlete should not be able to add this');
+
+rollback;
+
+*/
+
+-- EXPECTED ERROR:
+-- new row violates row-level security policy
 
 
 -- ============================================================

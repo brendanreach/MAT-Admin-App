@@ -246,11 +246,6 @@
   background: #f1f8fc;
 }
 
-.mat-financial-note.tournament {
-  border: 1px solid #efdcae;
-  background: #fff9e9;
-}
-
 .mat-financial-note span {
   color: #647990;
   font-size: 11px;

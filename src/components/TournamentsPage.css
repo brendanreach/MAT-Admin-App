@@ -746,81 +746,6 @@
   font-weight: 700;
 }
 
-.mat-tournament-payment-row {
-  border-top:
-    1px solid #e1e8ee;
-
-  background: white;
-
-  padding:
-    14px 18px;
-
-  display: flex;
-
-  justify-content:
-    space-between;
-
-  align-items:
-    center;
-
-  gap: 15px;
-}
-
-.mat-tournament-payment-row > div {
-  display: flex;
-  flex-direction: column;
-}
-
-.mat-tournament-payment-label {
-  color: #718399;
-  font-size: 11px;
-}
-
-.mat-tournament-payment-amount {
-  color: #10294f;
-  font-size: 17px;
-  font-weight: 800;
-}
-
-.mat-tournament-payment-toggle {
-  border:
-    1px solid #d3dde5;
-
-  background:
-    #f5f8fa;
-
-  color: #5b7087;
-
-  border-radius: 999px;
-
-  padding:
-    8px 12px;
-
-  display: flex;
-  align-items: center;
-
-  gap: 7px;
-
-  font-size: 12px;
-  font-weight: 700;
-
-  cursor: pointer;
-}
-
-.mat-tournament-payment-toggle input {
-  display: none;
-}
-
-.mat-tournament-payment-toggle.paid {
-  border-color:
-    #aee1c7;
-
-  background:
-    #ddf5e9;
-
-  color: #176849;
-}
-
 /* No registered athletes */
 
 .mat-tournament-no-athletes {
@@ -1023,14 +948,6 @@
   .mat-tournament-events {
     grid-template-columns:
       1fr;
-  }
-
-  .mat-tournament-payment-row {
-    align-items:
-      flex-start;
-
-    flex-direction:
-      column;
   }
 
   .mat-tournament-add-grid {
@@ -2075,7 +1992,7 @@ html[data-theme='dark'] body #root .mat-page .mat-tournament-detail .mat-tournam
 /* Tournaments */
 :root[data-theme='dark'] :is(.mat-tournament-tabs,.mat-tournament-tile,.mat-tournament-detail,.mat-tournament-athlete-card,.mat-history-athlete-card,.mat-history-inline-result,.mat-history-event-editor,.mat-tournament-add-athlete,.mat-archive-summary){color:var(--theme-text)!important;border-color:var(--theme-border)!important;background:var(--theme-surface)!important}
 :root[data-theme='dark'] :is(.mat-tournament-name,.mat-tournament-detail-title-row h2,.mat-tournament-section-heading h2,.mat-tournament-athlete-name-area strong,.mat-history-editor-heading h3){color:var(--theme-heading)!important}
-:root[data-theme='dark'] :is(.mat-tournament-meta,.mat-tournament-detail-meta,.mat-tournament-detail-label,.mat-tournament-payment-label,.mat-tournament-events-label,.mat-tournament-empty){color:var(--theme-muted)!important}
+:root[data-theme='dark'] :is(.mat-tournament-meta,.mat-tournament-detail-meta,.mat-tournament-detail-label,.mat-tournament-events-label,.mat-tournament-empty){color:var(--theme-muted)!important}
 :root[data-theme='dark'] :is(.mat-tournament-event-option,.mat-history-event-block,.mat-tournament-detail-stat){color:var(--theme-text)!important;border-color:var(--theme-border)!important;background:var(--theme-surface-alt)!important}
 :root[data-theme='dark'] .mat-tournament-tabs button:not(.active){color:var(--theme-text)!important;background:var(--theme-surface-alt)!important}
 
@@ -2221,3 +2138,235 @@ html[data-theme='dark'] body #root .mat-page .mat-tournament-detail .mat-tournam
     flex-direction: column;
   }
 }
+
+/* Informational fee note (MAT does not collect tournament fees) */
+.mat-tournament-fee-note{display:flex;align-items:flex-start;gap:9px;margin:0;padding:14px 28px;color:#52677c;border-bottom:1px solid #e0e8ee;background:#f7fbfd;font-size:13px;line-height:1.5}
+.mat-tournament-fee-note svg{flex:0 0 auto;margin-top:2px;color:#b87512}
+:root[data-theme='dark'] .mat-tournament-fee-note{color:#b8cbd8!important;border-color:#3f6074!important;background:#162f40!important}
+:root[data-theme='dark'] .mat-tournament-no-athletes{color:#b8cbd8!important;border-color:#3f6074!important;background:#193444!important}
+:root[data-theme='dark'] .mat-tournament-no-athletes :is(strong,.mat-historical-stat-value){color:#e7f1f7!important}
+:root[data-theme='dark'] .mat-tournament-no-athletes svg{color:#70c9fa!important}
+@media (max-width:600px){.mat-tournament-fee-note{padding:13px 18px}}
+
+/* Tournament form: informational cost fields */
+.mat-tournament-form-fee-heading{display:flex;flex-direction:column;gap:4px;padding-top:6px;border-top:1px solid #e1e8ee}
+.mat-tournament-form-fee-heading strong{padding-top:16px;color:#10294f;font-size:15px}
+.mat-tournament-form-fee-heading span{color:#6b7e94;font-size:13px;line-height:1.5}
+.mat-tournament-form-fee-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.mat-tournament-form-textarea{min-height:88px;padding-top:12px;padding-bottom:12px;line-height:1.5;resize:vertical;font-family:inherit}
+:root[data-theme='dark'] .mat-tournament-form-fee-heading{border-color:#3f6074!important}
+:root[data-theme='dark'] .mat-tournament-form-fee-heading strong{color:#fff!important}
+:root[data-theme='dark'] .mat-tournament-form-fee-heading span{color:#b8cbd8!important}
+@media (max-width:600px){.mat-tournament-form-fee-grid{grid-template-columns:1fr}}
+
+/* =========================================================
+   COMPACT PARTICIPANT LIST (coach tournament detail)
+========================================================= */
+.mat-participant-search{position:relative;display:flex;align-items:center;margin-bottom:12px}
+.mat-participant-search svg{position:absolute;left:13px;color:#7b90a4;pointer-events:none}
+.mat-participant-search input{width:100%;min-height:42px;padding:0 14px 0 38px;color:#173957;border:1px solid #d3dfe8;border-radius:10px;background:#fff;font:inherit;font-size:14px}
+.mat-participant-search input:focus{outline:2px solid #8ec5e7;outline-offset:1px}
+.mat-participant-no-match{padding:18px;color:#6b7e94;border:1px dashed #cfdce6;border-radius:10px;text-align:center;font-size:13px}
+
+.mat-participant-list{margin:0;padding:0;list-style:none;border:1px solid #dce5ec;border-radius:12px;background:#fff;overflow:hidden}
+.mat-participant+.mat-participant{border-top:1px solid #e4ebf0}
+.mat-participant{scroll-margin-top:16px}
+.mat-participant.expanded{background:#f6fafd}
+
+.mat-participant-row{width:100%;display:grid;grid-template-columns:38px minmax(150px,230px) minmax(0,1fr) auto;align-items:center;gap:14px;padding:11px 16px;color:inherit;border:0;background:transparent;text-align:left;font:inherit;cursor:pointer}
+.mat-participant-row:hover{background:#f3f8fc}
+.mat-participant-row:focus-visible{outline:2px solid #1588cf;outline-offset:-2px}
+.mat-participant-avatar{width:38px;height:38px;display:grid;place-items:center;color:#0876c4;border-radius:50%;background:#e1f1fb;font-size:13px;font-weight:800}
+.mat-participant-name{min-width:0;display:flex;flex-direction:column;gap:2px}
+.mat-participant-name strong{overflow:hidden;color:#10294f;font-size:14px;text-overflow:ellipsis;white-space:nowrap}
+.mat-participant-name span{overflow:hidden;color:#6f8297;font-size:12px;text-overflow:ellipsis;white-space:nowrap}
+.mat-participant-events{min-width:0;display:flex;flex-wrap:wrap;gap:5px}
+.mat-participant-chip{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;color:#285978;border:1px solid #cfe3f0;border-radius:999px;background:#eef7fc;font-size:11px;font-weight:700;white-space:nowrap}
+.mat-participant-chip.empty{color:#9a6a12;border-color:#efd9a8;background:#fff8e8}
+.mat-participant-chip.note{color:#5d6f80;border-color:#dbe3ea;background:#f5f8fa}
+.mat-participant-chip.gold{color:#8c5f00;border-color:#ecd587;background:#fff3c9}
+.mat-participant-chip.silver{color:#55636f;border-color:#d1d9df;background:#edf1f4}
+.mat-participant-chip.bronze{color:#7d4a2a;border-color:#e4c3aa;background:#f7e7da}
+.mat-participant-edit{display:inline-flex;align-items:center;gap:4px;padding:7px 11px;color:#0876c4;border:1px solid #cfe3f0;border-radius:8px;background:#fff;font-size:12px;font-weight:800}
+.mat-participant.expanded .mat-participant-edit{color:#fff;border-color:#0571c8;background:#0b80d3}
+
+.mat-participant-editor{display:flex;flex-direction:column;gap:18px;padding:4px 16px 18px 68px}
+.mat-participant-editor-heading{display:flex;flex-direction:column;gap:3px}
+.mat-participant-editor-heading strong{color:#173957;font-size:14px}
+.mat-participant-editor-heading span{color:#71879a;font-size:12px;line-height:1.5}
+.mat-participant-editor .mat-tournament-event-groups{gap:12px}
+.mat-participant-editor .mat-tournament-events-label{padding:0;border-top:0;font-size:10px}
+.mat-participant-editor .mat-tournament-events{padding:0}
+.mat-participant-editor.historical .mat-tournament-events{grid-template-columns:repeat(auto-fill,minmax(180px,1fr))}
+.mat-participant-editor.historical .mat-history-event-block:has(.mat-history-inline-result){grid-column:1/-1}
+.mat-participant-editor.historical .mat-history-event-block:has(.mat-history-inline-result) .mat-tournament-event-option{max-width:260px}
+.mat-participant-editor .mat-history-inline-result{margin-left:0}
+.mat-participant-editor:not(.historical) .mat-tournament-event-groups{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:14px 12px;align-items:start}
+.mat-participant-editor:not(.historical) .mat-tournament-events{grid-template-columns:1fr;gap:6px}
+.mat-participant-editor .mat-tournament-event-option{min-height:38px}
+.mat-participant-note{display:flex;flex-direction:column;gap:6px}
+.mat-participant-note label{display:flex;flex-direction:column;gap:2px;color:#173957;font-size:13px;font-weight:800}
+.mat-participant-note label span{color:#71879a;font-size:12px;font-weight:400}
+.mat-participant-note textarea{min-height:64px;resize:vertical;font-family:inherit}
+.mat-participant-note small{color:#71879a;font-size:11px}
+.mat-participant-editor-footer{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-top:14px;border-top:1px solid #e1e8ee}
+.mat-participant-editor-footer .mat-primary-button{min-height:38px;padding:0 20px}
+
+:root[data-theme='dark'] .mat-participant-list{border-color:#3f6074!important;background:#162f40!important}
+:root[data-theme='dark'] .mat-participant+.mat-participant{border-color:#2f4d60!important}
+:root[data-theme='dark'] .mat-participant.expanded{background:#1b3a4d!important}
+:root[data-theme='dark'] .mat-participant-row:hover{background:#1d3d51!important}
+:root[data-theme='dark'] .mat-participant-avatar{color:#9fdcff!important;background:#23546e!important}
+:root[data-theme='dark'] .mat-participant-name strong,:root[data-theme='dark'] .mat-participant-editor-heading strong,:root[data-theme='dark'] .mat-participant-note label{color:#fff!important}
+:root[data-theme='dark'] .mat-participant-name span,:root[data-theme='dark'] .mat-participant-editor-heading span,:root[data-theme='dark'] .mat-participant-note label span,:root[data-theme='dark'] .mat-participant-note small,:root[data-theme='dark'] .mat-participant-no-match{color:#b8cbd8!important}
+:root[data-theme='dark'] .mat-participant-chip{color:#cdeaff!important;border-color:#2f5e78!important;background:#1f4860!important}
+:root[data-theme='dark'] .mat-participant-chip.empty{color:#f4c27f!important;border-color:#7a5a2c!important;background:#3b2d16!important}
+:root[data-theme='dark'] .mat-participant-chip.note{color:#c6d3dc!important;border-color:#3f5868!important;background:#24394a!important}
+:root[data-theme='dark'] .mat-participant-chip.gold{color:#ffe08a!important;border-color:#6a5418!important;background:#4a3a10!important}
+:root[data-theme='dark'] .mat-participant-chip.silver{color:#e3eaef!important;border-color:#56687a!important;background:#3a4a55!important}
+:root[data-theme='dark'] .mat-participant-chip.bronze{color:#f3c7a5!important;border-color:#6d4a33!important;background:#4d3222!important}
+:root[data-theme='dark'] .mat-participant-edit{color:#9fdcff!important;border-color:#3f6074!important;background:#162f40!important}
+:root[data-theme='dark'] .mat-participant.expanded .mat-participant-edit{color:#fff!important;background:#0b80d3!important}
+:root[data-theme='dark'] .mat-participant-search input{color:#e7f1f7!important;border-color:#3f6074!important;background:#132938!important}
+:root[data-theme='dark'] .mat-participant-editor-footer{border-color:#3f6074!important}
+
+@media (max-width:760px){
+  .mat-participant-row{grid-template-columns:38px minmax(0,1fr) auto;row-gap:8px;padding:12px 14px}
+  .mat-participant-events{grid-column:2/-1;grid-row:2}
+  .mat-participant-editor{padding:4px 14px 16px}
+  .mat-participant-editor .mat-tournament-events{grid-template-columns:1fr}
+  .mat-participant-editor:not(.historical) .mat-tournament-event-groups{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 8px}
+  .mat-participant-editor:not(.historical) .mat-tournament-event-option{padding:8px 9px}
+  .mat-participant-editor-footer{flex-direction:column-reverse;align-items:stretch}
+  .mat-participant-editor-footer button{min-height:42px}
+}
+
+/* Participant event filter */
+.mat-participant-toolbar{display:flex;flex-direction:column;gap:10px;margin-bottom:12px}
+.mat-participant-toolbar .mat-participant-search{margin-bottom:0}
+.mat-participant-filters{display:flex;flex-wrap:wrap;gap:6px}
+.mat-participant-filter{display:inline-flex;align-items:center;gap:7px;min-height:34px;padding:0 6px 0 12px;color:#3c5a73;border:1px solid #d3dfe8;border-radius:999px;background:#fff;font:inherit;font-size:12px;font-weight:700;white-space:nowrap;cursor:pointer}
+.mat-participant-filter span{min-width:22px;height:22px;display:grid;place-items:center;padding:0 6px;color:#0876c4;border-radius:999px;background:#e4f2fb;font-size:11px;font-weight:800}
+.mat-participant-filter:hover{border-color:#8ec5e7}
+.mat-participant-filter.empty{color:#93a3b2}
+.mat-participant-filter.empty span{color:#93a3b2;background:#eef2f5}
+.mat-participant-filter.warning:not(.empty) span{color:#9a6a12;background:#fff1d1}
+.mat-participant-filter.active{color:#fff;border-color:#0571c8;background:linear-gradient(180deg,#118de0,#0571c8)}
+.mat-participant-filter.active span{color:#fff;background:rgba(255,255,255,.22)}
+.mat-participant-filter:focus-visible{outline:2px solid #1588cf;outline-offset:2px}
+.mat-participant-filter-summary{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px;padding:8px 12px;color:#3c5a73;border-radius:9px;background:#eef7fc;font-size:13px}
+.mat-participant-filter-summary strong{color:#0876c4}
+.mat-participant-filter-summary button{flex:0 0 auto;padding:4px 8px;color:#0876c4;border:0;border-radius:6px;background:transparent;font:inherit;font-size:12px;font-weight:800;cursor:pointer}
+.mat-participant-filter-summary button:hover{background:#dcefff}
+.mat-participant-chip.match{color:#fff;border-color:#0571c8;background:#0b80d3}
+
+:root[data-theme='dark'] .mat-participant-filter{color:#cfe0eb!important;border-color:#3f6074!important;background:#162f40!important}
+:root[data-theme='dark'] .mat-participant-filter span{color:#9fdcff!important;background:#23546e!important}
+:root[data-theme='dark'] .mat-participant-filter.empty{color:#7f97a8!important}
+:root[data-theme='dark'] .mat-participant-filter.empty span{color:#7f97a8!important;background:#1f3646!important}
+:root[data-theme='dark'] .mat-participant-filter.warning:not(.empty) span{color:#f4c27f!important;background:#3b2d16!important}
+:root[data-theme='dark'] .mat-participant-filter.active{color:#fff!important;border-color:#0b80d3!important;background:#0b80d3!important}
+:root[data-theme='dark'] .mat-participant-filter.active span{color:#fff!important;background:rgba(255,255,255,.2)!important}
+:root[data-theme='dark'] .mat-participant-filter-summary{color:#cfe0eb!important;background:#1b3a4d!important}
+:root[data-theme='dark'] .mat-participant-filter-summary :is(strong,button){color:#9fdcff!important}
+:root[data-theme='dark'] .mat-participant-chip.match{color:#fff!important;border-color:#0b80d3!important;background:#0b80d3!important}
+
+@media (max-width:760px){
+  .mat-participant-filters{flex-wrap:nowrap;margin:0 -14px;padding:0 14px 4px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  .mat-participant-filters::-webkit-scrollbar{display:none}
+  .mat-participant-filter{flex:0 0 auto;min-height:38px}
+  .mat-participant-filter-summary{align-items:flex-start}
+}
+
+/* =========================================================
+   TOURNAMENT REGISTRATION (link + athlete self sign-up)
+========================================================= */
+
+.mat-tournament-form-hint{display:block;margin-top:6px;color:#74889b;font-size:12px}
+.mat-tournament-registration-url{color:#0879c8;font-weight:700;text-decoration:underline;text-underline-offset:3px}
+.mat-participant-chip.self{color:#1f7a45;border-color:#bfe5cd;background:#eefaf2}
+
+.mat-registration-card{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:12px 20px;margin:0;padding:18px 28px;border-bottom:1px solid #e0e8ee;background:#f2f9fe}
+.mat-registration-card.registered{background:#effaf3}
+.mat-registration-card.closed{background:#f7f8fa}
+.mat-registration-card-text{display:flex;flex-direction:column;gap:4px;min-width:0}
+.mat-registration-card-text strong{display:inline-flex;align-items:center;gap:7px;color:#10294f;font-size:15px}
+.mat-registration-card.registered .mat-registration-card-text strong{color:#1f7a45}
+.mat-registration-card-text span{color:#52677c;font-size:13px;line-height:1.5}
+.mat-registration-card-actions{display:flex;align-items:center;flex-wrap:wrap;justify-content:flex-end;gap:8px}
+.mat-registration-card-actions .mat-primary-button,
+.mat-registration-card-actions .mat-secondary-button{min-height:42px;display:inline-flex;align-items:center;gap:7px;white-space:nowrap;text-decoration:none}
+.mat-registration-undo{min-height:42px;padding:0 12px;border:0;background:none;color:#8a5a5a;font-size:13px;font-weight:700;text-decoration:underline;cursor:pointer}
+.mat-registration-undo:disabled,
+.mat-registration-card-actions button:disabled{opacity:.6;cursor:wait}
+.mat-registration-message{grid-column:1/-1;padding:10px 12px;border-radius:8px;font-size:13px;line-height:1.45}
+.mat-registration-message.success{color:#1f6b3f;background:#dff5e7}
+.mat-registration-message.error{color:#9b2c2c;background:#fde8e8}
+
+@media (max-width:700px){
+  .mat-registration-card{grid-template-columns:1fr;padding:16px 18px}
+  .mat-registration-card-actions{justify-content:stretch}
+  .mat-registration-card-actions .mat-primary-button,
+  .mat-registration-card-actions .mat-secondary-button{flex:1 1 160px;justify-content:center}
+}
+
+:root[data-theme='dark'] .mat-tournament-form-hint{color:#9fb3c2!important}
+:root[data-theme='dark'] .mat-tournament-registration-url{color:#70c9fa!important}
+:root[data-theme='dark'] .mat-participant-chip.self{color:#9be3b5!important;border-color:#2f6247!important;background:#173828!important}
+:root[data-theme='dark'] .mat-registration-card{border-color:#3f6074!important;background:#14344a!important}
+:root[data-theme='dark'] .mat-registration-card.registered{background:#143a2a!important}
+:root[data-theme='dark'] .mat-registration-card.closed{background:#1b2c38!important}
+:root[data-theme='dark'] .mat-registration-card-text strong{color:#fff!important}
+:root[data-theme='dark'] .mat-registration-card.registered .mat-registration-card-text strong{color:#9be3b5!important}
+:root[data-theme='dark'] .mat-registration-card-text span{color:#b8cbd8!important}
+:root[data-theme='dark'] .mat-registration-undo{color:#ffadb4!important}
+:root[data-theme='dark'] .mat-registration-message.success{color:#c4f1d4!important;background:#1d4a33!important}
+:root[data-theme='dark'] .mat-registration-message.error{color:#ffd0d0!important;background:#4a2228!important}
+:root[data-theme='dark'] .mat-registration-link{color:#e6f4fc!important;border-color:#4f7185!important;background:#193f54!important}
+
+/* =========================================================
+   EVENTS OFFERED (admin form) + ATHLETE EVENT PICKER
+========================================================= */
+
+.mat-tournament-form-events{margin:0;padding:0;border:0;min-width:0;display:flex;flex-direction:column;gap:10px}
+.mat-tournament-form-events legend{display:flex;align-items:center;gap:10px;margin-bottom:10px;padding:0;color:#10294f;font-size:14px;font-weight:800}
+.mat-tournament-form-events-bar{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.mat-tournament-form-events-bar small{color:#74889b;font-size:12px;line-height:1.4}
+.mat-tournament-form-events-bar button{flex:0 0 auto;padding:6px 10px;border:1px solid #bcdcf0;border-radius:7px;background:#eef8fe;color:#0879c8;font-size:12px;font-weight:800;cursor:pointer}
+.mat-tournament-form-event-groups,
+.mat-registration-event-groups{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:8px}
+.mat-tournament-form-event-group,
+.mat-registration-event-group{display:flex;flex-direction:column;gap:6px;min-width:0}
+.mat-tournament-form-event-group:has(> span),
+.mat-registration-event-group:has(> span){grid-column:1/-1;display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:8px}
+.mat-tournament-form-event-group > span,
+.mat-registration-event-group > span{grid-column:1/-1;color:#5d6f80;font-size:11px;font-weight:800;letter-spacing:.04em;text-transform:uppercase}
+
+.mat-registration-card.with-picker{grid-template-columns:1fr}
+.mat-registration-card.with-picker .mat-registration-card-actions{justify-content:flex-start}
+.mat-registration-events{margin:0;padding:14px;min-width:0;border:1px solid #cfe3f1;border-radius:10px;background:#fff}
+.mat-registration-events legend{padding:0 6px;color:#10294f;font-size:13px;font-weight:800}
+.mat-registration-required{margin-left:6px;padding:2px 7px;border-radius:999px;background:#fff0df;color:#b45c10;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.04em}
+.mat-registration-hint{display:block;margin-top:10px;color:#b45c10;font-size:12px;font-weight:700}
+.mat-registration-card-actions .mat-primary-button:disabled{opacity:.5;cursor:not-allowed}
+
+@media (max-width:700px){
+  .mat-tournament-form-event-groups,
+  .mat-registration-event-groups,
+  .mat-tournament-form-event-group:has(> span),
+  .mat-registration-event-group:has(> span){grid-template-columns:1fr 1fr}
+  .mat-tournament-form-events-bar{align-items:flex-start;flex-direction:column}
+}
+
+:root[data-theme='dark'] .mat-tournament-form-events legend,
+:root[data-theme='dark'] .mat-registration-events legend{color:#fff!important}
+:root[data-theme='dark'] .mat-tournament-form-events-bar small,
+:root[data-theme='dark'] .mat-tournament-form-event-group > span,
+:root[data-theme='dark'] .mat-registration-event-group > span{color:#9fb3c2!important}
+:root[data-theme='dark'] .mat-tournament-form-events-bar button{color:#e6f4fc!important;border-color:#4f7185!important;background:#193f54!important}
+:root[data-theme='dark'] .mat-registration-events{border-color:#3f6074!important;background:#102838!important}
+:root[data-theme='dark'] .mat-registration-required{color:#ffc58a!important;background:#4a3218!important}
+:root[data-theme='dark'] .mat-registration-hint{color:#ffc58a!important}
+:root[data-theme='dark'] .mat-registration-card .mat-tournament-event-option.selected,
+:root[data-theme='dark'] .mat-tournament-form-events .mat-tournament-event-option.selected{color:#fff!important;border-color:#70c9fa!important;background:#1d4d68!important}
+:root[data-theme='dark'] .mat-registration-edit{color:#e6f4fc!important;border-color:#4f7185!important;background:#193f54!important}

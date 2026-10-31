@@ -446,3 +446,19 @@
   background: #23546e !important;
 }
 
+
+/* Athlete entry rows inside the coach-style tournament detail panel */
+.mat-tournament-detail .mat-athlete-tournament-events { gap: 10px; }
+.mat-tournament-detail .mat-athlete-tournament-event { padding: 14px 16px; border: 1px solid #dce5ec; border-radius: 12px; background: #fbfdfe; }
+.mat-tournament-detail .mat-athlete-tournament-event strong { color: #10294f; font-size: 14px; }
+.mat-tournament-detail .mat-athlete-tournament-event > div > span { font-size: 12px; }
+.mat-tournament-detail .mat-athlete-result-badge { padding: 6px 10px; font-size: 11px; }
+.mat-tournament-detail .mat-athlete-tournament-note { margin-top: 16px; padding: 14px 16px; }
+.mat-tournament-detail .mat-athlete-tournament-note strong { font-size: 12px; }
+.mat-tournament-detail .mat-athlete-tournament-note p { font-size: 13px; }
+.mat-tournament-detail .mat-tournament-no-athletes .mat-historical-stat-value { max-width: 420px; text-align: center; font-size: 14px; line-height: 1.5; }
+:root[data-theme='dark'] .mat-tournament-detail .mat-athlete-tournament-event { border-color: #3f6074 !important; background: #193444 !important; }
+:root[data-theme='dark'] .mat-tournament-detail .mat-athlete-tournament-note { background: #193444 !important; }
+:root[data-theme='dark'] .mat-tournament-detail .mat-athlete-result-badge.gold { color: #ffe08a !important; background: #4a3a10 !important; }
+:root[data-theme='dark'] .mat-tournament-detail .mat-athlete-result-badge.silver { color: #e3eaef !important; background: #3a4a55 !important; }
+:root[data-theme='dark'] .mat-tournament-detail .mat-athlete-result-badge.bronze { color: #f3c7a5 !important; background: #4d3222 !important; }

@@ -1,49 +1,25 @@
 import {
   Award,
-  ChevronLeft,
   ChevronRight,
   MapPin,
   Medal,
   MessageCircle,
-  Pin,
   Target,
   Trophy,
 } from 'lucide-react'
-import { useEffect, useMemo, useState } from 'react'
-import { supabase } from '../lib/supabase.js'
-import './AthleteHomePage.css'
-
-const HERO_IMAGES = [
-  '/home-hero-competition.png',
-  '/home-hero-training.png',
-  '/home-hero-team.png',
-]
-
-function parseDate(value) {
-  return value ? new Date(`${value}T00:00:00`) : null
-}
-
-function formatDate(value, includeYear = true) {
-  const date = parseDate(value)
-  if (!date) return 'Date TBD'
-  return date.toLocaleDateString(undefined, {
-    month: 'short',
-    day: 'numeric',
-    ...(includeYear ? { year: 'numeric' } : {}),
-  })
-}
-
-function formatDateRange(startDate, endDate) {
-  if (!startDate) return 'Date TBD'
-  if (!endDate || endDate === startDate) return formatDate(startDate)
-  const start = parseDate(startDate)
-  const end = parseDate(endDate)
-  if (!start || !end) return formatDate(startDate)
-  if (start.getFullYear() === end.getFullYear() && start.getMonth() === end.getMonth()) {
-    return `${start.toLocaleDateString(undefined, { month: 'short' })} ${start.getDate()}–${end.getDate()}, ${end.getFullYear()}`
-  }
-  return `${formatDate(startDate, false)} – ${formatDate(endDate)}`
-}
+import { useMemo } from 'react'
+import {
+  DEFAULT_SLIDE_IMAGES,
+  buildCarouselSlides,
+  formatDate,
+  formatDateRange,
+  getTodayString,
+  useHomeCarouselRows,
+  useRecentTopics,
+} from '../lib/homeCarousel.js'
+import HomeCarousel from './HomeCarousel.jsx'
+import TeamMessagesCard from './TeamMessagesCard.jsx'
+import './HomeLayout.css'
 
 function getMedalType(result) {
   if (!result) return ''
@@ -53,11 +29,6 @@ function getMedalType(result) {
   return ''
 }
 
-function truncate(value, length = 120) {
-  const text = String(value || '').trim()
-  return text.length > length ? `${text.slice(0, length).trim()}…` : text
-}
-
 export default function AthleteHomePage({
   member,
   tournaments = [],
@@ -65,30 +36,9 @@ export default function AthleteHomePage({
   tournamentResults = [],
   onNavigate,
 }) {
-  const [topics, setTopics] = useState([])
-  const [slideIndex, setSlideIndex] = useState(0)
-  const [paused, setPaused] = useState(false)
-
-  useEffect(() => {
-    let active = true
-    async function loadTopics() {
-      const { data, error } = await supabase
-        .from('discussion_topics')
-        .select('id,title,body,is_pinned,created_at,last_activity_at,discussion_comments(count)')
-        .eq('is_archived', false)
-        .order('is_pinned', { ascending: false })
-        .order('last_activity_at', { ascending: false })
-        .limit(5)
-      if (active && !error) setTopics(data || [])
-    }
-    loadTopics()
-    return () => { active = false }
-  }, [])
-
-  const today = useMemo(() => {
-    const now = new Date()
-    return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`
-  }, [])
+  const topics = useRecentTopics()
+  const { rows: carouselRows } = useHomeCarouselRows()
+  const today = useMemo(() => getTodayString(), [])
 
   const athleteEntryIds = useMemo(
     () => tournamentEntries.map((entry) => entry.id),
@@ -114,56 +64,22 @@ export default function AthleteHomePage({
     ? tournamentEntries.find((entry) => entry.tournament_id === nextTournament.id) || null
     : null
 
-  const slides = useMemo(() => {
-    const result = []
-    if (nextTournament) {
-      result.push({
-        id: `tournament-${nextTournament.id}`,
-        kicker: 'Upcoming Tournament',
-        title: nextTournament.name,
-        body: nextTournament.location || 'Your next team competition is coming up.',
-        meta: formatDateRange(nextTournament.event_date, nextTournament.end_date),
-        action: 'View Tournament',
-        target: 'tournaments',
-        image: HERO_IMAGES[0],
-      })
-    }
-    if (topics[0]) {
-      result.push({
-        id: `topic-${topics[0].id}`,
-        kicker: topics[0].is_pinned ? 'Pinned Team Discussion' : 'Team Discussion',
-        title: topics[0].title,
-        body: truncate(topics[0].body, 145),
-        meta: `${topics[0].discussion_comments?.[0]?.count || 0} comments`,
-        action: 'View Messages',
-        target: 'messages',
-        image: HERO_IMAGES[1],
-      })
-    }
-    result.push({
-      id: 'team-portal',
-      kicker: 'Competition Team',
-      title: member ? `Welcome, ${member.first_name}` : 'Michigan Academy of Taekwondo',
-      body: 'Stay connected with your team, coaches, tournaments, and competition progress.',
-      meta: member?.belt_rank ? `${member.belt_rank} Belt` : 'MAT Team Portal',
-      action: 'My Profile',
-      target: 'my-profile',
-      image: HERO_IMAGES[2],
-    })
-    return result
-  }, [nextTournament, topics, member])
-
-  useEffect(() => {
-    if (paused || slides.length < 2) return undefined
-    const timer = window.setInterval(() => {
-      setSlideIndex((current) => (current + 1) % slides.length)
-    }, 9000)
-    return () => window.clearInterval(timer)
-  }, [paused, slides.length])
-
-  useEffect(() => {
-    if (slideIndex >= slides.length) setSlideIndex(0)
-  }, [slideIndex, slides.length])
+  const slides = useMemo(
+    () => buildCarouselSlides(carouselRows, {
+      view: 'athlete',
+      nextTournament,
+      topic: topics[0],
+      welcome: {
+        kicker: 'Competition Team',
+        title: member ? `Welcome, ${member.first_name}` : 'Michigan Academy of Taekwondo',
+        body: 'Stay connected with your team, coaches, tournaments, and competition progress.',
+        meta: member?.belt_rank ? `${member.belt_rank} Belt` : 'MAT Team Portal',
+        action: 'My Profile',
+        target: 'my-profile',
+      },
+    }),
+    [carouselRows, nextTournament, topics, member]
+  )
 
   if (!member) {
     return (
@@ -174,61 +90,9 @@ export default function AthleteHomePage({
     )
   }
 
-  const currentSlide = slides[slideIndex] || slides[0]
-
   return (
     <div className="mat-new-home">
-      <section
-        className="mat-new-home-hero"
-        onMouseEnter={() => setPaused(true)}
-        onMouseLeave={() => setPaused(false)}
-      >
-        <img src={currentSlide.image} alt="" className="mat-new-home-hero-image" />
-        <div className="mat-new-home-hero-shade" />
-        <div className="mat-new-home-hero-copy">
-          <span>{currentSlide.kicker}</span>
-          <h1>{currentSlide.title}</h1>
-          <p>{currentSlide.body}</p>
-          <small>{currentSlide.meta}</small>
-          <button type="button" onClick={() => onNavigate(currentSlide.target)}>
-            {currentSlide.action}
-            <ChevronRight size={18} />
-          </button>
-        </div>
-
-        {slides.length > 1 && (
-          <>
-            <button
-              type="button"
-              className="mat-new-home-hero-arrow previous"
-              aria-label="Previous feature"
-              onClick={() => setSlideIndex((slideIndex - 1 + slides.length) % slides.length)}
-            >
-              <ChevronLeft size={24} />
-            </button>
-            <button
-              type="button"
-              className="mat-new-home-hero-arrow next"
-              aria-label="Next feature"
-              onClick={() => setSlideIndex((slideIndex + 1) % slides.length)}
-            >
-              <ChevronRight size={24} />
-            </button>
-            <div className="mat-new-home-dots" aria-label="Featured content slides">
-              {slides.map((slide, index) => (
-                <button
-                  key={slide.id}
-                  type="button"
-                  className={index === slideIndex ? 'active' : ''}
-                  aria-label={`Show slide ${index + 1}`}
-                  aria-current={index === slideIndex ? 'true' : undefined}
-                  onClick={() => setSlideIndex(index)}
-                />
-              ))}
-            </div>
-          </>
-        )}
-      </section>
+      <HomeCarousel slides={slides} onNavigate={onNavigate} />
 
       <section className="mat-new-home-stats" aria-label="Competition statistics">
         <button type="button" onClick={() => onNavigate('my-profile')}>
@@ -253,7 +117,7 @@ export default function AthleteHomePage({
           </header>
           {nextTournament ? (
             <div className="mat-new-home-next-content">
-              <img src={HERO_IMAGES[0]} alt="" />
+              <img src={DEFAULT_SLIDE_IMAGES.next_tournament} alt="" />
               <div>
                 <span className={`mat-new-home-status ${nextEntry ? 'registered' : ''}`}>
                   {nextEntry ? 'Registered' : 'Not Registered'}
@@ -275,26 +139,7 @@ export default function AthleteHomePage({
           </div>
         </article>
 
-        <article className="mat-new-home-card mat-new-home-messages">
-          <header>
-            <div><MessageCircle size={20} /><span>Team Messages</span></div>
-            <button type="button" onClick={() => onNavigate('messages')}>View All <ChevronRight size={15} /></button>
-          </header>
-          <div className="mat-new-home-message-list">
-            {topics.length === 0 ? (
-              <div className="mat-new-home-card-empty">No recent team discussions.</div>
-            ) : topics.slice(0, 4).map((topic) => (
-              <button key={topic.id} type="button" onClick={() => onNavigate('messages')}>
-                <span className="mat-new-home-message-icon">{topic.is_pinned ? <Pin size={17} /> : <MessageCircle size={17} />}</span>
-                <span className="mat-new-home-message-copy">
-                  <strong>{topic.title}</strong>
-                  <span>{truncate(topic.body, 100)}</span>
-                </span>
-                <span className="mat-new-home-message-count">{topic.discussion_comments?.[0]?.count || 0}</span>
-              </button>
-            ))}
-          </div>
-        </article>
+        <TeamMessagesCard topics={topics} onNavigate={onNavigate} />
       </section>
     </div>
   )

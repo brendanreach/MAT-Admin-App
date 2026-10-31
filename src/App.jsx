@@ -97,11 +97,6 @@ function App() {
   ] = useState([])
 
   const [
-    announcements,
-    setAnnouncements,
-  ] = useState([])
-
-  const [
     message,
     setMessage,
   ] = useState('')
@@ -171,7 +166,6 @@ function App() {
     setAllTournamentEntries([])
     setTournamentResults([])
     setCalendarEvents([])
-    setAnnouncements([])
     setViewMode('admin')
     setActiveTab('home')
   }, [
@@ -270,8 +264,7 @@ function App() {
       setAllTournamentEntries([])
       setTournamentResults([])
       setCalendarEvents([])
-      setAnnouncements([])
-      await loadAccountMemberLinks()
+        await loadAccountMemberLinks()
       setAccountLoading(false)
       return
     }
@@ -284,7 +277,6 @@ function App() {
       loadAllTournamentEntries(),
       loadTournamentResults(),
       loadCalendarEvents(),
-      loadAnnouncements(),
       loadAccountMemberLinks(),
     ])
 
@@ -534,41 +526,6 @@ function App() {
     )
   }
 
-  async function loadAnnouncements() {
-    const {
-      data,
-      error,
-    } =
-      await supabase
-        .from(
-          'announcements'
-        )
-        .select('*')
-        .order(
-          'publish_date',
-          {
-            ascending: false,
-          }
-        )
-        .order(
-          'created_at',
-          {
-            ascending: false,
-          }
-        )
-
-    if (error) {
-      setMessage(
-        error.message
-      )
-      return
-    }
-
-    setAnnouncements(
-      data || []
-    )
-  }
-
   async function handleLogout() {
     await supabase.auth.signOut()
   }
@@ -767,11 +724,14 @@ function App() {
                 tournaments={
                   tournaments
                 }
+                allTournamentEntries={
+                  allTournamentEntries
+                }
                 calendarEvents={
                   calendarEvents
                 }
-                announcements={
-                  announcements
+                accountName={
+                  accountName
                 }
                 onNavigate={
                   setActiveTab
@@ -865,6 +825,10 @@ function App() {
                 tournaments={
                   tournaments
                 }
+                members={
+                  members
+                }
+                showPrivateLessons
                 onCalendarEventsChanged={
                   loadCalendarEvents
                 }
@@ -882,9 +846,6 @@ function App() {
                 }
                 tournaments={
                   tournaments
-                }
-                allTournamentEntries={
-                  allTournamentEntries
                 }
               />
             )}
@@ -908,9 +869,6 @@ function App() {
                 }
                 tournamentResults={
                   tournamentResults
-                }
-                announcements={
-                  announcements
                 }
                 onNavigate={
                   setActiveTab
@@ -944,6 +902,9 @@ function App() {
                 }
                 tournamentResults={
                   tournamentResults
+                }
+                onEntriesChanged={
+                  loadAllTournamentEntries
                 }
               />
             )}

@@ -8,13 +8,13 @@ import {
 import {
   Archive,
   CalendarDays,
-  CheckCircle2,
   ChevronDown,
   ChevronRight,
   ChevronUp,
   CircleDollarSign,
   Clock3,
   Grid2X2,
+  Link2,
   List,
   Medal,
   MapPin,
@@ -22,7 +22,10 @@ import {
   Plus,
   Save,
   Search,
+  StickyNote,
+  Ticket,
   Trophy,
+  UserCheck,
   UserPlus,
   Users,
   X,
@@ -31,47 +34,12 @@ import {
 import { supabase } from '../lib/supabase.js'
 import TournamentForm from './TournamentForm.jsx'
 import './TournamentsPage.css'
-
-const EVENT_GROUPS = [
-  {
-    label: 'Sparring',
-    events: [
-      'Sparring',
-    ],
-  },
-  {
-    label: 'Recognized Poomsae',
-    events: [
-      'Recognized Poomsae - Individual',
-    ],
-  },
-  {
-    label: 'World Class Poomsae',
-    events: [
-      'World Class Poomsae - Individual',
-      'World Class Poomsae - Mixed Pairs',
-      'World Class Poomsae - Team',
-    ],
-  },
-  {
-    label: 'Traditional Poomsae',
-    events: [
-      'Traditional Poomsae',
-    ],
-  },
-  {
-    label: 'Board Breaking',
-    events: [
-      'Board Breaking',
-    ],
-  },
-  {
-    label: 'Weapons',
-    events: [
-      'Weapons',
-    ],
-  },
-]
+import {
+  EVENT_GROUPS,
+  getEventOptionLabel,
+  getTournamentEventGroups,
+  getTournamentEvents,
+} from '../lib/tournamentEvents.js'
 
 const RESULT_OPTIONS = [
   'Gold',
@@ -182,6 +150,23 @@ function getEventDisplayName(
   }
 
   return eventName
+}
+
+function getEventShortName(
+  eventName
+) {
+  return String(
+    eventName ||
+      ''
+  )
+    .replace(
+      'World Class Poomsae - ',
+      'WC '
+    )
+    .replace(
+      'Recognized Poomsae - Individual',
+      'Recognized Poomsae'
+    )
 }
 
 function getResultStageFromExisting(
@@ -318,6 +303,10 @@ function TournamentsPage({
     setExpandedAthletes,
   ] = useState({})
 
+  const [participantSearch, setParticipantSearch] = useState('')
+  const [participantEventFilter, setParticipantEventFilter] = useState('all')
+  const [noteDrafts, setNoteDrafts] = useState({})
+  const [savingNoteId, setSavingNoteId] = useState('')
   const [memberSearch, setMemberSearch] = useState('')
   const [showInactiveMembers, setShowInactiveMembers] = useState(false)
   const [addingMemberId, setAddingMemberId] = useState('')
@@ -362,6 +351,9 @@ function TournamentsPage({
 
   useEffect(() => {
     setExpandedAthletes({})
+    setParticipantSearch('')
+    setParticipantEventFilter('all')
+    setNoteDrafts({})
     setMessage('')
   }, [
     selectedTournamentId,
@@ -461,6 +453,118 @@ function TournamentsPage({
       ]
     )
 
+  const sortedSelectedEntries =
+    useMemo(
+      () =>
+        selectedEntries
+          .map((entry) => ({
+            entry,
+            member:
+              members.find(
+                (item) =>
+                  item.id ===
+                  entry.member_id
+              ),
+          }))
+          .filter(
+            ({ member }) =>
+              member
+          )
+          .sort((a, b) =>
+            `${a.member.last_name} ${a.member.first_name}`.localeCompare(
+              `${b.member.last_name} ${b.member.first_name}`
+            )
+          ),
+      [
+        selectedEntries,
+        members,
+      ]
+    )
+
+  const activeEventGroup =
+    EVENT_GROUPS.find(
+      (group) =>
+        group.label ===
+        participantEventFilter
+    ) || null
+
+  function entryMatchesEventFilter(
+    entry,
+    filter
+  ) {
+    const events =
+      entry.events ||
+      []
+
+    if (filter === 'all') {
+      return true
+    }
+
+    if (filter === 'none') {
+      return events.length === 0
+    }
+
+    const group =
+      EVENT_GROUPS.find(
+        (item) =>
+          item.label ===
+          filter
+      )
+
+    return Boolean(
+      group &&
+        events.some(
+          (eventName) =>
+            group.events.includes(
+              eventName
+            )
+        )
+    )
+  }
+
+  const participantFilterOptions = [
+    {
+      value: 'all',
+      label: 'All',
+    },
+    ...EVENT_GROUPS.map(
+      (group) => ({
+        value: group.label,
+        label: group.label,
+      })
+    ),
+    {
+      value: 'none',
+      label: 'No Events',
+    },
+  ].map((option) => ({
+    ...option,
+    count:
+      sortedSelectedEntries.filter(
+        ({ entry }) =>
+          entryMatchesEventFilter(
+            entry,
+            option.value
+          )
+      ).length,
+  }))
+
+  const visibleParticipants =
+    sortedSelectedEntries.filter(
+      ({ entry, member }) =>
+        entryMatchesEventFilter(
+          entry,
+          participantEventFilter
+        ) &&
+        `${member.first_name} ${member.last_name}`
+          .toLowerCase()
+          .includes(
+            participantSearch
+              .trim()
+              .toLowerCase()
+          )
+    )
+
   const isSelectedArchived =
     Boolean(
       selectedTournament &&
@@ -521,16 +625,6 @@ function TournamentsPage({
         return aName.localeCompare(bName)
       })
   }, [availableMembers, memberSearch, showInactiveMembers])
-
-  function getMember(
-    memberId
-  ) {
-    return members.find(
-      (member) =>
-        member.id ===
-        memberId
-    )
-  }
 
   function getTournamentEntries(
     tournamentId
@@ -606,43 +700,28 @@ function TournamentsPage({
   function getTournamentStats(
     tournament
   ) {
-    const entries =
-      getTournamentEntries(
-        tournament.id
-      )
-
-    const paidEntries =
-      entries.filter(
-        (entry) =>
-          entry.has_paid
-      )
-
-    const unpaidEntries =
-      entries.filter(
-        (entry) =>
-          !entry.has_paid
-      )
-
-    const entryFee =
-      Number(
-        tournament.entry_fee ||
-          0
-      )
-
     return {
       totalAthletes:
-        entries.length,
-
-      paidAthletes:
-        paidEntries.length,
-
-      unpaidAthletes:
-        unpaidEntries.length,
-
-      feesOutstanding:
-        unpaidEntries.length *
-        entryFee,
+        getTournamentEntries(
+          tournament.id
+        ).length,
     }
+  }
+
+  function formatFee(
+    amount
+  ) {
+    if (
+      amount === null ||
+      amount === undefined ||
+      amount === ''
+    ) {
+      return 'Not set'
+    }
+
+    return `$${Number(
+      amount
+    ).toFixed(2)}`
   }
 
   function formatDate(
@@ -826,14 +905,76 @@ function TournamentsPage({
   function toggleAthleteExpanded(
     entryId
   ) {
-    setExpandedAthletes(
-      (current) => ({
-        ...current,
+    const opening =
+      !expandedAthletes[entryId]
 
-        [entryId]:
-          !current[entryId],
-      })
+    // Only one participant editor is open at a time so the list stays short.
+    setExpandedAthletes(
+      opening
+        ? { [entryId]: true }
+        : {}
     )
+
+    if (opening) {
+      window.setTimeout(() => {
+        document
+          .getElementById(
+            `mat-participant-${entryId}`
+          )
+          ?.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start',
+          })
+      }, 60)
+    }
+  }
+
+  async function saveEntryNote(
+    entry
+  ) {
+    const draft =
+      noteDrafts[entry.id]
+
+    if (
+      draft === undefined ||
+      draft.trim() ===
+        (entry.notes || '')
+    ) {
+      return
+    }
+
+    setSavingNoteId(
+      entry.id
+    )
+
+    const {
+      error,
+    } =
+      await supabase
+        .from(
+          'tournament_entries'
+        )
+        .update({
+          notes:
+            draft.trim() ||
+            null,
+        })
+        .eq(
+          'id',
+          entry.id
+        )
+
+    setSavingNoteId('')
+
+    if (error) {
+      setMessage(
+        error.message
+      )
+
+      return
+    }
+
+    await onEntriesChanged()
   }
 
   async function addAthlete(
@@ -1085,36 +1226,6 @@ function TournamentsPage({
     ) {
       await onResultsChanged()
     }
-  }
-
-  async function togglePaid(
-    entry
-  ) {
-    const {
-      error,
-    } =
-      await supabase
-        .from(
-          'tournament_entries'
-        )
-        .update({
-          has_paid:
-            !entry.has_paid,
-        })
-        .eq(
-          'id',
-          entry.id
-        )
-
-    if (error) {
-      setMessage(
-        error.message
-      )
-
-      return
-    }
-
-    await onEntriesChanged()
   }
 
   function getResultFormKey(
@@ -1503,9 +1614,13 @@ function TournamentsPage({
     historical
   ) {
     const knownEvents =
-      EVENT_GROUPS.flatMap(
-        (group) =>
-          group.events
+      getTournamentEvents(
+        selectedTournament
+      )
+
+    const offeredGroups =
+      getTournamentEventGroups(
+        selectedTournament
       )
 
     const legacyEvents =
@@ -1524,7 +1639,7 @@ function TournamentsPage({
 
         <div className="mat-tournament-event-groups">
 
-          {EVENT_GROUPS.map(
+          {offeredGroups.map(
             (group) => (
               <div
                 key={
@@ -1580,12 +1695,10 @@ function TournamentsPage({
                             />
 
                             <span>
-                              {group.events.length >
-                              1
-                                ? getEventDisplayName(
-                                    eventName
-                                  )
-                                : group.label}
+                              {getEventOptionLabel(
+                                group,
+                                eventName
+                              )}
                             </span>
 
                           </label>
@@ -1615,7 +1728,7 @@ function TournamentsPage({
           <div className="mat-tournament-event-group">
 
             <div className="mat-tournament-events-label">
-              Existing Historical Events
+              Not Offered at This Tournament
             </div>
 
             <div className="mat-tournament-events">
@@ -1671,44 +1784,67 @@ function TournamentsPage({
     )
   }
 
-  function renderAthleteEditor(
+  function renderParticipantRow(
     entry,
     member,
     historical = false
   ) {
     const expanded =
-      historical
-        ? Boolean(
-            expandedAthletes[
-              entry.id
-            ]
-          )
-        : true
+      Boolean(
+        expandedAthletes[
+          entry.id
+        ]
+      )
 
-    const eventCount =
-      entry.events?.length ||
-      0
+    const events =
+      entry.events ||
+      []
 
-    const resultCount =
+    const results =
       getEntryResults(
         entry.id
-      ).length
+      )
+
+    const noteValue =
+      noteDrafts[entry.id] ??
+      entry.notes ??
+      ''
+
+    const meta = [
+      entry.division_age_group,
+      member.belt_rank &&
+        `${member.belt_rank} Belt`,
+      !member.is_active &&
+        'Inactive',
+    ].filter(Boolean)
 
     return (
-      <div
+      <li
         key={
           entry.id
         }
-        className={`mat-tournament-athlete-card ${
-          historical
-            ? 'mat-history-athlete-card'
+        id={`mat-participant-${entry.id}`}
+        className={`mat-participant ${
+          expanded
+            ? 'expanded'
             : ''
         }`}
       >
 
-        <div className="mat-tournament-athlete-header">
+        <button
+          type="button"
+          className="mat-participant-row"
+          aria-expanded={
+            expanded
+          }
+          onClick={() =>
+            toggleAthleteExpanded(
+              entry.id
+            )
+          }
+        >
 
-          <div className="mat-tournament-athlete-avatar">
+          <span className="mat-participant-avatar">
             {member.first_name
               ?.charAt(0)
               .toUpperCase()}
@@ -1716,92 +1852,206 @@ function TournamentsPage({
             {member.last_name
               ?.charAt(0)
               .toUpperCase()}
-          </div>
+          </span>
 
-          <div className="mat-tournament-athlete-name-area">
-
+          <span className="mat-participant-name">
             <strong>
               {member.first_name}{' '}
               {member.last_name}
             </strong>
 
-            <div>
-              Competition Age:{' '}
-              {entry.division_age_group ||
-                '—'}
+            {meta.length > 0 && (
+              <span>
+                {meta.join(
+                  ' · '
+                )}
+              </span>
+            )}
+          </span>
+
+          <span className="mat-participant-events">
+            {events.length ===
+            0 ? (
+              <span className="mat-participant-chip empty">
+                No events yet
+              </span>
+            ) : (
+              events.map(
+                (eventName) => {
+                  const stage =
+                    getResultStageFromExisting(
+                      results.find(
+                        (result) =>
+                          result.event_name ===
+                          eventName
+                      )
+                    )
+
+                  const medal =
+                    [
+                      'Gold',
+                      'Silver',
+                      'Bronze',
+                    ].includes(
+                      stage
+                    )
+
+                  return (
+                    <span
+                      key={
+                        eventName
+                      }
+                      className={`mat-participant-chip ${
+                        medal
+                          ? stage.toLowerCase()
+                          : ''
+                      } ${
+                        activeEventGroup?.events.includes(
+                          eventName
+                        )
+                          ? 'match'
+                          : ''
+                      }`}
+                      title={
+                        stage
+                          ? `${eventName}: ${stage}`
+                          : eventName
+                      }
+                    >
+                      {medal && (
+                        <Medal
+                          size={12}
+                        />
+                      )}
+
+                      {getEventShortName(
+                        eventName
+                      )}
+                    </span>
+                  )
+                }
+              )
+            )}
+
+            {entry.self_registered && (
+              <span
+                className="mat-participant-chip self"
+                title="The athlete marked themselves as registered from the app"
+              >
+                <UserCheck
+                  size={12}
+                />
+
+                Self-registered
+              </span>
+            )}
+
+            {entry.notes && (
+              <span
+                className="mat-participant-chip note"
+                title={
+                  entry.notes
+                }
+              >
+                <StickyNote
+                  size={12}
+                />
+
+                Note
+              </span>
+            )}
+          </span>
+
+          <span className="mat-participant-edit">
+            {expanded
+              ? 'Close'
+              : 'Edit'}
+
+            {expanded ? (
+              <ChevronUp
+                size={16}
+              />
+            ) : (
+              <ChevronDown
+                size={16}
+              />
+            )}
+          </span>
+
+        </button>
+
+        {expanded && (
+          <div
+            className={`mat-participant-editor ${
+              historical
+                ? 'historical'
+                : ''
+            }`}
+          >
+
+            <div className="mat-participant-editor-heading">
+              <strong>
+                {historical
+                  ? 'Events & Results'
+                  : 'Events'}
+              </strong>
 
               <span>
-                •
+                {historical
+                  ? 'Tick the events this athlete competed in, then record each result below it.'
+                  : 'Tick each event this athlete is entered in. Changes save automatically.'}
               </span>
+            </div>
 
-              Belt:{' '}
-              {member.belt_rank ||
-                '—'}
+            {renderEventChoices(
+              entry,
+              historical
+            )}
 
-              {historical && (
-                <>
-                  <span>
-                    •
-                  </span>
+            <div className="mat-participant-note">
+              <label
+                htmlFor={`mat-entry-note-${entry.id}`}
+              >
+                Entry Note
 
-                  {eventCount}{' '}
-                  {eventCount === 1
-                    ? 'Event'
-                    : 'Events'}
+                <span>
+                  Visible to the athlete on their Tournaments page. Saves when you click away.
+                </span>
+              </label>
 
-                  <span>
-                    •
-                  </span>
+              <textarea
+                id={`mat-entry-note-${entry.id}`}
+                className="mat-input"
+                rows={2}
+                placeholder="e.g. Ring 4, report by 9:00 AM. Bring both doboks."
+                value={
+                  noteValue
+                }
+                onChange={(event) =>
+                  setNoteDrafts(
+                    (current) => ({
+                      ...current,
+                      [entry.id]:
+                        event.target.value,
+                    })
+                  )
+                }
+                onBlur={() =>
+                  saveEntryNote(
+                    entry
+                  )
+                }
+              />
 
-                  {resultCount}{' '}
-                  {resultCount === 1
-                    ? 'Result'
-                    : 'Results'}
-                </>
-              )}
-
-              {!member.is_active && (
-                <>
-                  <span>
-                    •
-                  </span>
-
-                  Inactive
-                </>
+              {savingNoteId ===
+                entry.id && (
+                <small>
+                  Saving note...
+                </small>
               )}
             </div>
 
-          </div>
-
-          {historical ? (
-            <div className="mat-history-athlete-actions">
-
-              <button
-                type="button"
-                className="mat-history-expand-button"
-                onClick={() =>
-                  toggleAthleteExpanded(
-                    entry.id
-                  )
-                }
-              >
-                {expanded ? (
-                  <>
-                    Close History
-                    <ChevronUp
-                      size={17}
-                    />
-                  </>
-                ) : (
-                  <>
-                    Edit History
-                    <ChevronDown
-                      size={17}
-                    />
-                  </>
-                )}
-              </button>
-
+            <div className="mat-participant-editor-footer">
               <button
                 type="button"
                 className="mat-tournament-remove"
@@ -1811,110 +2061,26 @@ function TournamentsPage({
                   )
                 }
               >
-                Remove
+                Remove from Tournament
               </button>
 
+              <button
+                type="button"
+                className="mat-primary-button"
+                onClick={() =>
+                  toggleAthleteExpanded(
+                    entry.id
+                  )
+                }
+              >
+                Done
+              </button>
             </div>
-          ) : (
-            <button
-              type="button"
-              className="mat-tournament-remove"
-              onClick={() =>
-                removeAthlete(
-                  entry.id
-                )
-              }
-            >
-              Remove
-            </button>
-          )}
-
-        </div>
-
-        {expanded && (
-          <div className="mat-history-expanded-content">
-
-            {historical && (
-              <div className="mat-history-editor-heading">
-
-                <div>
-                  <strong>
-                    Competition History
-                  </strong>
-
-                  <span>
-                    Select the events this athlete
-                    competed in, then record the
-                    result directly below each
-                    selected event.
-                  </span>
-                </div>
-
-              </div>
-            )}
-
-            {renderEventChoices(
-              entry,
-              historical
-            )}
-
-            {!historical && (
-              <div className="mat-tournament-payment-row">
-
-                <div>
-                  <span className="mat-tournament-payment-label">
-                    Tournament Entry Fee
-                  </span>
-
-                  <span className="mat-tournament-payment-amount">
-                    $
-                    {Number(
-                      selectedTournament.entry_fee ||
-                        0
-                    ).toFixed(
-                      2
-                    )}
-                  </span>
-                </div>
-
-                <label
-                  className={`mat-tournament-payment-toggle ${
-                    entry.has_paid
-                      ? 'paid'
-                      : ''
-                  }`}
-                >
-                  <input
-                    type="checkbox"
-                    checked={
-                      entry.has_paid
-                    }
-                    onChange={() =>
-                      togglePaid(
-                        entry
-                      )
-                    }
-                  />
-
-                  <CheckCircle2
-                    size={18}
-                  />
-
-                  <span>
-                    {entry.has_paid
-                      ? 'Fee Paid'
-                      : 'Mark Fee Paid'}
-                  </span>
-
-                </label>
-
-              </div>
-            )}
 
           </div>
         )}
 
-      </div>
+      </li>
     )
   }
 
@@ -2499,14 +2665,13 @@ function TournamentsPage({
 
                         <div>
                           <strong>
-                            $
-                            {stats.feesOutstanding.toFixed(
-                              2
+                            {formatFee(
+                              tournament.entry_fee
                             )}
                           </strong>
 
                           <span>
-                            Outstanding
+                            Entry Fee
                           </span>
                         </div>
 
@@ -2635,6 +2800,25 @@ function TournamentsPage({
                     </div>
                   )}
 
+                  {selectedTournament.registration_url && (
+                    <div>
+                      <Link2
+                        size={17}
+                      />
+
+                      <a
+                        className="mat-tournament-registration-url"
+                        href={
+                          selectedTournament.registration_url
+                        }
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        Registration Page
+                      </a>
+                    </div>
+                  )}
+
                 </div>
 
               </div>
@@ -2754,28 +2938,6 @@ function TournamentsPage({
 
                 <div className="mat-tournament-detail-stat">
 
-                  <div className="mat-tournament-small-icon paid">
-                    <CheckCircle2
-                      size={20}
-                    />
-                  </div>
-
-                  <div>
-                    <div className="mat-historical-stat-value">
-                      {
-                        selectedStats.paidAthletes
-                      }
-                    </div>
-
-                    <span className="mat-historical-stat-label">
-                      Fees Paid
-                    </span>
-                  </div>
-
-                </div>
-
-                <div className="mat-tournament-detail-stat">
-
                   <div className="mat-tournament-small-icon outstanding">
                     <CircleDollarSign
                       size={20}
@@ -2784,19 +2946,53 @@ function TournamentsPage({
 
                   <div>
                     <div className="mat-historical-stat-value">
-                      $
-                      {selectedStats.feesOutstanding.toFixed(
-                        2
+                      {formatFee(
+                        selectedTournament.entry_fee
                       )}
                     </div>
 
                     <span className="mat-historical-stat-label">
-                      Fees Outstanding
+                      Entry Fee (per athlete)
                     </span>
                   </div>
 
                 </div>
 
+                <div className="mat-tournament-detail-stat">
+
+                  <div className="mat-tournament-small-icon paid">
+                    <Ticket
+                      size={20}
+                    />
+                  </div>
+
+                  <div>
+                    <div className="mat-historical-stat-value">
+                      {formatFee(
+                        selectedTournament.spectator_fee
+                      )}
+                    </div>
+
+                    <span className="mat-historical-stat-label">
+                      Spectator Fee
+                    </span>
+                  </div>
+
+                </div>
+
+              </div>
+            )}
+
+            {!isSelectedArchived && (
+              <div className="mat-tournament-fee-note">
+                <CircleDollarSign
+                  size={16}
+                />
+
+                <span>
+                  {selectedTournament.fee_notes ||
+                    'Fees are paid directly to the tournament organizer during registration. MAT does not collect them.'}
+                </span>
               </div>
             )}
 
@@ -2814,13 +3010,13 @@ function TournamentsPage({
                   <h3>
                     {isSelectedArchived
                       ? 'Historical Competitors'
-                      : 'Registered Athletes'}
+                      : 'Participants'}
                   </h3>
 
                   <p>
                     {isSelectedArchived
-                      ? 'Expand an athlete to edit events and competition results.'
-                      : 'Choose tournament events and track registration fee status.'}
+                      ? 'Tap a participant to edit their events and results.'
+                      : 'Tap a participant to edit their events and entry note.'}
                   </p>
                 </div>
 
@@ -2846,30 +3042,139 @@ function TournamentsPage({
 
                 </div>
               ) : (
-                <div className="mat-tournament-athlete-list">
+                <>
+                  <div className="mat-participant-toolbar">
 
-                  {selectedEntries.map(
-                    (entry) => {
-                      const member =
-                        getMember(
-                          entry.member_id
+                    <div
+                      className="mat-participant-filters"
+                      role="group"
+                      aria-label="Filter participants by event"
+                    >
+                      {participantFilterOptions.map(
+                        (option) => (
+                          <button
+                            key={
+                              option.value
+                            }
+                            type="button"
+                            className={`mat-participant-filter ${
+                              participantEventFilter ===
+                              option.value
+                                ? 'active'
+                                : ''
+                            } ${
+                              option.count === 0
+                                ? 'empty'
+                                : ''
+                            } ${
+                              option.value === 'none'
+                                ? 'warning'
+                                : ''
+                            }`}
+                            aria-pressed={
+                              participantEventFilter ===
+                              option.value
+                            }
+                            onClick={() =>
+                              setParticipantEventFilter(
+                                option.value
+                              )
+                            }
+                          >
+                            {
+                              option.label
+                            }
+
+                            <span>
+                              {
+                                option.count
+                              }
+                            </span>
+                          </button>
                         )
+                      )}
+                    </div>
 
-                      if (
-                        !member
-                      ) {
-                        return null
-                      }
+                    {sortedSelectedEntries.length >
+                      6 && (
+                      <div className="mat-participant-search">
+                        <Search
+                          size={16}
+                        />
 
-                      return renderAthleteEditor(
-                        entry,
-                        member,
-                        isSelectedArchived
-                      )
-                    }
+                        <input
+                          type="search"
+                          placeholder="Find a participant"
+                          aria-label="Find a participant"
+                          value={
+                            participantSearch
+                          }
+                          onChange={(event) =>
+                            setParticipantSearch(
+                              event.target.value
+                            )
+                          }
+                        />
+                      </div>
+                    )}
+
+                  </div>
+
+                  {participantEventFilter !==
+                    'all' && (
+                    <div className="mat-participant-filter-summary">
+                      <span>
+                        Showing{' '}
+                        <strong>
+                          {
+                            visibleParticipants.length
+                          }
+                        </strong>{' '}
+                        of{' '}
+                        {
+                          sortedSelectedEntries.length
+                        }{' '}
+                        {participantEventFilter ===
+                        'none'
+                          ? 'participants with no events yet'
+                          : `participants entered in ${participantEventFilter}`}
+                      </span>
+
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setParticipantEventFilter(
+                            'all'
+                          )
+                        }
+                      >
+                        Clear filter
+                      </button>
+                    </div>
                   )}
 
-                </div>
+                  {visibleParticipants.length ===
+                  0 ? (
+                    <div className="mat-participant-no-match">
+                      {participantSearch.trim()
+                        ? 'No participants match that name.'
+                        : participantEventFilter === 'none'
+                          ? 'Every participant has at least one event.'
+                          : `No participants are entered in ${participantEventFilter}.`}
+                    </div>
+                  ) : (
+                    <ul className="mat-participant-list">
+                      {visibleParticipants.map(
+                        ({ entry, member }) =>
+                          renderParticipantRow(
+                            entry,
+                            member,
+                            isSelectedArchived
+                          )
+                      )}
+                    </ul>
+                  )}
+                </>
               )}
 
             </div>

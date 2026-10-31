@@ -71,7 +71,6 @@ function sanitizeCurrencyInput(value) {
 function FinancialsPage({
   members,
   tournaments,
-  allTournamentEntries,
 }) {
   const [
     transactions,
@@ -411,37 +410,6 @@ function FinancialsPage({
         })
       )
     }, [filteredTransactions])
-
-  const tournamentFeeOutstanding =
-    useMemo(() => {
-      return tournaments.reduce(
-        (
-          total,
-          tournament
-        ) => {
-          const entries =
-            allTournamentEntries.filter(
-              (entry) =>
-                entry.tournament_id ===
-                tournament.id &&
-                !entry.has_paid
-            )
-
-          return (
-            total +
-            entries.length *
-              Number(
-                tournament.entry_fee ||
-                  0
-              )
-          )
-        },
-        0
-      )
-    }, [
-      tournaments,
-      allTournamentEntries,
-    ])
 
   const spendingByCategory =
     useMemo(() => {
@@ -1166,25 +1134,6 @@ function FinancialsPage({
               <small>
                 Planning estimate based
                 on current active roster.
-              </small>
-
-            </div>
-
-            <div className="mat-financial-note tournament">
-
-              <span>
-                Tournament Fees Outstanding
-              </span>
-
-              <strong>
-                {formatMoney(
-                  tournamentFeeOutstanding
-                )}
-              </strong>
-
-              <small>
-                Athlete tournament obligations.
-                Not MAT revenue.
               </small>
 
             </div>

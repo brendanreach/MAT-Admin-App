@@ -230,6 +230,14 @@
   color: #b24646;
 }
 
+/* Private Lesson - Pink (coach calendar only) */
+
+.mat-calendar-chip.lesson,
+.mat-calendar-event-type.lesson {
+  background: #fdeaf4;
+  color: #a23a73;
+}
+
 /* Other - Gray */
 
 .mat-calendar-chip.other,
@@ -747,3 +755,6 @@
 :root[data-theme='dark'] .mat-calendar-event-type { filter: brightness(.95) saturate(.9); }
 :root[data-theme='dark'] .mat-athlete-calendar-repeat,
 :root[data-theme='dark'] .mat-athlete-calendar-heading { color: #70c9fa !important; }
+
+/* Lessons get a dashed edge so they stand apart from team events. */
+.mat-calendar-chip.lesson { border-left-style: dashed; }
