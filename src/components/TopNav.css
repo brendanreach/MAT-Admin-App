@@ -978,3 +978,51 @@
 :root[data-theme='dark'] .mat-bottom-nav-button.active svg {
   color: #35b5f4 !important;
 }
+
+/* =========================================================
+   UNREAD MESSAGE INDICATORS
+   Also used on the Messages page's Direct Messages tab.
+========================================================= */
+
+.mat-unread-badge {
+  display: inline-grid;
+  place-items: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  color: #fff;
+  border-radius: 999px;
+  background: #d92d20;
+  font-size: 11px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.mat-mobile-nav-button .mat-unread-badge {
+  margin-left: auto;
+}
+
+.mat-bottom-nav-button {
+  position: relative;
+}
+
+.mat-bottom-nav-button .mat-unread-badge {
+  position: absolute;
+  top: 2px;
+  left: calc(50% + 6px);
+  min-width: 17px;
+  height: 17px;
+  padding: 0 4px;
+  font-size: 10px;
+}
+
+.mat-unread-dot {
+  position: absolute;
+  top: 6px;
+  left: calc(50% + 8px);
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #d92d20;
+  box-shadow: 0 0 0 2px var(--theme-surface);
+}

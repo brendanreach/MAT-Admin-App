@@ -1,0 +1,40 @@
+/* Admin result approval board */
+.mat-approval-message{margin-bottom:16px}
+.mat-approval-empty{padding:40px;color:var(--theme-muted);text-align:center}
+.mat-approval-groups{display:grid;gap:22px}
+.mat-approval-group{display:grid;gap:10px}
+.mat-approval-group>header{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.mat-approval-group h2{margin:0;color:var(--theme-heading);font-size:19px}
+.mat-approval-group>header span{color:var(--theme-muted);font-size:13px}
+.mat-approval-group>header button,.mat-approval-actions button,.mat-approval-reject button{display:inline-flex;align-items:center;gap:6px}
+.mat-approval-card{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px 18px;color:var(--theme-text);border:1px solid var(--theme-border);border-radius:14px;background:var(--theme-surface)}
+.mat-approval-card-main{display:grid;gap:8px;min-width:0}
+.mat-approval-who{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.mat-approval-who strong{color:var(--theme-heading);font-size:16px}
+.mat-approval-who span{color:var(--theme-muted);font-size:13px;font-weight:700}
+.mat-approval-compare{display:flex;gap:22px;flex-wrap:wrap}
+.mat-approval-compare>div{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.mat-approval-compare small{color:var(--theme-muted);font-size:11px;font-weight:900;letter-spacing:.06em;text-transform:uppercase}
+.mat-approval-compare em{color:var(--theme-muted);font-size:12px;font-style:normal}
+.mat-approval-stage{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;color:var(--theme-text);border:1px solid var(--theme-border);border-radius:999px;background:var(--theme-surface-alt);font-size:12px;font-weight:800}
+.mat-approval-stage.gold{color:#7a5a00;border-color:#e8c45a;background:#fff4cc}
+.mat-approval-stage.silver{color:#4a5560;border-color:#c3ccd4;background:#eef1f4}
+.mat-approval-stage.bronze{color:#7a4520;border-color:#dfaa80;background:#fbe7d8}
+.mat-approval-none{color:var(--theme-muted);font-size:12px;font-style:italic}
+.mat-approval-note{margin:0;color:var(--theme-text);font-size:13px}
+.mat-approval-meta{display:flex;align-items:center;gap:6px;flex-wrap:wrap;color:var(--theme-muted);font-size:12px}
+.mat-approval-meta b{padding:2px 7px;color:#7a5a00;border-radius:6px;background:#fff4cc;font-size:11px}
+.mat-approval-status.approved{color:#1f8a4c;font-weight:800}
+.mat-approval-status.rejected{color:#c0392b;font-weight:800}
+.mat-approval-actions{display:flex;flex:none;gap:8px}
+.mat-approval-reject{display:grid;flex:none;gap:8px;width:min(320px,100%)}
+.mat-approval-reject input{min-height:40px;padding:8px 10px;color:var(--theme-text);border:1px solid var(--theme-border);border-radius:8px;background:var(--theme-input);font:inherit}
+.mat-approval-reject>div{display:flex;justify-content:flex-end;gap:8px}
+.mat-approval-reject-button{min-height:40px;padding:0 14px;color:#fff;border:0;border-radius:10px;background:#c0392b;font:inherit;font-weight:800;cursor:pointer}
+.mat-approval-reject-button:disabled{opacity:.6;cursor:not-allowed}
+:root[data-theme='dark'] .mat-approval-stage.gold,:root[data-theme='dark'] .mat-approval-meta b{color:#ffe08a;border-color:#8a6d1f;background:#3d3212}
+:root[data-theme='dark'] .mat-approval-stage.silver{color:#dfe6ec;border-color:#6b7a86;background:#2b3640}
+:root[data-theme='dark'] .mat-approval-stage.bronze{color:#f4c39d;border-color:#8a5530;background:#3d2716}
+@media(max-width:700px){.mat-approval-card{align-items:stretch;flex-direction:column}.mat-approval-actions{justify-content:flex-end}.mat-approval-reject{width:100%}}
+:root[data-theme='dark'] .mat-approval-status.approved{color:#7ee2a8}
+:root[data-theme='dark'] .mat-approval-status.rejected{color:#ff9b91}

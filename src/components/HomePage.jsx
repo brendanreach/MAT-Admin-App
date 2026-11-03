@@ -83,6 +83,8 @@ function HomePage({
   calendarEvents = [],
   accountName,
   onNavigate,
+  view = 'admin',
+  canManageCarousel = true,
 }) {
   const topics = useRecentTopics()
   const { rows: carouselRows, configured: carouselConfigured, reload: reloadCarousel } = useHomeCarouselRows()
@@ -216,7 +218,7 @@ function HomePage({
 
   const slides = useMemo(
     () => buildCarouselSlides(carouselRows, {
-      view: 'admin',
+      view,
       nextTournament,
       topic: topics[0],
       welcome: {
@@ -228,12 +230,16 @@ function HomePage({
         target: 'roster',
       },
     }),
-    [carouselRows, nextTournament, topics, firstName, activeMembers.length]
+    [carouselRows, view, nextTournament, topics, firstName, activeMembers.length]
   )
 
   return (
     <div className="mat-new-home">
-      <HomeCarousel slides={slides} onNavigate={onNavigate} onManage={() => setManagingSlides(true)} />
+      <HomeCarousel
+        slides={slides}
+        onNavigate={onNavigate}
+        onManage={canManageCarousel ? () => setManagingSlides(true) : undefined}
+      />
 
       <section className="mat-new-home-stats" aria-label="Team overview">
         <button type="button" onClick={() => onNavigate('roster')}>
@@ -340,7 +346,7 @@ function HomePage({
         </article>
       </section>
 
-      {managingSlides && (
+      {canManageCarousel && managingSlides && (
         <HomeCarouselManager
           rows={carouselRows}
           configured={carouselConfigured}

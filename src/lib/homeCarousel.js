@@ -29,13 +29,13 @@ export const AUDIENCE_OPTIONS = [
 ]
 
 export const SLIDE_TARGETS = [
-  { value: 'tournaments', label: 'Tournaments', views: ['admin', 'athlete'] },
-  { value: 'calendar', label: 'Calendar', views: ['admin', 'athlete'] },
-  { value: 'messages', label: 'Messages', views: ['admin', 'athlete'] },
+  { value: 'tournaments', label: 'Tournaments', views: ['admin', 'coach', 'athlete'] },
+  { value: 'calendar', label: 'Calendar', views: ['admin', 'coach', 'athlete'] },
+  { value: 'messages', label: 'Messages', views: ['admin', 'coach', 'athlete'] },
   { value: 'coaches', label: 'Coaches', views: ['admin', 'athlete'] },
   { value: 'new-member-guide', label: 'Team Guide', views: ['admin', 'athlete'] },
   { value: 'my-profile', label: 'My Profile (athletes)', views: ['athlete'] },
-  { value: 'roster', label: 'Roster (admins)', views: ['admin'] },
+  { value: 'roster', label: 'Roster (admins and coaches)', views: ['admin', 'coach'] },
   { value: 'financials', label: 'Financials (admins)', views: ['admin'] },
 ]
 
@@ -94,8 +94,10 @@ export function isTargetAvailable(target, view) {
   return SLIDE_TARGETS.some((option) => option.value === target && option.views.includes(view))
 }
 
+// Coaches only see slides meant for everyone.
 function audienceMatchesView(audience, view) {
   if (audience === 'everyone') return true
+  if (view === 'coach') return false
   return view === 'admin' ? audience === 'admins' : audience === 'athletes'
 }
 

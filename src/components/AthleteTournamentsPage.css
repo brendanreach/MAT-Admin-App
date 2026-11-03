@@ -462,3 +462,28 @@
 :root[data-theme='dark'] .mat-tournament-detail .mat-athlete-result-badge.gold { color: #ffe08a !important; background: #4a3a10 !important; }
 :root[data-theme='dark'] .mat-tournament-detail .mat-athlete-result-badge.silver { color: #e3eaef !important; background: #3a4a55 !important; }
 :root[data-theme='dark'] .mat-tournament-detail .mat-athlete-result-badge.bronze { color: #f3c7a5 !important; background: #4d3222 !important; }
+
+/* Athlete result submissions (past tournaments) */
+.mat-result-submission .mat-tournament-section-heading{align-items:flex-start;gap:14px}
+.mat-result-submission .mat-tournament-section-heading>button{flex:none}
+.mat-result-submission .mat-registration-message{margin-bottom:12px}
+.mat-result-submission-list{display:grid;gap:8px;margin:0 0 14px;padding:0;list-style:none}
+.mat-result-submission-list li{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:10px;padding:10px 12px;color:var(--theme-text);border:1px solid var(--theme-border);border-radius:10px;background:var(--theme-surface-alt)}
+.mat-result-submission-list li>div{display:grid;gap:2px;min-width:0}
+.mat-result-submission-list li span{color:var(--theme-muted);font-size:12px}
+.mat-result-submission-list svg.pending{color:#b7791f}
+.mat-result-submission-list svg.rejected{color:#c0392b}
+.mat-result-submission-form{display:grid;gap:8px}
+.mat-result-submission-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--theme-border);border-radius:10px;background:var(--theme-surface)}
+.mat-result-submission-row.selected{border-color:var(--theme-accent)}
+.mat-result-submission-event{display:flex;align-items:center;gap:9px;color:var(--theme-text);font-weight:700;cursor:pointer}
+.mat-result-submission-event input{width:18px;height:18px;flex:none}
+.mat-result-submission-event svg{flex:none;color:#1f8a4c}
+.mat-result-submission-fields{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px}
+.mat-result-submission-fields select,.mat-result-submission-fields input,.mat-result-submission-note textarea{width:100%;min-height:40px;padding:8px 10px;color:var(--theme-text);border:1px solid var(--theme-border);border-radius:8px;background:var(--theme-input);font:inherit}
+.mat-result-submission-note{display:grid;gap:6px;margin-top:6px;color:var(--theme-text);font-size:13px;font-weight:700}
+.mat-result-submission-note textarea{resize:vertical}
+.mat-result-submission-hint{margin:0;color:var(--theme-muted);font-size:12px}
+.mat-result-submission-actions{display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap}
+.mat-result-submission-actions button{display:inline-flex;align-items:center;gap:6px}
+@media(max-width:700px){.mat-result-submission .mat-tournament-section-heading{flex-direction:column}.mat-result-submission-row{grid-template-columns:1fr}.mat-result-submission-fields{grid-template-columns:1fr}}

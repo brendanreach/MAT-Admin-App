@@ -3,6 +3,7 @@ import {
   BarChart3,
   CalendarDays,
   ChevronDown,
+  ClipboardCheck,
   ClipboardList,
   Home,
   LogOut,
@@ -29,10 +30,13 @@ const NAV_ITEMS = {
     ['tournaments', 'Tournaments', Trophy],
     ['calendar', 'Calendar', CalendarDays],
     ['messages', 'Messages', MessagesSquare],
+    ['approvals', 'Approvals', ClipboardCheck],
     ['financials', 'Financials', BarChart3],
   ],
   coach: [
     ['home', 'Home', Home],
+    ['roster', 'Roster', Users],
+    ['tournaments', 'Tournaments', Trophy],
     ['lesson-requests', 'Lesson Requests', ClipboardList],
     ['calendar', 'Calendar', CalendarDays],
     ['messages', 'Messages', MessagesSquare],
@@ -63,7 +67,8 @@ const MOBILE_PRIMARY_IDS = {
   ],
   coach: [
     'home',
-    'lesson-requests',
+    'roster',
+    'tournaments',
     'calendar',
   ],
 }
@@ -104,6 +109,7 @@ export default function TopNav({
   viewMode = 'athlete',
   onChangeViewMode,
   onLogout,
+  badgeCounts = {},
 }) {
   const [accountOpen, setAccountOpen] =
     useState(false)
@@ -172,6 +178,38 @@ export default function TopNav({
     mobileMoreItems.some(
       ([id]) => id === activeTab,
     )
+
+  // Tabs that show a count badge, and how the count is read aloud.
+  const BADGE_LABELS = {
+    messages: 'unread direct messages',
+    approvals: 'results waiting for approval',
+  }
+
+  const getBadgeCount = (id) =>
+    BADGE_LABELS[id]
+      ? Number(badgeCounts[id]) || 0
+      : 0
+
+  const moreHasBadge =
+    mobileMoreItems.some(
+      ([id]) => getBadgeCount(id) > 0,
+    )
+
+  const renderUnreadBadge = (id) => {
+    const count =
+      getBadgeCount(id)
+
+    return count > 0 ? (
+      <span
+        className="mat-unread-badge"
+        aria-label={`${count} ${BADGE_LABELS[id]}`}
+      >
+        {count > 99
+          ? '99+'
+          : count}
+      </span>
+    ) : null
+  }
 
   useEffect(() => {
     document.documentElement.dataset.theme =
@@ -274,6 +312,7 @@ export default function TopNav({
     >
       <Icon className="mat-nav-icon" />
       <span>{label}</span>
+      {renderUnreadBadge(id)}
     </button>
   )
 
@@ -297,6 +336,7 @@ export default function TopNav({
     >
       <Icon className="mat-mobile-nav-icon" />
       <span>{label}</span>
+      {renderUnreadBadge(id)}
     </button>
   )
 
@@ -320,6 +360,7 @@ export default function TopNav({
     >
       <Icon className="mat-bottom-nav-icon" />
       <span>{label}</span>
+      {renderUnreadBadge(id)}
     </button>
   )
 
@@ -579,6 +620,12 @@ export default function TopNav({
         >
           <MoreHorizontal className="mat-bottom-nav-icon" />
           <span>More</span>
+          {moreHasBadge && (
+            <span
+              className="mat-unread-dot"
+              aria-label="New items under More"
+            />
+          )}
         </button>
       </nav>
     </>

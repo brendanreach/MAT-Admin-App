@@ -6,6 +6,8 @@ import {
 
 import { supabase } from './lib/supabase.js'
 import { attachPosterUrls } from './lib/tournamentPosters.js'
+import { useUnreadDirectMessages } from './lib/unreadDirectMessages.js'
+import { usePendingResultSubmissionCount } from './lib/resultSubmissions.js'
 
 import LoginPage from './components/LoginPage.jsx'
 import AccessPendingPage from './components/AccessPendingPage.jsx'
@@ -26,6 +28,7 @@ import CalendarPage from './components/CalendarPage.jsx'
 import FinancialsPage from './components/FinancialsPage.jsx'
 import MessagesPage from './components/MessagesPage.jsx'
 import AthleteSwitcher from './components/AthleteSwitcher.jsx'
+import ResultApprovalsPage from './components/ResultApprovalsPage.jsx'
 
 function activeAthleteStorageKey(userId) {
   return `mat-active-athlete-${userId}`
@@ -134,6 +137,29 @@ function App() {
     session?.user?.id ||
     null
 
+  const {
+    count: unreadMessageCount,
+    refresh: refreshUnreadMessages,
+  } = useUnreadDirectMessages(
+    userId
+  )
+
+  // Show the unread count in the browser tab, e.g. "(2) MAT Competition Team".
+  useEffect(() => {
+    const baseTitle =
+      document.title.replace(
+        /^\(\d+\)\s*/,
+        ''
+      )
+
+    document.title =
+      unreadMessageCount > 0
+        ? `(${unreadMessageCount}) ${baseTitle}`
+        : baseTitle
+  }, [
+    unreadMessageCount,
+  ])
+
   useEffect(() => {
     let mounted = true
 
@@ -228,10 +254,22 @@ function App() {
       'admin'
     )
 
+  const isCoach =
+    roles.includes(
+      'coach'
+    )
+
   const isAthlete =
     roles.includes(
       'athlete'
     )
+
+  const {
+    count: pendingApprovalCount,
+    refresh: refreshPendingApprovals,
+  } = usePendingResultSubmissionCount(
+    isAdmin
+  )
 
   useEffect(() => {
     if (!accountProfile) {
@@ -252,6 +290,14 @@ function App() {
 
         if (
           currentMode ===
+            'coach' &&
+          isCoach
+        ) {
+          return currentMode
+        }
+
+        if (
+          currentMode ===
             'athlete' &&
           isAthlete
         ) {
@@ -260,6 +306,10 @@ function App() {
 
         if (isAdmin) {
           return 'admin'
+        }
+
+        if (isCoach) {
+          return 'coach'
         }
 
         if (isAthlete) {
@@ -272,6 +322,7 @@ function App() {
   }, [
     accountProfile,
     isAdmin,
+    isCoach,
     isAthlete,
   ])
 
@@ -415,13 +466,18 @@ function App() {
         rolesToUse
       )
 
-    const userIsAdmin =
+    // Admins and coaches see the full roster; athletes see
+    // the limited public profiles.
+    const userIsStaff =
       normalizedRoles.includes(
         'admin'
+      ) ||
+      normalizedRoles.includes(
+        'coach'
       )
 
     const source =
-      userIsAdmin
+      userIsStaff
         ? 'members'
         : 'member_public_profiles'
 
@@ -568,6 +624,14 @@ function App() {
       nextMode ===
         'admin' &&
       !isAdmin
+    ) {
+      return
+    }
+
+    if (
+      nextMode ===
+        'coach' &&
+      !isCoach
     ) {
       return
     }
@@ -773,6 +837,12 @@ function App() {
         onLogout={
           handleLogout
         }
+        badgeCounts={{
+          messages:
+            unreadMessageCount,
+          approvals:
+            pendingApprovalCount,
+        }}
       />
 
       {message && (
@@ -905,6 +975,31 @@ function App() {
                 }
                 onTournamentsChanged={
                   loadTournaments
+                }
+              />
+            )}
+
+            {activeTab ===
+              'approvals' && (
+              <ResultApprovalsPage
+                members={
+                  members
+                }
+                tournaments={
+                  tournaments
+                }
+                allTournamentEntries={
+                  allTournamentEntries
+                }
+                tournamentResults={
+                  tournamentResults
+                }
+                onReviewed={() =>
+                  Promise.all([
+                    loadAllTournamentEntries(),
+                    loadTournamentResults(),
+                    refreshPendingApprovals(),
+                  ])
                 }
               />
             )}
@@ -1077,10 +1172,124 @@ function App() {
         )}
 
 
+        {viewMode ===
+          'coach' && (
+          <>
+            {activeTab ===
+              'home' && (
+              <HomePage
+                members={
+                  members
+                }
+                tournaments={
+                  tournaments
+                }
+                allTournamentEntries={
+                  allTournamentEntries
+                }
+                calendarEvents={
+                  calendarEvents
+                }
+                accountName={
+                  accountName
+                }
+                onNavigate={
+                  setActiveTab
+                }
+                view="coach"
+                canManageCarousel={
+                  false
+                }
+              />
+            )}
+
+            {activeTab ===
+              'roster' && (
+              <RosterPage
+                members={
+                  members
+                }
+                tournaments={
+                  tournaments
+                }
+                allTournamentEntries={
+                  allTournamentEntries
+                }
+                tournamentResults={
+                  tournamentResults
+                }
+                onMembersChanged={() =>
+                  loadMembers(
+                    accountProfile?.roles
+                  )
+                }
+                canEdit={
+                  false
+                }
+              />
+            )}
+
+            {activeTab ===
+              'tournaments' && (
+              <TournamentsPage
+                members={
+                  members
+                }
+                tournaments={
+                  tournaments
+                }
+                allTournamentEntries={
+                  allTournamentEntries
+                }
+                tournamentResults={
+                  tournamentResults
+                }
+                onTournamentsChanged={
+                  loadTournaments
+                }
+                onEntriesChanged={
+                  loadAllTournamentEntries
+                }
+                onResultsChanged={
+                  loadTournamentResults
+                }
+              />
+            )}
+
+            {activeTab ===
+              'lesson-requests' && (
+              <AdminPrivateLessonRequests />
+            )}
+
+            {activeTab ===
+              'calendar' && (
+              <CalendarPage
+                calendarEvents={
+                  calendarEvents
+                }
+                tournaments={
+                  tournaments
+                }
+                members={
+                  members
+                }
+                showPrivateLessons
+                readOnly
+              />
+            )}
+          </>
+        )}
+
         {activeTab === 'messages' && (
           <MessagesPage
             accountId={userId}
             roles={roles}
+            unreadMessageCount={
+              unreadMessageCount
+            }
+            onReadStateChanged={
+              refreshUnreadMessages
+            }
           />
         )}
       </main>

@@ -16,10 +16,12 @@ import {
   Trophy,
   X,
 } from 'lucide-react'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import { supabase } from '../lib/supabase.js'
 import { getEventOptionLabel, getTournamentEventGroups } from '../lib/tournamentEvents.js'
+import { loadMemberSubmissions } from '../lib/resultSubmissions.js'
+import AthleteResultSubmission from './AthleteResultSubmission.jsx'
 
 const MEDAL_STAGES = ['Gold', 'Silver', 'Bronze']
 
@@ -72,8 +74,24 @@ function AthleteTournamentsPage({
   const [registrationMessage, setRegistrationMessage] = useState(null)
   const [eventDraft, setEventDraft] = useState({ tournamentId: '', events: [] })
   const [editingEventsFor, setEditingEventsFor] = useState('')
+  const [submissions, setSubmissions] = useState([])
   const tournamentDetailRef = useRef(null)
   const todayString = getLocalTodayString()
+
+  const memberId = member?.id
+
+  const reloadSubmissions = useCallback(async () => {
+    if (!memberId) return
+    try {
+      setSubmissions(await loadMemberSubmissions(memberId))
+    } catch (error) {
+      console.error('Could not load result submissions:', error.message)
+    }
+  }, [memberId])
+
+  useEffect(() => {
+    reloadSubmissions()
+  }, [reloadSubmissions])
 
   useEffect(() => {
     if (!selectedTournamentId) return undefined
@@ -663,6 +681,18 @@ function AthleteTournamentsPage({
             </div>
           )}
         </div>
+
+        {isSelectedArchived && member && (
+          <AthleteResultSubmission
+            key={tournament.id}
+            tournament={tournament}
+            member={member}
+            entry={entry}
+            results={results}
+            submissions={submissions.filter((item) => item.tournament_id === tournament.id)}
+            onSubmitted={reloadSubmissions}
+          />
+        )}
       </section>
     )
   }

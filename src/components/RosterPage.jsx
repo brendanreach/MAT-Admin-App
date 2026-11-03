@@ -28,6 +28,7 @@ function RosterPage({
   allTournamentEntries,
   tournamentResults,
   onMembersChanged,
+  canEdit = true,
 }) {
   const [searchTerm, setSearchTerm] =
     useState('')
@@ -345,6 +346,7 @@ function RosterPage({
               </option>
             </select>
 
+            {canEdit && (
             <button
               type="button"
               className="mat-primary-button"
@@ -353,6 +355,7 @@ function RosterPage({
               <Plus size={20} />
               Add Athlete
             </button>
+            )}
 
           </div>
 
@@ -375,7 +378,7 @@ function RosterPage({
                     Disciplines
                   </th>
                   <th>Status</th>
-                  <th>Actions</th>
+                  {canEdit && <th>Actions</th>}
                 </tr>
               </thead>
 
@@ -447,6 +450,7 @@ function RosterPage({
                         </span>
                       </td>
 
+                      {canEdit && (
                       <td>
                         <button
                           type="button"
@@ -463,6 +467,7 @@ function RosterPage({
                           Edit
                         </button>
                       </td>
+                      )}
 
                     </tr>
                   )
@@ -591,6 +596,7 @@ function RosterPage({
                       View Profile
                     </button>
 
+                    {canEdit && (
                     <button
                       type="button"
                       className="mat-roster-mobile-edit-button"
@@ -603,6 +609,7 @@ function RosterPage({
                       <Pencil size={17} />
                       Edit
                     </button>
+                    )}
 
                   </div>
 

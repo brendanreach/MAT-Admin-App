@@ -24,7 +24,7 @@ function formatTimestamp(value) {
     : { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })
 }
 
-export default function DirectMessages({ accountId, roles = [] }) {
+export default function DirectMessages({ accountId, roles = [], onReadStateChanged }) {
   const isAdmin = roles.map((role) => String(role).toLowerCase()).includes('admin')
   const [conversations, setConversations] = useState([])
   const [directory, setDirectory] = useState([])
@@ -66,7 +66,8 @@ export default function DirectMessages({ accountId, roles = [] }) {
       account_id: accountId,
       last_read_at: new Date().toISOString(),
     })
-  }, [accountId])
+    onReadStateChanged?.()
+  }, [accountId, onReadStateChanged])
 
   useEffect(() => {
     loadConversations()

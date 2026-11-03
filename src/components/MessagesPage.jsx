@@ -5,8 +5,9 @@ import DiscussionsPage from './DiscussionsPage.jsx'
 import './MessagesPage.css'
 import './DirectMessages.css'
 
-export default function MessagesPage({ accountId, roles = [] }) {
-  const [section, setSection] = useState('discussions')
+export default function MessagesPage({ accountId, roles = [], unreadMessageCount = 0, onReadStateChanged }) {
+  // Open straight to Direct Messages when something is waiting to be read.
+  const [section, setSection] = useState(unreadMessageCount > 0 ? 'direct' : 'discussions')
 
   return (
     <div className="mat-messaging-shell">
@@ -30,13 +31,18 @@ export default function MessagesPage({ accountId, roles = [] }) {
         >
           <MessageCircle size={18} />
           Direct Messages
+          {unreadMessageCount > 0 && (
+            <span className="mat-unread-badge" aria-label={`${unreadMessageCount} unread`}>
+              {unreadMessageCount > 99 ? '99+' : unreadMessageCount}
+            </span>
+          )}
         </button>
       </div>
 
       {section === 'discussions' ? (
         <DiscussionsPage accountId={accountId} roles={roles} />
       ) : (
-        <DirectMessages accountId={accountId} roles={roles} />
+        <DirectMessages accountId={accountId} roles={roles} onReadStateChanged={onReadStateChanged} />
       )}
     </div>
   )
