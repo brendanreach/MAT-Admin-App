@@ -14,6 +14,7 @@ import {
   CircleDollarSign,
   Clock3,
   Grid2X2,
+  Image,
   Link2,
   List,
   Medal,
@@ -2557,6 +2558,17 @@ function TournamentsPage({
                     }
                   >
 
+                    {tournament.poster_url && (
+                      <img
+                        className="mat-tournament-tile-poster"
+                        src={
+                          tournament.poster_url
+                        }
+                        alt=""
+                        loading="lazy"
+                      />
+                    )}
+
                     <div className="mat-tournament-tile-top">
 
                       <div className="mat-tournament-icon">
@@ -2815,6 +2827,25 @@ function TournamentsPage({
                         rel="noopener noreferrer"
                       >
                         Registration Page
+                      </a>
+                    </div>
+                  )}
+
+                  {selectedTournament.poster_url && (
+                    <div>
+                      <Image
+                        size={17}
+                      />
+
+                      <a
+                        className="mat-tournament-registration-url"
+                        href={
+                          selectedTournament.poster_url
+                        }
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        View Event Poster
                       </a>
                     </div>
                   )}

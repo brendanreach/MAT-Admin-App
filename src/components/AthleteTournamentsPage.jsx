@@ -8,6 +8,7 @@ import {
   CircleDollarSign,
   Clock3,
   ExternalLink,
+  Image,
   MapPin,
   Medal,
   Target,
@@ -430,6 +431,10 @@ function AthleteTournamentsPage({
         className={`mat-tournament-tile ${isSelected ? 'selected' : ''}`}
         onClick={() => setSelectedTournamentId(tournament.id)}
       >
+        {tournament.poster_url && (
+          <img className="mat-tournament-tile-poster" src={tournament.poster_url} alt="" loading="lazy" />
+        )}
+
         <div className="mat-tournament-tile-top">
           <div className="mat-tournament-icon">
             {viewMode === 'archive' ? <Medal size={23} /> : <Trophy size={23} />}
@@ -516,6 +521,14 @@ function AthleteTournamentsPage({
                 <div>
                   <Clock3 size={17} />
                   <span>Registration Deadline: {formatDate(tournament.registration_deadline)}</span>
+                </div>
+              )}
+              {tournament.poster_url && (
+                <div>
+                  <Image size={17} />
+                  <a className="mat-tournament-registration-url" href={tournament.poster_url} target="_blank" rel="noopener noreferrer">
+                    View Event Poster
+                  </a>
                 </div>
               )}
             </div>

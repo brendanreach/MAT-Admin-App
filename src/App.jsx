@@ -5,6 +5,7 @@ import {
 } from 'react'
 
 import { supabase } from './lib/supabase.js'
+import { attachPosterUrls } from './lib/tournamentPosters.js'
 
 import LoginPage from './components/LoginPage.jsx'
 import AccessPendingPage from './components/AccessPendingPage.jsx'
@@ -24,6 +25,27 @@ import TournamentsPage from './components/TournamentsPage.jsx'
 import CalendarPage from './components/CalendarPage.jsx'
 import FinancialsPage from './components/FinancialsPage.jsx'
 import MessagesPage from './components/MessagesPage.jsx'
+import AthleteSwitcher from './components/AthleteSwitcher.jsx'
+
+function activeAthleteStorageKey(userId) {
+  return `mat-active-athlete-${userId}`
+}
+
+function readStoredAthleteId(userId) {
+  try {
+    return localStorage.getItem(activeAthleteStorageKey(userId))
+  } catch {
+    return null
+  }
+}
+
+function storeAthleteId(userId, memberId) {
+  try {
+    localStorage.setItem(activeAthleteStorageKey(userId), memberId)
+  } catch {
+    // Remembering the choice is a convenience only.
+  }
+}
 
 function normalizeRoles(roles) {
   if (!Array.isArray(roles)) {
@@ -60,6 +82,13 @@ function App() {
     accountMemberLinks,
     setAccountMemberLinks,
   ] = useState([])
+
+  // The athlete picked in this session, tagged with the account that
+  // picked it so a different login never inherits the choice.
+  const [
+    athleteSelection,
+    setAthleteSelection,
+  ] = useState(null)
 
   const [
     viewMode,
@@ -447,7 +476,9 @@ function App() {
     }
 
     setTournaments(
-      data || []
+      await attachPosterUrls(
+        data || []
+      )
     )
   }
 
@@ -558,41 +589,81 @@ function App() {
     )
   }
 
-  const selfMemberLink =
+  // Every athlete this account is linked to, with the account's own
+  // athlete record (relationship "self") listed first.
+  const linkedAthletes =
     useMemo(() => {
-      return (
-        accountMemberLinks.find(
+      const orderedLinks = [
+        ...accountMemberLinks.filter(
           (link) =>
             link.relationship_type ===
             'self'
-        ) ||
-        accountMemberLinks[0] ||
-        null
-      )
+        ),
+        ...accountMemberLinks.filter(
+          (link) =>
+            link.relationship_type !==
+            'self'
+        ),
+      ]
+
+      const seen = new Set()
+
+      return orderedLinks
+        .map((link) =>
+          members.find(
+            (member) =>
+              member.id ===
+              link.member_id
+          )
+        )
+        .filter((member) => {
+          if (
+            !member ||
+            seen.has(member.id)
+          ) {
+            return false
+          }
+
+          seen.add(member.id)
+          return true
+        })
     }, [
       accountMemberLinks,
-    ])
-
-  const linkedMember =
-    useMemo(() => {
-      if (
-        !selfMemberLink
-      ) {
-        return null
-      }
-
-      return (
-        members.find(
-          (member) =>
-            member.id ===
-            selfMemberLink.member_id
-        ) ||
-        null
-      )
-    }, [
-      selfMemberLink,
       members,
     ])
+
+  const storedAthleteId =
+    useMemo(
+      () =>
+        userId
+          ? readStoredAthleteId(userId)
+          : null,
+      [userId]
+    )
+
+  const selectedAthleteId =
+    athleteSelection?.userId === userId
+      ? athleteSelection.memberId
+      : storedAthleteId
+
+  const linkedMember =
+    linkedAthletes.find(
+      (member) =>
+        String(member.id) ===
+        String(selectedAthleteId)
+    ) ||
+    linkedAthletes[0] ||
+    null
+
+  function handleAthleteChange(
+    memberId
+  ) {
+    setAthleteSelection({
+      userId,
+      memberId,
+    })
+    storeAthleteId(userId, memberId)
+  }
 
   const linkedTournamentEntries =
     useMemo(() => {
@@ -855,9 +926,24 @@ function App() {
         {viewMode ===
           'athlete' && (
           <>
+            <AthleteSwitcher
+              athletes={
+                linkedAthletes
+              }
+              activeAthleteId={
+                linkedMember?.id
+              }
+              onChange={
+                handleAthleteChange
+              }
+            />
+
             {activeTab ===
               'home' && (
               <AthleteHomePage
+                key={
+                  linkedMember?.id
+                }
                 member={
                   linkedMember
                 }
@@ -879,6 +965,9 @@ function App() {
             {activeTab ===
               'coaches' && (
               <AthleteCoachesPage
+                key={
+                  linkedMember?.id
+                }
                 accountId={
                   userId
                 }
@@ -891,6 +980,9 @@ function App() {
             {activeTab ===
               'tournaments' && (
               <AthleteTournamentsPage
+                key={
+                  linkedMember?.id
+                }
                 member={
                   linkedMember
                 }
@@ -925,6 +1017,9 @@ function App() {
               'my-profile' &&
               linkedMember && (
                 <AthleteProfileModal
+                  key={
+                    linkedMember.id
+                  }
                   member={
                     linkedMember
                   }

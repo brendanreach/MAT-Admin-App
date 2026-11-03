@@ -258,7 +258,7 @@ function HomePage({
           </header>
           {nextTournament ? (
             <div className="mat-new-home-next-content">
-              <img src={DEFAULT_SLIDE_IMAGES.next_tournament} alt="" />
+              <img src={nextTournament.poster_url || DEFAULT_SLIDE_IMAGES.next_tournament} alt="" />
               <div>
                 <span className={`mat-new-home-status ${entryCountByTournament[nextTournament.id] ? 'registered' : ''}`}>
                   {plural(entryCountByTournament[nextTournament.id] || 0, 'athlete')} entered

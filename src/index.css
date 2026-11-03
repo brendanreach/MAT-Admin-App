@@ -868,6 +868,7 @@ body {
 
 .mat-content {
   width: min(100%, 1500px);
+  margin-inline: auto;
   padding: clamp(16px, 1.8vw, 28px);
 }
 

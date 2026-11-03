@@ -1,12 +1,14 @@
 import './TournamentsPage.css'
 import {
   useEffect,
+  useRef,
   useState,
 } from 'react'
 
 import {
   CalendarDays,
   CircleDollarSign,
+  ImagePlus,
   Link2,
   ListChecks,
   MapPin,
@@ -23,6 +25,11 @@ import {
   getEventOptionLabel,
   getTournamentEvents,
 } from '../lib/tournamentEvents.js'
+import {
+  compressTournamentPoster,
+  removeTournamentPoster,
+  uploadTournamentPoster,
+} from '../lib/tournamentPosters.js'
 
 const emptyForm = {
   name: '',
@@ -113,6 +120,54 @@ function TournamentForm({
     message,
     setMessage,
   ] = useState('')
+
+  // A newly chosen poster (already compressed) and its preview link.
+  const [
+    posterUpload,
+    setPosterUpload,
+  ] = useState(null)
+
+  const [
+    posterRemoved,
+    setPosterRemoved,
+  ] = useState(false)
+
+  const [
+    posterProcessing,
+    setPosterProcessing,
+  ] = useState(false)
+
+  const posterInputRef =
+    useRef(null)
+
+  useEffect(() => {
+    if (!posterUpload) {
+      return undefined
+    }
+
+    return () =>
+      URL.revokeObjectURL(
+        posterUpload.previewUrl
+      )
+  }, [
+    posterUpload,
+  ])
+
+  const existingPosterPath =
+    editingTournament?.poster_path ||
+    null
+
+  const posterChanged =
+    Boolean(posterUpload) ||
+    (posterRemoved &&
+      Boolean(existingPosterPath))
+
+  const posterPreviewUrl =
+    posterUpload?.previewUrl ||
+    (posterRemoved
+      ? ''
+      : editingTournament?.poster_url ||
+        '')
 
   useEffect(() => {
     if (!editingTournament) {
@@ -226,6 +281,47 @@ function TournamentForm({
     )
   }
 
+  async function handlePosterChange(
+    event
+  ) {
+    const file =
+      event.target.files?.[0]
+
+    event.target.value = ''
+
+    if (!file) {
+      return
+    }
+
+    setMessage('')
+    setPosterProcessing(true)
+
+    try {
+      const { blob } =
+        await compressTournamentPoster(
+          file
+        )
+
+      setPosterUpload({
+        blob,
+        previewUrl:
+          URL.createObjectURL(blob),
+      })
+      setPosterRemoved(false)
+    } catch (error) {
+      setMessage(
+        error.message
+      )
+    }
+
+    setPosterProcessing(false)
+  }
+
+  function handleRemovePoster() {
+    setPosterUpload(null)
+    setPosterRemoved(true)
+  }
+
   async function handleSubmit(
     event
   ) {
@@ -285,6 +381,29 @@ function TournamentForm({
 
     setSaving(true)
 
+    let uploadedPosterPath =
+      null
+
+    if (posterUpload) {
+      try {
+        uploadedPosterPath =
+          await uploadTournamentPoster(
+            posterUpload.blob
+          )
+      } catch (error) {
+        setMessage(
+          /bucket/i.test(
+            error.message
+          )
+            ? 'Poster uploads need a database update first. Run supabase/tournament-posters.sql in the Supabase SQL editor, then try again.'
+            : `The poster could not be uploaded: ${error.message}`
+        )
+
+        setSaving(false)
+        return
+      }
+    }
+
     const tournamentData = {
       name:
         formData.name.trim(),
@@ -324,6 +443,13 @@ function TournamentForm({
         formData.fee_notes.trim() ||
         null,
 
+    }
+
+    // Only send the poster when it changed, so tournaments can still be
+    // saved before the poster database update has been run.
+    if (posterChanged) {
+      tournamentData.poster_path =
+        uploadedPosterPath
     }
 
     let data
@@ -372,8 +498,16 @@ function TournamentForm({
     }
 
     if (error) {
+      await removeTournamentPoster(
+        uploadedPosterPath
+      )
+
       setMessage(
-        /registration_url|available_events/.test(
+        /poster_path/.test(
+          error.message
+        )
+          ? 'Poster uploads need a database update first. Run supabase/tournament-posters.sql in the Supabase SQL editor, then try again.'
+          : /registration_url|available_events/.test(
           error.message
         )
           ? 'The registration link and event list need a database update first. Run supabase/tournament-registration.sql in the Supabase SQL editor, then try again.'
@@ -386,6 +520,12 @@ function TournamentForm({
 
       setSaving(false)
       return
+    }
+
+    if (posterChanged) {
+      await removeTournamentPoster(
+        existingPosterPath
+      )
     }
 
     setSaving(false)
@@ -844,6 +984,97 @@ function TournamentForm({
 
           </div>
 
+          <div className="mat-tournament-form-field">
+
+            <label htmlFor="tournament-poster">
+              <span className="mat-tournament-form-label-icon">
+                <ImagePlus size={21} />
+              </span>
+
+              <span>
+                Event Poster (optional)
+              </span>
+            </label>
+
+            <div className="mat-tournament-poster-field">
+
+              {posterPreviewUrl ? (
+                <img
+                  className="mat-tournament-poster-preview"
+                  src={
+                    posterPreviewUrl
+                  }
+                  alt="Event poster preview"
+                />
+              ) : (
+                <div className="mat-tournament-poster-empty">
+                  No poster
+                </div>
+              )}
+
+              <div className="mat-tournament-poster-actions">
+
+                <input
+                  id="tournament-poster"
+                  ref={
+                    posterInputRef
+                  }
+                  className="sr-only"
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp"
+                  onChange={
+                    handlePosterChange
+                  }
+                  disabled={
+                    saving ||
+                    posterProcessing
+                  }
+                />
+
+                <button
+                  type="button"
+                  className="mat-tournament-form-cancel"
+                  onClick={() =>
+                    posterInputRef.current?.click()
+                  }
+                  disabled={
+                    saving ||
+                    posterProcessing
+                  }
+                >
+                  {posterProcessing
+                    ? 'Preparing...'
+                    : posterPreviewUrl
+                      ? 'Replace Poster'
+                      : 'Upload Poster'}
+                </button>
+
+                {posterPreviewUrl && (
+                  <button
+                    type="button"
+                    className="mat-tournament-poster-remove"
+                    onClick={
+                      handleRemovePoster
+                    }
+                    disabled={
+                      saving ||
+                      posterProcessing
+                    }
+                  >
+                    Remove
+                  </button>
+                )}
+
+                <small>
+                  JPG, PNG or WebP. Large images are resized automatically.
+                </small>
+
+              </div>
+
+            </div>
+
+          </div>
+
           {message && (
             <div className="mat-tournament-form-error">
               {message}
@@ -864,7 +1095,10 @@ function TournamentForm({
             <button
               type="submit"
               className="mat-tournament-form-submit"
-              disabled={saving}
+              disabled={
+                saving ||
+                posterProcessing
+              }
             >
               {saving
                 ? 'Saving...'

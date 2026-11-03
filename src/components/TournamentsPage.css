@@ -2370,3 +2370,16 @@ html[data-theme='dark'] body #root .mat-page .mat-tournament-detail .mat-tournam
 :root[data-theme='dark'] .mat-registration-card .mat-tournament-event-option.selected,
 :root[data-theme='dark'] .mat-tournament-form-events .mat-tournament-event-option.selected{color:#fff!important;border-color:#70c9fa!important;background:#1d4d68!important}
 :root[data-theme='dark'] .mat-registration-edit{color:#e6f4fc!important;border-color:#4f7185!important;background:#193f54!important}
+
+/* Tournament posters */
+.mat-tournament-tile-poster{display:block;width:100%;height:170px;margin-bottom:16px;object-fit:cover;object-position:top;border-radius:12px;background:var(--theme-surface-alt)}
+.mat-tournament-poster-field{display:flex;align-items:flex-start;gap:16px}
+.mat-tournament-poster-preview,.mat-tournament-poster-empty{flex:none;width:120px;height:160px;border:1px solid var(--theme-border);border-radius:12px;background:var(--theme-surface-alt)}
+.mat-tournament-poster-preview{object-fit:cover;object-position:top}
+.mat-tournament-poster-empty{display:grid;place-items:center;color:var(--theme-muted);font-size:13px;font-weight:700}
+.mat-tournament-poster-actions{display:flex;flex-wrap:wrap;align-items:center;gap:10px;min-width:0}
+.mat-tournament-poster-actions small{flex-basis:100%;color:var(--theme-muted);font-size:12px}
+.mat-tournament-poster-remove{padding:10px 14px;color:#b42318;border:1px solid #f1b8b2;border-radius:10px;background:transparent;font:inherit;font-weight:800;cursor:pointer}
+.mat-tournament-poster-remove:disabled{opacity:.6;cursor:not-allowed}
+:root[data-theme='dark'] .mat-tournament-poster-remove{color:#ff9b91;border-color:#7a3a35}
+@media(max-width:520px){.mat-tournament-poster-field{flex-direction:column}.mat-tournament-poster-preview,.mat-tournament-poster-empty{width:100%;height:220px}}

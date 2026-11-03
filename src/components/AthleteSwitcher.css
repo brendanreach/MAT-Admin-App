@@ -1,0 +1,9 @@
+.mat-athlete-switcher{display:flex;align-items:center;gap:12px;margin-bottom:18px;padding:10px 14px;color:var(--theme-text);border:1px solid var(--theme-border);border-radius:14px;background:var(--theme-surface)}
+.mat-athlete-switcher-label{flex:none;color:var(--theme-muted);font-size:11px;font-weight:900;letter-spacing:.08em;text-transform:uppercase}
+.mat-athlete-switcher-options{display:flex;flex-wrap:wrap;gap:8px;min-width:0}
+.mat-athlete-switcher button{display:inline-flex;align-items:center;gap:7px;min-height:38px;padding:7px 14px;color:var(--theme-text);border:1px solid var(--theme-border);border-radius:999px;background:var(--theme-surface-alt);font:inherit;font-size:14px;font-weight:800;cursor:pointer}
+.mat-athlete-switcher button svg{color:var(--theme-accent)}
+.mat-athlete-switcher button:hover{border-color:var(--theme-accent)}
+.mat-athlete-switcher button.active{color:#fff;border-color:#087bc7;background:linear-gradient(135deg,#148fd1,#0875c7)}
+.mat-athlete-switcher button.active svg{color:#fff}
+@media(max-width:650px){.mat-athlete-switcher{align-items:flex-start;flex-direction:column;gap:8px;margin-bottom:12px}.mat-athlete-switcher-options{width:100%}.mat-athlete-switcher button{flex:1 1 auto;justify-content:center}}
