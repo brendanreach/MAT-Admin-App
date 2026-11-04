@@ -1,6 +1,7 @@
 import { Link2, Search, ShieldCheck, Trash2, UserRound } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { supabase } from '../lib/supabase.js'
+import AthletePicker from './AthletePicker.jsx'
 import './AccountAthleteAssignments.css'
 
 const normalizeRoles = (roles) =>
@@ -49,7 +50,8 @@ export default function AccountAthleteAssignments({ members = [], onChanged }) {
 
   async function assignAccount(event) {
     event.preventDefault()
-    if (!accountId || !memberId) return
+    if (!accountId) return setMessage('Choose an account to link.')
+    if (!memberId) return setMessage('Choose an athlete to link.')
     setSaving(true)
     setMessage('')
     const { error } = await supabase.rpc('admin_assign_account_to_member', {
@@ -80,6 +82,12 @@ export default function AccountAthleteAssignments({ members = [], onChanged }) {
   const memberMap = useMemo(
     () => new Map(members.map((member) => [member.id, member])),
     [members]
+  )
+
+  // Athletes already linked to the chosen account can't be linked twice.
+  const linkedMemberIds = useMemo(
+    () => links.filter((link) => link.account_id === accountId).map((link) => link.member_id),
+    [links, accountId]
   )
 
   const visibleAccounts = useMemo(() => {
@@ -115,23 +123,20 @@ export default function AccountAthleteAssignments({ members = [], onChanged }) {
             ))}
           </select>
         </label>
-        <label>
+        <div className="mat-account-assignment-field">
           Athlete profile
-          <select value={memberId} onChange={(event) => setMemberId(event.target.value)} required>
-            <option value="">Select an athlete...</option>
-            {members.map((member) => (
-              <option key={member.id} value={member.id}>
-                {member.first_name} {member.last_name}
-              </option>
-            ))}
-          </select>
-        </label>
+          <AthletePicker
+            members={members}
+            value={memberId}
+            onChange={setMemberId}
+            disabledIds={linkedMemberIds}
+          />
+        </div>
         <label>
           Relationship
           <select value={relationshipType} onChange={(event) => setRelationshipType(event.target.value)}>
             <option value="self">Self / athlete account</option>
             <option value="parent">Parent or guardian</option>
-            <option value="family">Family member</option>
           </select>
         </label>
         <button type="submit" className="mat-primary-button" disabled={saving}>
