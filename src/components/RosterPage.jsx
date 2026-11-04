@@ -34,7 +34,7 @@ function RosterPage({
     useState('')
 
   const [statusFilter, setStatusFilter] =
-    useState('all')
+    useState('active')
 
   const [showForm, setShowForm] =
     useState(false)

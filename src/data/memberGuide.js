@@ -1,79 +1,98 @@
 export const guideRuleVersion = {
-  label: '2026 USATKD / WT Guidelines',
+  label: 'USA Taekwondo rules, 2026',
   verified: 'September 2026',
   note:
-    'Competition rules can change. Always confirm the information packet and designated forms for the specific tournament before competing.',
+    'Rules change. Always check the tournament information packet and its designated forms before competing.',
 }
 
-export const tournamentRegistrationGuide = [
+// Registration steps grouped into phases. Keep each step to one or two short sentences.
+export const registrationPhases = [
   {
-    title: 'Check What Type of Tournament It Is',
-    text:
-      'Start by checking the MAT Tournaments page and the tournament information. Registration may be different depending on whether the event is USA Taekwondo sanctioned or operated through another tournament organizer.',
+    id: 'before',
+    title: 'Before you register',
+    steps: [
+      {
+        title: 'Check the tournament type',
+        text: 'Open the tournament on the MAT Tournaments page. USA Taekwondo sanctioned events register through Sport:80; other events use their own link.',
+      },
+      {
+        title: 'Create or log in to Sport:80',
+        text: 'The athlete or parent needs a USA Taekwondo Sport:80 account with the athlete profile connected.',
+        linkLabel: 'Open USA Taekwondo Sport:80',
+        linkUrl: 'https://usataekwondo.sport80.com/',
+      },
+      {
+        title: 'Keep the membership active',
+        text: 'USATKD events need an active USA Taekwondo membership. An expired membership can block registration.',
+      },
+      {
+        title: 'Check the athlete profile',
+        text: 'Confirm name, date of birth, gender, belt rank and club are correct before you start.',
+      },
+    ],
   },
   {
-    title: 'Create or Log Into Your Sport:80 Account',
-    text:
-      'USA Taekwondo sanctioned events commonly use the USA Taekwondo Sport:80 membership and registration system. The athlete or parent should create an account and make sure the athlete profile is connected and set up correctly.',
-    linkLabel: 'Open USA Taekwondo Sport:80',
-    linkUrl: 'https://usataekwondo.sport80.com/',
+    id: 'during',
+    title: 'When you register',
+    steps: [
+      {
+        title: 'Find the tournament',
+        text: 'In Sport:80, open Events and find the tournament, or use the registration link MAT shares.',
+      },
+      {
+        title: 'Pick your events',
+        text: 'Choose events such as sparring (kyorugi), recognized poomsae, traditional poomsae or breaking. Not sure? Ask a MAT coach.',
+      },
+      {
+        title: 'Confirm your division',
+        text: 'Double-check competition age, rank, weight class and poomsae category. Mistakes can put the athlete in the wrong division.',
+      },
+      {
+        title: 'Pay the entry fee',
+        text: 'Entry fees are paid during registration. They are separate from MAT tuition and fees.',
+      },
+      {
+        title: 'Beat the deadline',
+        text: 'Many events have early, regular and late prices, and registration closes after the final deadline.',
+      },
+    ],
   },
   {
-    title: 'Maintain an Active USA Taekwondo Membership',
-    text:
-      'For USATKD-sanctioned competition, make sure the athlete has the appropriate active USA Taekwondo membership before attempting tournament registration. An expired or incomplete membership may prevent the athlete from registering for an event.',
-  },
-  {
-    title: 'Verify the Athlete Profile',
-    text:
-      'Before registering, confirm that the athlete name, date of birth, gender, belt rank, club information, membership information, and other required profile details are accurate.',
-  },
-  {
-    title: 'Find the Tournament in Sport:80',
-    text:
-      'After logging into the USA Taekwondo Sport:80 system, open the Events area and locate the tournament. You may also use the tournament registration link provided by MAT when one is available.',
-  },
-  {
-    title: 'Choose the Correct Competition Events',
-    text:
-      'Select the events the athlete will compete in, such as Kyorugi (Sparring), Recognized Poomsae, Traditional Poomsae, Board Breaking, or another event offered by the tournament. Check with a MAT coach if you are unsure which events to enter.',
-  },
-  {
-    title: 'Confirm the Correct Division Information',
-    text:
-      'Review the athlete competition age, rank, sparring weight division, poomsae category, and other division information before completing registration. Incorrect information can place the athlete into the wrong division or require corrections later.',
-  },
-  {
-    title: 'Pay the Tournament Registration Fees',
-    text:
-      'Tournament entry fees for USATKD-sanctioned events are normally paid during the Sport:80 registration process. Tournament entry fees are separate from MAT tuition and other MAT fees.',
-  },
-  {
-    title: 'Register Before the Deadline',
-    text:
-      'Complete registration before the published deadline. Some tournaments have early, regular, and late registration periods with different prices. Registration may close completely after the final deadline.',
-  },
-  {
-    title: 'Watch for Tournament Updates',
-    text:
-      'Registration is only the beginning. Continue checking the tournament information for schedules, report times, weigh-in information, staging details, brackets, equipment requirements, designated poomsae, and other updates.',
-  },
-  {
-    title: 'For Non-USATKD Events',
-    text:
-      'Not every tournament uses Sport:80. For other tournaments, follow the registration link and instructions provided by MAT or the tournament organizer. The MAT Tournaments page should be your starting point for finding the correct registration process.',
+    id: 'after',
+    title: 'After you register',
+    steps: [
+      {
+        title: 'Watch for updates',
+        text: 'Keep checking for the schedule, report times, weigh-in details, brackets, equipment rules and designated poomsae.',
+      },
+    ],
   },
 ]
 
-export const tournamentDayGuide = [
-  'Review the final tournament schedule, report time, brackets, and designated poomsae before leaving for the venue.',
-  'Arrive early enough for check-in, weigh-in, equipment inspection, staging, and warm-up.',
-  'Bring your complete dobok and all required competition equipment.',
-  'Sparring athletes should know their registered weight division before arriving at weigh-in.',
-  'Poomsae athletes should review the complete compulsory form pool for their division and the designated forms if they have been published.',
-  'Listen carefully for staging and ring announcements throughout the tournament.',
-  'Stay in contact with MAT coaches so you know when and where to report.',
-  'Do not leave the venue until you have confirmed that all of your events are complete.',
+export const nonUsatkdRegistrationNote =
+  'Not every tournament uses Sport:80. For other events, follow the registration link and instructions from MAT or the tournament organizer. The MAT Tournaments page is always the place to start.'
+
+export const tournamentDayGroups = [
+  {
+    id: 'night-before',
+    title: 'The night before',
+    items: [
+      'Review the final schedule, report time, brackets and designated poomsae.',
+      'Sparring: know your registered weight class before weigh-in.',
+      'Poomsae: practice every form in your division’s pool, plus any designated forms.',
+      'Pack your full dobok and all required competition gear.',
+    ],
+  },
+  {
+    id: 'at-venue',
+    title: 'At the venue',
+    items: [
+      'Arrive early enough for check-in, weigh-in, equipment check, staging and warm-up.',
+      'Listen for staging and ring announcements all day.',
+      'Stay in touch with your MAT coaches so you know when and where to report.',
+      'Don’t leave until you have confirmed all of your events are finished.',
+    ],
+  },
 ]
 
 export const terminology = [
@@ -597,3 +616,148 @@ export function getSparringWeights(
 
   return aspiring[division]?.[gender] || []
 }
+
+
+// WT compulsory poomsae, black belts. Taeback in the WT chart is the same form as Taebaek.
+const taegeuk = (...numbers) => numbers.map((number) => `Taegeuk ${number} Jang`)
+const WT_PALGWE_TO_HANSU = ['Koryo', 'Keumgang', 'Taebaek', 'Pyongwon', 'Shipjin', 'Jitae', 'Chonkwon', 'Hansu']
+
+const wtIndividualPoomsae = [
+  { title: 'Dragon / Tiger / Youth', detail: 'Ages 6–11', forms: [...taegeuk(2, 3, 4, 5, 6, 7, 8), 'Koryo'] },
+  { title: 'Cadet', detail: 'Ages 12–14', forms: [...taegeuk(4, 5, 6, 7, 8), ...WT_PALGWE_TO_HANSU.slice(0, 3)] },
+  { title: 'Junior', detail: 'Ages 15–17', forms: [...taegeuk(5, 6, 7, 8), ...WT_PALGWE_TO_HANSU.slice(0, 4)] },
+  { title: 'Under 30 / Under 40', detail: 'Ages 18–40', forms: [...taegeuk(7, 8), ...WT_PALGWE_TO_HANSU.slice(0, 6)] },
+  { title: 'Under 50', detail: 'Ages 41–50', forms: [...taegeuk(8), ...WT_PALGWE_TO_HANSU.slice(0, 7)] },
+  { title: 'Under 60 / Under 65 / Over 65 / Over 70', detail: 'Ages 51+', forms: WT_PALGWE_TO_HANSU },
+]
+
+// Pairs and team divisions use identical lists in the WT chart.
+const wtPairsTeamsPoomsae = [
+  { title: 'Cadet', detail: 'Pairs and teams', forms: [...taegeuk(4, 5, 6, 7, 8), ...WT_PALGWE_TO_HANSU.slice(0, 3)] },
+  { title: 'Junior', detail: 'Pairs and teams', forms: [...taegeuk(4, 5, 6, 7, 8), ...WT_PALGWE_TO_HANSU.slice(0, 4)] },
+  { title: 'Under 30', detail: 'Pairs and teams', forms: [...taegeuk(6, 7, 8), ...WT_PALGWE_TO_HANSU.slice(0, 6)] },
+  { title: 'Under 50', detail: 'Pairs and teams', forms: [...taegeuk(8), ...WT_PALGWE_TO_HANSU.slice(0, 7)] },
+  { title: 'Under 60', detail: 'Pairs and teams', forms: WT_PALGWE_TO_HANSU },
+  { title: 'Over 60', detail: 'Pairs and teams', forms: WT_PALGWE_TO_HANSU },
+]
+
+// AAU compulsory poomsae. AAU spells Chonkwon as "Cheonkwon"; same form.
+const AAU_BLACK = WT_PALGWE_TO_HANSU
+
+const aauIndividualPoomsae = [
+  { title: 'Minor', detail: 'Ages 9 and under', forms: [...taegeuk(3, 4, 5, 6, 7, 8), 'Koryo'] },
+  { title: 'Youth', detail: 'Ages 10–11', forms: [...taegeuk(4, 5, 6, 7, 8), ...AAU_BLACK.slice(0, 2)] },
+  { title: 'Cadet', detail: 'Ages 12–14', forms: [...taegeuk(4, 5, 6, 7, 8), ...AAU_BLACK.slice(0, 3)] },
+  { title: 'Junior', detail: 'Ages 15–17', forms: [...taegeuk(5, 6, 7, 8), ...AAU_BLACK.slice(0, 4)] },
+  { title: 'Under 30 / Under 40', detail: 'Ages 18–40', forms: [...taegeuk(7, 8), ...AAU_BLACK.slice(0, 6)] },
+  { title: 'Under 50', detail: 'Ages 41–50', forms: [...taegeuk(8), ...AAU_BLACK.slice(0, 7)] },
+  { title: 'Under 60 / Under 65 / Over 65', detail: 'Ages 51+', forms: AAU_BLACK },
+]
+
+// Pair and team divisions use identical lists in the AAU chart.
+const aauPairsTeamsPoomsae = [
+  { title: 'Youth', detail: 'Ages 8–11', forms: [...taegeuk(4, 5, 6, 7, 8), ...AAU_BLACK.slice(0, 2)] },
+  { title: 'Cadet', detail: 'Ages 12–14', forms: [...taegeuk(4, 5, 6, 7, 8), ...AAU_BLACK.slice(0, 3)] },
+  { title: 'Junior', detail: 'Ages 15–17', forms: [...taegeuk(5, 6, 7, 8), ...AAU_BLACK.slice(0, 4)] },
+  { title: 'Under 30', detail: 'Ages 18–30', forms: [...taegeuk(7, 8), ...AAU_BLACK.slice(0, 6)] },
+  { title: 'Under 50', detail: 'Ages 31–50', forms: [...taegeuk(8), ...AAU_BLACK.slice(0, 7)] },
+  { title: 'Under 60 / Over 60', detail: 'Ages 51+', forms: AAU_BLACK },
+]
+
+const aauColorBeltPoomsae = [
+  { title: 'Intermediate · Tyke / Minor', detail: 'Green, purple, blue · ages 9 and under', forms: taegeuk(2, 3, 4, 5) },
+  { title: 'Intermediate · Youth and up', detail: 'Green, purple, blue · ages 10+', forms: taegeuk(2, 3, 4, 5, 6) },
+  { title: 'Advanced · Tyke / Minor', detail: 'Brown, red · ages 9 and under', forms: taegeuk(3, 4, 5, 6, 7) },
+  { title: 'Advanced · Youth and up', detail: 'Brown, red · ages 10+', forms: taegeuk(3, 4, 5, 6, 7, 8) },
+]
+
+// Required forms by organization. Each category lists cards of
+// { title, detail, forms }. An organization with no categories shows a
+// "being added" notice until its official lists are filled in.
+export const formOrganizations = [
+  {
+    id: 'usatkd',
+    label: 'USA Taekwondo',
+    short: 'USATKD',
+    description: 'USATKD-sanctioned events, including state and national championships.',
+    categories: [
+      {
+        id: 'recognized-black',
+        label: 'Recognized · Black Belt',
+        cardLabel: 'Division',
+        items: recognizedBlackBeltPoomsae.map((item) => ({
+          title: item.divisions.join(' / '),
+          detail: `Ages ${item.ages}`,
+          forms: item.forms,
+        })),
+      },
+      {
+        id: 'recognized-color',
+        label: 'Recognized · Color Belt',
+        cardLabel: 'Belt',
+        items: recognizedColorBeltPoomsae.map((item) => ({
+          title: item.rank,
+          detail: item.geup,
+          forms: item.forms,
+        })),
+      },
+      {
+        id: 'traditional',
+        label: 'Traditional',
+        cardLabel: 'Rank',
+        items: traditionalPoomsae.map((item) => ({
+          title: item.rank,
+          detail: item.detail,
+          forms: item.forms,
+        })),
+      },
+    ],
+  },
+  {
+    id: 'wt',
+    label: 'World Taekwondo',
+    short: 'WT',
+    description: 'International and WT-ranked events, such as G-ranked opens.',
+    categories: [
+      {
+        id: 'individual',
+        label: 'Individual · Black Belt',
+        cardLabel: 'Division',
+        items: wtIndividualPoomsae,
+      },
+      {
+        id: 'pairs-teams',
+        label: 'Pairs & Teams · Black Belt',
+        cardLabel: 'Division',
+        items: wtPairsTeamsPoomsae,
+      },
+    ],
+  },
+  {
+    id: 'aau',
+    label: 'AAU Taekwondo',
+    short: 'AAU',
+    description: 'AAU events, including AAU state and national championships.',
+    categories: [
+      {
+        id: 'individual',
+        label: 'Individual · Black Belt',
+        cardLabel: 'Division',
+        items: aauIndividualPoomsae,
+      },
+      {
+        id: 'pairs-teams',
+        label: 'Pairs & Teams · Black Belt',
+        cardLabel: 'Division',
+        items: aauPairsTeamsPoomsae,
+      },
+      {
+        id: 'color',
+        label: 'Color Belt',
+        cardLabel: 'Level',
+        note: 'Intermediate is green, purple and blue belts. Advanced is brown and red belts. AAU may combine divisions at an event.',
+        items: aauColorBeltPoomsae,
+      },
+    ],
+  },
+]

@@ -2,552 +2,472 @@ import './NewMemberGuidePage.css'
 import { useMemo, useState } from 'react'
 import {
   ArrowLeft,
+  ArrowRight,
   BookOpen,
+  CalendarCheck,
   CheckCircle2,
+  ClipboardList,
+  Compass,
   ExternalLink,
   GraduationCap,
   Info,
   Scale,
+  Search,
   ShieldCheck,
   Trophy,
 } from 'lucide-react'
 
 import {
+  formOrganizations,
   getSparringWeights,
   guideRuleVersion,
-  recognizedBlackBeltPoomsae,
-  recognizedColorBeltPoomsae,
+  nonUsatkdRegistrationNote,
+  registrationPhases,
   sparringDivisions,
   terminology,
-  tournamentDayGuide,
-  tournamentRegistrationGuide,
-  traditionalPoomsae,
+  tournamentDayGroups,
 } from '../data/memberGuide'
 
-function FormsGuide() {
-  const [formType, setFormType] = useState('recognized-black')
-  const [search, setSearch] = useState('')
+const TABS = [
+  { id: 'start', label: 'Start Here', icon: Compass },
+  { id: 'registration', label: 'Registration', icon: ClipboardList },
+  { id: 'forms', label: 'Forms', icon: GraduationCap },
+  { id: 'sparring', label: 'Sparring', icon: Scale },
+  { id: 'tournament-day', label: 'Tournament Day', icon: Trophy },
+  { id: 'glossary', label: 'Glossary', icon: BookOpen },
+]
 
-  const selectedData = useMemo(() => {
-    if (formType === 'recognized-color') {
-      return recognizedColorBeltPoomsae.map((item) => ({
-        title: item.rank,
-        detail: item.geup,
-        forms: item.forms,
-      }))
-    }
+const QUICK_LINKS = [
+  { tab: 'registration', title: 'Sign up for a tournament', text: 'Step-by-step registration, from Sport:80 to the deadline.' },
+  { tab: 'forms', title: 'Which forms do I need?', text: 'Required poomsae by organization, belt and age division.' },
+  { tab: 'sparring', title: 'Find a weight class', text: 'Sparring weight classes by age, level and gender.' },
+  { tab: 'tournament-day', title: 'Get ready for the day', text: 'A checklist for the night before and the venue.' },
+  { tab: 'glossary', title: 'Learn the lingo', text: 'Poomsae, kyorugi, geup, staging and more.' },
+]
 
-    if (formType === 'traditional') {
-      return traditionalPoomsae.map((item) => ({
-        title: item.rank,
-        detail: item.detail,
-        forms: item.forms,
-      }))
-    }
+const TAB_STORAGE_KEY = 'mat-guide-tab'
 
-    return recognizedBlackBeltPoomsae.map((item) => ({
-      title: item.divisions.join(' / '),
-      detail: item.ages,
-      forms: item.forms,
-    }))
-  }, [formType])
+function readStoredTab() {
+  try {
+    const stored = window.localStorage.getItem(TAB_STORAGE_KEY)
+    return TABS.some((tab) => tab.id === stored) ? stored : 'start'
+  } catch {
+    return 'start'
+  }
+}
 
-  const filteredData = useMemo(() => {
-    const query = search.trim().toLowerCase()
+function SectionIntro({ eyebrow, title, children }) {
+  return (
+    <header className="mat-guide-intro">
+      <span>{eyebrow}</span>
+      <h2>{title}</h2>
+      {children && <p>{children}</p>}
+    </header>
+  )
+}
 
-    if (!query) {
-      return selectedData
-    }
+function Callout({ icon: Icon = Info, children }) {
+  return (
+    <div className="mat-guide-callout">
+      <Icon size={18} aria-hidden="true" />
+      <p>{children}</p>
+    </div>
+  )
+}
 
-    return selectedData.filter((item) => {
-      const searchableText = [
-        item.title,
-        item.detail,
-        ...item.forms,
-      ]
-        .join(' ')
-        .toLowerCase()
+function PillGroup({ label, options, value, onChange }) {
+  return (
+    <div className="mat-guide-pill-group">
+      <span>{label}</span>
+      <div role="radiogroup" aria-label={label}>
+        {options.map((option) => (
+          <button
+            key={option.value}
+            type="button"
+            role="radio"
+            aria-checked={value === option.value}
+            className={value === option.value ? 'active' : ''}
+            onClick={() => onChange(option.value)}
+          >
+            {option.label}
+          </button>
+        ))}
+      </div>
+    </div>
+  )
+}
 
-      return searchableText.includes(query)
-    })
-  }, [search, selectedData])
-
+function StartHere({ onOpenTab }) {
   return (
     <>
-      <div className="mat-guide-rule-controls">
-        <label>
-          Form Guide
-          <select
-            value={formType}
-            onChange={(event) =>
-              setFormType(event.target.value)
-            }
-          >
-            <option value="recognized-black">
-              Recognized - Black Belt
-            </option>
+      <SectionIntro eyebrow="Welcome to the team" title="Where do you want to start?">
+        Pick a topic below. Everything in this guide is also in the tabs above.
+      </SectionIntro>
 
-            <option value="recognized-color">
-              Recognized - Color Belt
-            </option>
-
-            <option value="traditional">
-              Traditional Poomsae
-            </option>
-          </select>
-        </label>
-
-        <label>
-          Search Rank or Division
-          <input
-            type="text"
-            value={search}
-            onChange={(event) =>
-              setSearch(event.target.value)
-            }
-            placeholder="Example: Cadet, Red, 1st Dan..."
-          />
-        </label>
+      <div className="mat-guide-quick-grid">
+        {QUICK_LINKS.map((link) => {
+          const tab = TABS.find((item) => item.id === link.tab)
+          const Icon = tab.icon
+          return (
+            <button key={link.tab} type="button" className="mat-guide-quick-card" onClick={() => onOpenTab(link.tab)}>
+              <span className="mat-guide-quick-icon"><Icon size={20} /></span>
+              <span className="mat-guide-quick-text">
+                <strong>{link.title}</strong>
+                <small>{link.text}</small>
+              </span>
+              <ArrowRight size={18} className="mat-guide-quick-arrow" aria-hidden="true" />
+            </button>
+          )
+        })}
       </div>
 
-      <div className="mat-guide-info-box">
-        <Info size={16} />
+      <Callout icon={ShieldCheck}>
+        <strong>{guideRuleVersion.label}</strong> · checked {guideRuleVersion.verified}. {guideRuleVersion.note}
+      </Callout>
+    </>
+  )
+}
 
-        <span>
-          The compulsory poomsae pool is not always the
-          same as the forms performed at a specific
-          tournament. Event-specific designated poomsae
-          may be announced separately in the tournament
-          information.
-        </span>
-      </div>
+// First step number of each phase, so numbering runs on across phases.
+const PHASE_START_NUMBERS = registrationPhases.reduce(
+  (starts, phase, index) => [...starts, index === 0 ? 1 : starts[index - 1] + registrationPhases[index - 1].steps.length],
+  []
+)
 
-      <div className="mat-guide-rule-grid">
-        {filteredData.map((item, index) => (
-          <article
-            className="mat-guide-rule-card"
-            key={`${item.title}-${item.detail}-${index}`}
-          >
-            <div className="mat-guide-rule-card-heading">
-              <div>
-                <span>Division / Rank</span>
-                <strong>{item.title}</strong>
-                <small>{item.detail}</small>
-              </div>
-            </div>
+function RegistrationGuide() {
+  return (
+    <>
+      <SectionIntro eyebrow="Getting registered" title="Signing up for a tournament">
+        Most USA Taekwondo events register through Sport:80. Work through these in order.
+      </SectionIntro>
 
-            <div className="mat-guide-form-chips">
-              {item.forms.map((form) => (
-                <span key={form}>{form}</span>
-              ))}
-            </div>
-          </article>
+      <div className="mat-guide-phases">
+        {registrationPhases.map((phase, phaseIndex) => (
+          <section key={phase.id} className="mat-guide-phase">
+            <h3>{phase.title}</h3>
+            <ol>
+              {phase.steps.map((step, stepIndex) => {
+                return (
+                  <li key={step.title}>
+                    <span className="mat-guide-step-number">{PHASE_START_NUMBERS[phaseIndex] + stepIndex}</span>
+                    <div>
+                      <strong>{step.title}</strong>
+                      <p>{step.text}</p>
+                      {step.linkUrl && (
+                        <a href={step.linkUrl} target="_blank" rel="noopener noreferrer" className="mat-guide-link">
+                          {step.linkLabel}
+                          <ExternalLink size={14} />
+                        </a>
+                      )}
+                    </div>
+                  </li>
+                )
+              })}
+            </ol>
+          </section>
         ))}
       </div>
 
-      {filteredData.length === 0 && (
-        <div className="mat-guide-info-box">
-          <Info size={16} />
-          <span>
-            No matching rank or division was found.
-          </span>
+      <Callout>{nonUsatkdRegistrationNote}</Callout>
+    </>
+  )
+}
+
+function FormsGuide() {
+  const [orgId, setOrgId] = useState(formOrganizations[0].id)
+  const [categoryId, setCategoryId] = useState(formOrganizations[0].categories[0]?.id || '')
+  const [search, setSearch] = useState('')
+
+  const org = formOrganizations.find((item) => item.id === orgId)
+  const category = org.categories.find((item) => item.id === categoryId) || org.categories[0]
+
+  const query = search.trim().toLowerCase()
+  const items = (category?.items || []).filter((item) =>
+    !query || [item.title, item.detail, ...item.forms].join(' ').toLowerCase().includes(query)
+  )
+
+  function changeOrg(nextOrgId) {
+    const nextOrg = formOrganizations.find((item) => item.id === nextOrgId)
+    setOrgId(nextOrgId)
+    setCategoryId(nextOrg.categories[0]?.id || '')
+    setSearch('')
+  }
+
+  return (
+    <>
+      <SectionIntro eyebrow="Poomsae reference" title="Required forms">
+        Form lists differ a little between organizations. Choose the one running your tournament.
+      </SectionIntro>
+
+      <div className="mat-guide-org-tabs" role="tablist" aria-label="Organization">
+        {formOrganizations.map((item) => (
+          <button
+            key={item.id}
+            type="button"
+            role="tab"
+            aria-selected={item.id === orgId}
+            className={item.id === orgId ? 'active' : ''}
+            onClick={() => changeOrg(item.id)}
+          >
+            <strong>{item.short}</strong>
+            <small>{item.label}</small>
+          </button>
+        ))}
+      </div>
+
+      <p className="mat-guide-org-description">{org.description}</p>
+
+      {org.categories.length === 0 ? (
+        <div className="mat-guide-pending">
+          <GraduationCap size={28} aria-hidden="true" />
+          <strong>{org.label} form lists are being added</strong>
+          <p>Until then, check the tournament information packet or ask a MAT coach which forms you need.</p>
         </div>
+      ) : (
+        <>
+          <div className="mat-guide-form-filters">
+            <PillGroup
+              label="Category"
+              options={org.categories.map((item) => ({ value: item.id, label: item.label }))}
+              value={category.id}
+              onChange={(value) => { setCategoryId(value); setSearch('') }}
+            />
+            <label className="mat-guide-search">
+              <Search size={17} aria-hidden="true" />
+              <input
+                type="search"
+                value={search}
+                onChange={(event) => setSearch(event.target.value)}
+                placeholder="Search a belt, division or form"
+                aria-label="Search forms"
+              />
+            </label>
+          </div>
+
+          {category.note && <Callout>{category.note}</Callout>}
+
+          <div className="mat-guide-form-grid">
+            {items.map((item, index) => (
+              <article key={`${item.title}-${item.detail}-${index}`} className="mat-guide-form-card">
+                <header>
+                  <span>{category.cardLabel}</span>
+                  <h3>{item.title}</h3>
+                  <small>{item.detail}</small>
+                </header>
+                <ul>
+                  {item.forms.map((form) => <li key={form}>{form}</li>)}
+                </ul>
+              </article>
+            ))}
+          </div>
+
+          {items.length === 0 && (
+            <p className="mat-guide-empty">Nothing matches “{search.trim()}”.</p>
+          )}
+
+          <Callout>
+            These are the full pools a form can be drawn from. Each tournament announces its designated forms separately.
+          </Callout>
+        </>
       )}
     </>
   )
 }
 
-function SparringWeightGuide() {
+function SparringGuide() {
   const [division, setDivision] = useState('cadet')
-  const [competitionClass, setCompetitionClass] =
-    useState('world')
+  const [competitionClass, setCompetitionClass] = useState('world')
   const [gender, setGender] = useState('male')
 
-  const selectedDivision = sparringDivisions.find(
-    (item) => item.id === division
-  )
-
-  const availableClasses =
-    selectedDivision?.availableClasses || []
-
-  const effectiveCompetitionClass =
-    availableClasses.includes(competitionClass)
-      ? competitionClass
-      : availableClasses[0] || 'aspiring'
-
-  const weights = getSparringWeights(
-    division,
-    effectiveCompetitionClass,
-    gender
-  )
-
-  function handleDivisionChange(event) {
-    const newDivision = event.target.value
-    setDivision(newDivision)
-
-    const nextDivision = sparringDivisions.find(
-      (item) => item.id === newDivision
-    )
-
-    if (
-      !nextDivision?.availableClasses.includes(
-        competitionClass
-      )
-    ) {
-      setCompetitionClass(
-        nextDivision?.availableClasses[0] || 'aspiring'
-      )
-    }
-  }
+  const selectedDivision = sparringDivisions.find((item) => item.id === division)
+  const availableClasses = selectedDivision?.availableClasses || []
+  const level = availableClasses.includes(competitionClass) ? competitionClass : availableClasses[0] || 'aspiring'
+  const weights = getSparringWeights(division, level, gender)
 
   return (
     <>
-      <div className="mat-guide-weight-controls">
-        <label>
-          Age Division
-          <select
-            value={division}
-            onChange={handleDivisionChange}
-          >
-            {sparringDivisions.map((item) => (
-              <option
-                key={item.id}
-                value={item.id}
-              >
-                {item.label} ({item.ages})
-              </option>
-            ))}
-          </select>
-        </label>
+      <SectionIntro eyebrow="Kyorugi reference" title="Sparring weight classes">
+        USA Taekwondo weight classes. Pick the athlete’s age division, level and gender.
+      </SectionIntro>
 
-        <label>
-          Competition Level
-          <select
-            value={effectiveCompetitionClass}
-            onChange={(event) =>
-              setCompetitionClass(event.target.value)
-            }
-          >
-            {availableClasses.includes('world') && (
-              <option value="world">
-                World Class
-              </option>
-            )}
-
-            {availableClasses.includes('aspiring') && (
-              <option value="aspiring">
-                Aspiring
-              </option>
-            )}
-          </select>
-        </label>
-
-        <label>
-          Gender Division
-          <select
+      <div className="mat-guide-sparring-controls">
+        <PillGroup
+          label="Age division"
+          options={sparringDivisions.map((item) => ({ value: item.id, label: `${item.label} · ${item.ages}` }))}
+          value={division}
+          onChange={setDivision}
+        />
+        <div className="mat-guide-sparring-row">
+          <PillGroup
+            label="Level"
+            options={[
+              ...(availableClasses.includes('world') ? [{ value: 'world', label: 'World Class' }] : []),
+              ...(availableClasses.includes('aspiring') ? [{ value: 'aspiring', label: 'Aspiring' }] : []),
+            ]}
+            value={level}
+            onChange={setCompetitionClass}
+          />
+          <PillGroup
+            label="Gender"
+            options={[{ value: 'male', label: 'Male' }, { value: 'female', label: 'Female' }]}
             value={gender}
-            onChange={(event) =>
-              setGender(event.target.value)
-            }
-          >
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-          </select>
-        </label>
-      </div>
-
-      <div className="mat-guide-weight-result">
-        <div className="mat-guide-weight-heading">
-          <span>Sparring Divisions</span>
-
-          <h3>
-            {selectedDivision?.label} ·{' '}
-            {effectiveCompetitionClass === 'world'
-              ? 'World Class'
-              : 'Aspiring'}{' '}
-            · {gender === 'male' ? 'Male' : 'Female'}
-          </h3>
-
-          <p>
-            Competition age:{' '}
-            {selectedDivision?.ages}
-          </p>
-        </div>
-
-        <div className="mat-guide-weight-chips">
-          {weights.map((weight) => (
-            <div
-              className="mat-guide-weight-chip"
-              key={weight}
-            >
-              {weight}
-            </div>
-          ))}
+            onChange={setGender}
+          />
         </div>
       </div>
 
-      <div className="mat-guide-info-box">
-        <ShieldCheck size={16} />
+      <section className="mat-guide-weight-panel" aria-live="polite">
+        <h3>
+          {selectedDivision?.label} · {level === 'world' ? 'World Class' : 'Aspiring'} · {gender === 'male' ? 'Male' : 'Female'}
+        </h3>
+        <p>Competition age {selectedDivision?.ages}</p>
+        <ul>
+          {weights.map((weight) => <li key={weight}>{weight}</li>)}
+        </ul>
+      </section>
 
-        <span>
-          Sparring weight classes are competition
-          divisions, not target body weights. Athletes
-          and parents should discuss the correct
-          tournament division with their MAT coach.
-        </span>
+      <Callout icon={ShieldCheck}>
+        Weight classes are competition divisions, not target body weights. Talk with your MAT coach about the right division.
+      </Callout>
+    </>
+  )
+}
+
+function TournamentDayGuide() {
+  return (
+    <>
+      <SectionIntro eyebrow="Competition prep" title="Tournament day checklist">
+        What every athlete and parent should know before competing.
+      </SectionIntro>
+
+      <div className="mat-guide-day-grid">
+        {tournamentDayGroups.map((group) => (
+          <section key={group.id} className="mat-guide-day-card">
+            <h3><CalendarCheck size={18} aria-hidden="true" />{group.title}</h3>
+            <ul>
+              {group.items.map((item) => (
+                <li key={item}><CheckCircle2 size={18} aria-hidden="true" /><span>{item}</span></li>
+              ))}
+            </ul>
+          </section>
+        ))}
       </div>
     </>
   )
 }
 
-export default function NewMemberGuidePage({
-  onNavigate,
-}) {
+function Glossary() {
+  const [search, setSearch] = useState('')
+  const terms = useMemo(() => {
+    const query = search.trim().toLowerCase()
+    const sorted = [...terminology].sort((a, b) => a.term.localeCompare(b.term))
+    if (!query) return sorted
+    return sorted.filter((item) => `${item.term} ${item.definition}`.toLowerCase().includes(query))
+  }, [search])
+
+  return (
+    <>
+      <SectionIntro eyebrow="Competition vocabulary" title="Glossary">
+        Words you’ll hear at MAT, at tournaments and in staging.
+      </SectionIntro>
+
+      <label className="mat-guide-search mat-guide-glossary-search">
+        <Search size={17} aria-hidden="true" />
+        <input
+          type="search"
+          value={search}
+          onChange={(event) => setSearch(event.target.value)}
+          placeholder="Search terms"
+          aria-label="Search terms"
+        />
+      </label>
+
+      <dl className="mat-guide-terms">
+        {terms.map((item) => (
+          <div key={item.term}>
+            <dt>{item.term}</dt>
+            <dd>{item.definition}</dd>
+          </div>
+        ))}
+      </dl>
+
+      {terms.length === 0 && <p className="mat-guide-empty">No terms match “{search.trim()}”.</p>}
+    </>
+  )
+}
+
+export default function NewMemberGuidePage({ onNavigate }) {
+  const [activeTab, setActiveTab] = useState(readStoredTab)
+
+  function openTab(tabId) {
+    setActiveTab(tabId)
+    try {
+      window.localStorage.setItem(TAB_STORAGE_KEY, tabId)
+    } catch {
+      // Storage can be unavailable (private mode); the tab still switches.
+    }
+  }
+
+  function handleTabKeyDown(event) {
+    if (event.key !== 'ArrowRight' && event.key !== 'ArrowLeft') return
+    event.preventDefault()
+    const index = TABS.findIndex((tab) => tab.id === activeTab)
+    const next = TABS[(index + (event.key === 'ArrowRight' ? 1 : TABS.length - 1)) % TABS.length]
+    openTab(next.id)
+    document.getElementById(`mat-guide-tab-${next.id}`)?.focus()
+  }
+
   return (
     <div className="mat-guide">
-      <button
-        type="button"
-        className="mat-guide-back"
-        onClick={() => onNavigate('home')}
-      >
+      <button type="button" className="mat-guide-back" onClick={() => onNavigate('home')}>
         <ArrowLeft size={16} />
         Back to Home
       </button>
 
       <section className="mat-guide-hero">
-        <div className="mat-guide-hero-icon">
-          <GraduationCap size={28} />
-        </div>
-
+        <div className="mat-guide-hero-icon"><GraduationCap size={28} /></div>
         <div>
-          <div className="mat-eyebrow">
-            Michigan Academy of Taekwondo
-          </div>
-
+          <div className="mat-eyebrow">Michigan Academy of Taekwondo</div>
           <h1>New Member Guide</h1>
-
-          <p>
-            A simple guide to tournament registration,
-            competition divisions, poomsae requirements,
-            tournament day, and common Taekwondo
-            terminology.
-          </p>
+          <p>Everything you need for your first tournaments, one topic at a time.</p>
         </div>
       </section>
 
-      <div className="mat-guide-version">
-        <Info size={17} />
-
-        <div>
-          <strong>{guideRuleVersion.label}</strong>
-          <span>
-            Verified {guideRuleVersion.verified}.{' '}
-            {guideRuleVersion.note}
-          </span>
-        </div>
+      <div className="mat-guide-tabs" role="tablist" aria-label="Guide topics" onKeyDown={handleTabKeyDown}>
+        {TABS.map((tab) => {
+          const Icon = tab.icon
+          const selected = tab.id === activeTab
+          return (
+            <button
+              key={tab.id}
+              id={`mat-guide-tab-${tab.id}`}
+              type="button"
+              role="tab"
+              aria-selected={selected}
+              aria-controls="mat-guide-panel"
+              tabIndex={selected ? 0 : -1}
+              className={selected ? 'active' : ''}
+              onClick={() => openTab(tab.id)}
+            >
+              <Icon size={17} aria-hidden="true" />
+              {tab.label}
+            </button>
+          )
+        })}
       </div>
 
-      <nav
-        className="mat-guide-jump-grid"
-        aria-label="New member guide sections"
-      >
-        <a
-          href="#registration"
-          className="mat-guide-jump-card"
-        >
-          <BookOpen size={18} />
-          <span>Tournament Registration</span>
-        </a>
-
-        <a
-          href="#forms"
-          className="mat-guide-jump-card"
-        >
-          <GraduationCap size={18} />
-          <span>Poomsae Forms</span>
-        </a>
-
-        <a
-          href="#sparring"
-          className="mat-guide-jump-card"
-        >
-          <Scale size={18} />
-          <span>Sparring Divisions</span>
-        </a>
-
-        <a
-          href="#tournament-day"
-          className="mat-guide-jump-card"
-        >
-          <Trophy size={18} />
-          <span>Tournament Day</span>
-        </a>
-      </nav>
-
       <section
-        id="registration"
-        className="mat-guide-section"
+        id="mat-guide-panel"
+        className="mat-guide-panel"
+        role="tabpanel"
+        aria-labelledby={`mat-guide-tab-${activeTab}`}
       >
-        <div className="mat-guide-section-heading">
-          <div className="mat-guide-section-icon">
-            <BookOpen size={19} />
-          </div>
-
-          <div>
-            <span>Getting Registered</span>
-            <h2>Tournament Registration</h2>
-            <p>
-              The exact registration process depends on
-              the tournament. For USA Taekwondo
-              sanctioned events, athletes will commonly
-              use the USATKD Sport:80 system.
-            </p>
-          </div>
-        </div>
-
-        <div className="mat-guide-step-list">
-          {tournamentRegistrationGuide.map(
-            (step, index) => (
-              <div
-                className="mat-guide-step"
-                key={step.title}
-              >
-                <div className="mat-guide-step-number">
-                  {index + 1}
-                </div>
-
-                <div>
-                  <strong>{step.title}</strong>
-
-                  <p>{step.text}</p>
-
-                  {step.linkUrl && (
-                    <a
-                      href={step.linkUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="mat-guide-step-link"
-                    >
-                      {step.linkLabel}
-                      <ExternalLink size={13} />
-                    </a>
-                  )}
-                </div>
-              </div>
-            )
-          )}
-        </div>
-      </section>
-
-      <section
-        id="forms"
-        className="mat-guide-section"
-      >
-        <div className="mat-guide-section-heading">
-          <div className="mat-guide-section-icon">
-            <GraduationCap size={19} />
-          </div>
-
-          <div>
-            <span>Poomsae Reference</span>
-            <h2>Required Form Guide</h2>
-            <p>
-              Use the controls below to review the
-              poomsae associated with different ranks
-              and competition divisions.
-            </p>
-          </div>
-        </div>
-
-        <FormsGuide />
-      </section>
-
-      <section
-        id="sparring"
-        className="mat-guide-section"
-      >
-        <div className="mat-guide-section-heading">
-          <div className="mat-guide-section-icon">
-            <Scale size={19} />
-          </div>
-
-          <div>
-            <span>Kyorugi Reference</span>
-            <h2>Sparring Weight Classes</h2>
-            <p>
-              Select the athlete division, competition
-              level, and gender division to view the
-              corresponding sparring weight categories.
-            </p>
-          </div>
-        </div>
-
-        <SparringWeightGuide />
-      </section>
-
-      <section
-        id="tournament-day"
-        className="mat-guide-section"
-      >
-        <div className="mat-guide-section-heading">
-          <div className="mat-guide-section-icon">
-            <Trophy size={19} />
-          </div>
-
-          <div>
-            <span>Competition Preparation</span>
-            <h2>Tournament Day Basics</h2>
-            <p>
-              A few important things every athlete and
-              parent should know before competition day.
-            </p>
-          </div>
-        </div>
-
-        <div className="mat-guide-checklist">
-          {tournamentDayGuide.map((item) => (
-            <div
-              className="mat-guide-check-item"
-              key={item}
-            >
-              <CheckCircle2 size={16} />
-              <span>{item}</span>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section
-        id="terminology"
-        className="mat-guide-section"
-      >
-        <div className="mat-guide-section-heading">
-          <div className="mat-guide-section-icon">
-            <BookOpen size={19} />
-          </div>
-
-          <div>
-            <span>Competition Vocabulary</span>
-            <h2>Useful Terminology</h2>
-            <p>
-              Common words you may hear at MAT,
-              tournaments, weigh-ins, and competition
-              staging.
-            </p>
-          </div>
-        </div>
-
-        <div className="mat-guide-terms">
-          {terminology.map((item) => (
-            <div
-              className="mat-guide-term"
-              key={item.term}
-            >
-              <strong>{item.term}</strong>
-              <p>{item.definition}</p>
-            </div>
-          ))}
-        </div>
+        {activeTab === 'start' && <StartHere onOpenTab={openTab} />}
+        {activeTab === 'registration' && <RegistrationGuide />}
+        {activeTab === 'forms' && <FormsGuide />}
+        {activeTab === 'sparring' && <SparringGuide />}
+        {activeTab === 'tournament-day' && <TournamentDayGuide />}
+        {activeTab === 'glossary' && <Glossary />}
       </section>
     </div>
   )
