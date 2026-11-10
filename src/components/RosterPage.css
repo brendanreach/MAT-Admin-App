@@ -406,3 +406,32 @@
   background: var(--theme-surface-alt) !important;
 }
 
+
+/* Phone athlete cards (the desktop table is covered above) */
+:root[data-theme='dark'] .mat-roster-mobile-card {
+  border-color: var(--theme-border) !important;
+  background: var(--theme-surface) !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+}
+
+:root[data-theme='dark'] .mat-roster-mobile-name,
+:root[data-theme='dark'] .mat-roster-mobile-meta strong {
+  color: var(--theme-heading) !important;
+}
+
+:root[data-theme='dark'] .mat-roster-mobile-meta,
+:root[data-theme='dark'] .mat-roster-mobile-label,
+:root[data-theme='dark'] .mat-roster-empty {
+  color: var(--theme-muted) !important;
+}
+
+:root[data-theme='dark'] .mat-roster-mobile-details,
+:root[data-theme='dark'] .mat-roster-mobile-actions {
+  border-top-color: var(--theme-border) !important;
+}
+
+:root[data-theme='dark'] .mat-roster-mobile-edit-button {
+  color: var(--theme-heading) !important;
+  border-color: var(--theme-border) !important;
+  background: var(--theme-surface-alt) !important;
+}
