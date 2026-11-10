@@ -1,0 +1,7 @@
+dist
+android
+node_modules
+package-lock.json
+
+# CSS is hand-formatted with compact one-line rules; Prettier would expand it
+*.css

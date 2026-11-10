@@ -1,138 +1,59 @@
-import {
-  CalendarDays,
-  Clock3,
-  MapPin,
-  Repeat2,
-  X,
-} from 'lucide-react'
+import { CalendarDays, Clock3, MapPin, Repeat2, X } from 'lucide-react'
 
-import {
-  useEffect,
-  useMemo,
-  useState,
-} from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 import { supabase } from '../lib/supabase.js'
 
-const EVENT_TYPES = [
-  'Training',
-  'Testing',
-  'Seminar',
-  'Team Event',
-  'Deadline',
-  'Closed',
-  'Other',
-]
+const EVENT_TYPES = ['Training', 'Testing', 'Seminar', 'Team Event', 'Deadline', 'Closed', 'Other']
 
-function CalendarEventForm({
-  editingEvent,
-  defaultDate,
-  onClose,
-  onSaved,
-}) {
-  const [
-    title,
-    setTitle,
-  ] = useState('')
+function CalendarEventForm({ editingEvent, defaultDate, onClose, onSaved }) {
+  const [title, setTitle] = useState('')
 
-  const [
-    eventType,
-    setEventType,
-  ] = useState('Training')
+  const [eventType, setEventType] = useState('Training')
 
-  const [
-    eventDate,
-    setEventDate,
-  ] = useState(
-    defaultDate || ''
-  )
+  const [eventDate, setEventDate] = useState(defaultDate || '')
 
-  const [
-    endDate,
-    setEndDate,
-  ] = useState('')
+  const [endDate, setEndDate] = useState('')
 
-  const [
-    startTime,
-    setStartTime,
-  ] = useState('')
+  const [startTime, setStartTime] = useState('')
 
-  const [
-    endTime,
-    setEndTime,
-  ] = useState('')
+  const [endTime, setEndTime] = useState('')
 
-  const [
-    location,
-    setLocation,
-  ] = useState('')
+  const [location, setLocation] = useState('')
 
-  const [
-    notes,
-    setNotes,
-  ] = useState('')
+  const [notes, setNotes] = useState('')
 
-  const [
-    allDay,
-    setAllDay,
-  ] = useState(false)
+  const [allDay, setAllDay] = useState(false)
 
-  const [
-    isRecurring,
-    setIsRecurring,
-  ] = useState(false)
+  const [isRecurring, setIsRecurring] = useState(false)
 
-  const [
-    recurrenceEndDate,
-    setRecurrenceEndDate,
-  ] = useState('')
+  const [recurrenceEndDate, setRecurrenceEndDate] = useState('')
 
-  const [
-    saving,
-    setSaving,
-  ] = useState(false)
+  const [saving, setSaving] = useState(false)
 
-  const [
-    message,
-    setMessage,
-  ] = useState('')
+  const [message, setMessage] = useState('')
 
-  const weekdayName =
-    useMemo(() => {
-      if (!eventDate) {
-        return ''
-      }
+  const weekdayName = useMemo(() => {
+    if (!eventDate) {
+      return ''
+    }
 
-      const date =
-        new Date(
-          `${eventDate}T00:00:00`
-        )
+    const date = new Date(`${eventDate}T00:00:00`)
 
-      if (
-        Number.isNaN(
-          date.getTime()
-        )
-      ) {
-        return ''
-      }
+    if (Number.isNaN(date.getTime())) {
+      return ''
+    }
 
-      return date.toLocaleDateString(
-        undefined,
-        {
-          weekday: 'long',
-        }
-      )
-    }, [
-      eventDate,
-    ])
+    return date.toLocaleDateString(undefined, {
+      weekday: 'long',
+    })
+  }, [eventDate])
 
   useEffect(() => {
     if (!editingEvent) {
       setTitle('')
       setEventType('Training')
-      setEventDate(
-        defaultDate || ''
-      )
+      setEventDate(defaultDate || '')
       setEndDate('')
       setStartTime('')
       setEndTime('')
@@ -145,216 +66,104 @@ function CalendarEventForm({
       return
     }
 
-    setTitle(
-      editingEvent.title ||
-        ''
-    )
+    setTitle(editingEvent.title || '')
 
-    setEventType(
-      editingEvent.event_type ||
-        'Training'
-    )
+    setEventType(editingEvent.event_type || 'Training')
 
-    setEventDate(
-      editingEvent.event_date ||
-        ''
-    )
+    setEventDate(editingEvent.event_date || '')
 
-    setEndDate(
-      editingEvent.end_date ||
-        ''
-    )
+    setEndDate(editingEvent.end_date || '')
 
-    setStartTime(
-      editingEvent.start_time
-        ? String(
-            editingEvent.start_time
-          ).slice(0, 5)
-        : ''
-    )
+    setStartTime(editingEvent.start_time ? String(editingEvent.start_time).slice(0, 5) : '')
 
-    setEndTime(
-      editingEvent.end_time
-        ? String(
-            editingEvent.end_time
-          ).slice(0, 5)
-        : ''
-    )
+    setEndTime(editingEvent.end_time ? String(editingEvent.end_time).slice(0, 5) : '')
 
-    setLocation(
-      editingEvent.location ||
-        ''
-    )
+    setLocation(editingEvent.location || '')
 
-    setNotes(
-      editingEvent.notes ||
-        ''
-    )
+    setNotes(editingEvent.notes || '')
 
-    setAllDay(
-      Boolean(
-        editingEvent.all_day
-      )
-    )
+    setAllDay(Boolean(editingEvent.all_day))
 
-    setIsRecurring(
-      editingEvent.recurrence_type ===
-        'weekly'
-    )
+    setIsRecurring(editingEvent.recurrence_type === 'weekly')
 
-    setRecurrenceEndDate(
-      editingEvent.recurrence_end_date ||
-        ''
-    )
-  }, [
-    editingEvent,
-    defaultDate,
-  ])
+    setRecurrenceEndDate(editingEvent.recurrence_end_date || '')
+  }, [editingEvent, defaultDate])
 
-  async function handleSubmit(
-    event
-  ) {
+  async function handleSubmit(event) {
     event.preventDefault()
 
     setMessage('')
 
     if (!title.trim()) {
-      setMessage(
-        'Please enter an event title.'
-      )
+      setMessage('Please enter an event title.')
       return
     }
 
     if (!eventDate) {
-      setMessage(
-        'Please choose a start date.'
-      )
+      setMessage('Please choose a start date.')
       return
     }
 
-    if (
-      endDate &&
-      endDate < eventDate
-    ) {
-      setMessage(
-        'The event end date cannot be before the start date.'
-      )
+    if (endDate && endDate < eventDate) {
+      setMessage('The event end date cannot be before the start date.')
       return
     }
 
-    if (
-      isRecurring &&
-      recurrenceEndDate &&
-      recurrenceEndDate <
-        eventDate
-    ) {
-      setMessage(
-        'The repeat-until date cannot be before the first event.'
-      )
+    if (isRecurring && recurrenceEndDate && recurrenceEndDate < eventDate) {
+      setMessage('The repeat-until date cannot be before the first event.')
       return
     }
 
-    const sameEventDay =
-      !endDate ||
-      endDate === eventDate
+    const sameEventDay = !endDate || endDate === eventDate
 
-    if (
-      !allDay &&
-      sameEventDay &&
-      startTime &&
-      endTime &&
-      endTime < startTime
-    ) {
-      setMessage(
-        'The end time cannot be before the start time.'
-      )
+    if (!allDay && sameEventDay && startTime && endTime && endTime < startTime) {
+      setMessage('The end time cannot be before the start time.')
       return
     }
 
     setSaving(true)
 
     const payload = {
-      title:
-        title.trim(),
+      title: title.trim(),
 
-      event_type:
-        eventType,
+      event_type: eventType,
 
-      event_date:
-        eventDate,
+      event_date: eventDate,
 
-      end_date:
-        endDate || null,
+      end_date: endDate || null,
 
-      start_time:
-        allDay ||
-        !startTime
-          ? null
-          : startTime,
+      start_time: allDay || !startTime ? null : startTime,
 
-      end_time:
-        allDay ||
-        !endTime
-          ? null
-          : endTime,
+      end_time: allDay || !endTime ? null : endTime,
 
-      location:
-        location.trim() ||
-        null,
+      location: location.trim() || null,
 
-      notes:
-        notes.trim() ||
-        null,
+      notes: notes.trim() || null,
 
-      all_day:
-        allDay,
+      all_day: allDay,
 
-      recurrence_type:
-        isRecurring
-          ? 'weekly'
-          : 'none',
+      recurrence_type: isRecurring ? 'weekly' : 'none',
 
-      recurrence_end_date:
-        isRecurring &&
-        recurrenceEndDate
-          ? recurrenceEndDate
-          : null,
+      recurrence_end_date: isRecurring && recurrenceEndDate ? recurrenceEndDate : null,
     }
 
     let error
 
     if (editingEvent) {
-      const response =
-        await supabase
-          .from(
-            'calendar_events'
-          )
-          .update(payload)
-          .eq(
-            'id',
-            editingEvent.id
-          )
+      const response = await supabase
+        .from('calendar_events')
+        .update(payload)
+        .eq('id', editingEvent.id)
 
-      error =
-        response.error
+      error = response.error
     } else {
-      const response =
-        await supabase
-          .from(
-            'calendar_events'
-          )
-          .insert([
-            payload,
-          ])
+      const response = await supabase.from('calendar_events').insert([payload])
 
-      error =
-        response.error
+      error = response.error
     }
 
     if (error) {
-      setMessage(
-        error.message
-      )
+      setMessage(error.message)
 
       setSaving(false)
       return
@@ -370,29 +179,14 @@ function CalendarEventForm({
   }
 
   return (
-    <div
-      className="mat-modal-backdrop"
-      onClick={onClose}
-    >
-      <div
-        className="mat-modal"
-        onClick={(event) =>
-          event.stopPropagation()
-        }
-      >
+    <div className="mat-modal-backdrop" onClick={onClose}>
+      <div className="mat-modal" onClick={(event) => event.stopPropagation()}>
         <div className="mat-modal-header">
-
           <div>
-            <div className="mat-eyebrow">
-              Team Calendar
-            </div>
+            <div className="mat-eyebrow">Team Calendar</div>
 
             <h2>
-              {editingEvent
-                ? isRecurring
-                  ? 'Edit Recurring Event'
-                  : 'Edit Event'
-                : 'Add Event'}
+              {editingEvent ? (isRecurring ? 'Edit Recurring Event' : 'Edit Event') : 'Add Event'}
             </h2>
           </div>
 
@@ -404,84 +198,47 @@ function CalendarEventForm({
           >
             <X size={20} />
           </button>
-
         </div>
 
-        <form
-          className="mat-form"
-          onSubmit={
-            handleSubmit
-          }
-        >
-
-          {message && (
-            <div className="mat-error">
-              {message}
-            </div>
-          )}
+        <form className="mat-form" onSubmit={handleSubmit}>
+          {message && <div className="mat-error">{message}</div>}
 
           <div className="mat-form-group">
-
-            <label htmlFor="calendar-event-title">
-              Event Title
-            </label>
+            <label htmlFor="calendar-event-title">Event Title</label>
 
             <input
               id="calendar-event-title"
               className="mat-input"
               type="text"
               value={title}
-              onChange={(event) =>
-                setTitle(
-                  event.target.value
-                )
-              }
+              onChange={(event) => setTitle(event.target.value)}
               placeholder="Example: Competition Team Training"
               autoFocus
               required
             />
-
           </div>
 
           <div className="mat-form-group">
-
-            <label htmlFor="calendar-event-type">
-              Event Type
-            </label>
+            <label htmlFor="calendar-event-type">Event Type</label>
 
             <select
               id="calendar-event-type"
               className="mat-input"
               value={eventType}
-              onChange={(event) =>
-                setEventType(
-                  event.target.value
-                )
-              }
+              onChange={(event) => setEventType(event.target.value)}
             >
-              {EVENT_TYPES.map(
-                (type) => (
-                  <option
-                    key={type}
-                    value={type}
-                  >
-                    {type}
-                  </option>
-                )
-              )}
+              {EVENT_TYPES.map((type) => (
+                <option key={type} value={type}>
+                  {type}
+                </option>
+              ))}
             </select>
-
           </div>
 
           <div className="mat-form-grid">
-
             <div className="mat-form-group">
-
               <label htmlFor="calendar-start-date">
-                <CalendarDays
-                  size={15}
-                />
-
+                <CalendarDays size={15} />
                 Start Date
               </label>
 
@@ -491,45 +248,25 @@ function CalendarEventForm({
                 type="date"
                 value={eventDate}
                 onChange={(event) => {
-                  const newStartDate =
-                    event.target.value
+                  const newStartDate = event.target.value
 
-                  setEventDate(
-                    newStartDate
-                  )
+                  setEventDate(newStartDate)
 
-                  if (
-                    endDate &&
-                    newStartDate &&
-                    endDate <
-                      newStartDate
-                  ) {
+                  if (endDate && newStartDate && endDate < newStartDate) {
                     setEndDate('')
                   }
 
-                  if (
-                    recurrenceEndDate &&
-                    newStartDate &&
-                    recurrenceEndDate <
-                      newStartDate
-                  ) {
-                    setRecurrenceEndDate(
-                      ''
-                    )
+                  if (recurrenceEndDate && newStartDate && recurrenceEndDate < newStartDate) {
+                    setRecurrenceEndDate('')
                   }
                 }}
                 required
               />
-
             </div>
 
             <div className="mat-form-group">
-
               <label htmlFor="calendar-end-date">
-                <CalendarDays
-                  size={15}
-                />
-
+                <CalendarDays size={15} />
                 End Date
               </label>
 
@@ -538,53 +275,28 @@ function CalendarEventForm({
                 className="mat-input"
                 type="date"
                 value={endDate}
-                min={
-                  eventDate ||
-                  undefined
-                }
-                onChange={(event) =>
-                  setEndDate(
-                    event.target.value
-                  )
-                }
+                min={eventDate || undefined}
+                onChange={(event) => setEndDate(event.target.value)}
               />
-
             </div>
-
           </div>
 
           <div className="mat-form-group">
-
             <label className="mat-checkbox-label">
-
               <input
                 type="checkbox"
-                checked={
-                  allDay
-                }
-                onChange={(event) =>
-                  setAllDay(
-                    event.target.checked
-                  )
-                }
+                checked={allDay}
+                onChange={(event) => setAllDay(event.target.checked)}
               />
-
               All-day event
-
             </label>
-
           </div>
 
           {!allDay && (
             <div className="mat-form-grid">
-
               <div className="mat-form-group">
-
                 <label htmlFor="calendar-start-time">
-                  <Clock3
-                    size={15}
-                  />
-
+                  <Clock3 size={15} />
                   Start Time
                 </label>
 
@@ -592,25 +304,14 @@ function CalendarEventForm({
                   id="calendar-start-time"
                   className="mat-input"
                   type="time"
-                  value={
-                    startTime
-                  }
-                  onChange={(event) =>
-                    setStartTime(
-                      event.target.value
-                    )
-                  }
+                  value={startTime}
+                  onChange={(event) => setStartTime(event.target.value)}
                 />
-
               </div>
 
               <div className="mat-form-group">
-
                 <label htmlFor="calendar-end-time">
-                  <Clock3
-                    size={15}
-                  />
-
+                  <Clock3 size={15} />
                   End Time
                 </label>
 
@@ -618,119 +319,65 @@ function CalendarEventForm({
                   id="calendar-end-time"
                   className="mat-input"
                   type="time"
-                  value={
-                    endTime
-                  }
-                  onChange={(event) =>
-                    setEndTime(
-                      event.target.value
-                    )
-                  }
+                  value={endTime}
+                  onChange={(event) => setEndTime(event.target.value)}
                 />
-
               </div>
-
             </div>
           )}
 
           <div className="mat-form-group">
-
             <label className="mat-checkbox-label">
-
               <input
                 type="checkbox"
-                checked={
-                  isRecurring
-                }
+                checked={isRecurring}
                 onChange={(event) => {
-                  const checked =
-                    event.target.checked
+                  const checked = event.target.checked
 
-                  setIsRecurring(
-                    checked
-                  )
+                  setIsRecurring(checked)
 
                   if (!checked) {
-                    setRecurrenceEndDate(
-                      ''
-                    )
+                    setRecurrenceEndDate('')
                   }
                 }}
               />
-
-              <Repeat2
-                size={16}
-              />
-
+              <Repeat2 size={16} />
               Recurring event
-
             </label>
-
           </div>
 
           {isRecurring && (
             <div className="mat-recurring-box">
-
               <div className="mat-recurring-summary">
-
-                <Repeat2
-                  size={18}
-                />
+                <Repeat2 size={18} />
 
                 <div>
-                  <strong>
-                    Repeats every{' '}
-                    {weekdayName ||
-                      'week'}
-                  </strong>
+                  <strong>Repeats every {weekdayName || 'week'}</strong>
 
-                  <span>
-                    The start date
-                    determines which
-                    day of the week
-                    this event repeats.
-                  </span>
+                  <span>The start date determines which day of the week this event repeats.</span>
                 </div>
-
               </div>
 
               <div className="mat-form-group">
-
-                <label htmlFor="calendar-repeat-until">
-                  Repeat Until
-                </label>
+                <label htmlFor="calendar-repeat-until">Repeat Until</label>
 
                 <input
                   id="calendar-repeat-until"
                   className="mat-input"
                   type="date"
-                  min={
-                    eventDate ||
-                    undefined
-                  }
-                  value={
-                    recurrenceEndDate
-                  }
-                  onChange={(event) =>
-                    setRecurrenceEndDate(
-                      event.target.value
-                    )
-                  }
+                  min={eventDate || undefined}
+                  value={recurrenceEndDate}
+                  onChange={(event) => setRecurrenceEndDate(event.target.value)}
                 />
 
                 <small className="mat-recurring-help">
-                  Optional. Leave this
-                  blank to continue
-                  repeating every week.
+                  Optional. Leave this blank to continue repeating every week.
                 </small>
-
               </div>
-
             </div>
           )}
 
           <div className="mat-form-group">
-
             <label htmlFor="calendar-location">
               <MapPin size={15} />
               Location
@@ -741,39 +388,25 @@ function CalendarEventForm({
               className="mat-input"
               type="text"
               value={location}
-              onChange={(event) =>
-                setLocation(
-                  event.target.value
-                )
-              }
+              onChange={(event) => setLocation(event.target.value)}
               placeholder="Optional"
             />
-
           </div>
 
           <div className="mat-form-group">
-
-            <label htmlFor="calendar-notes">
-              Notes
-            </label>
+            <label htmlFor="calendar-notes">Notes</label>
 
             <textarea
               id="calendar-notes"
               className="mat-textarea"
               value={notes}
-              onChange={(event) =>
-                setNotes(
-                  event.target.value
-                )
-              }
+              onChange={(event) => setNotes(event.target.value)}
               placeholder="Optional event details..."
               rows={4}
             />
-
           </div>
 
           <div className="mat-form-actions">
-
             <button
               type="button"
               className="mat-secondary-button"
@@ -783,11 +416,7 @@ function CalendarEventForm({
               Cancel
             </button>
 
-            <button
-              type="submit"
-              className="mat-primary-button"
-              disabled={saving}
-            >
+            <button type="submit" className="mat-primary-button" disabled={saving}>
               {saving
                 ? 'Saving...'
                 : editingEvent
@@ -798,11 +427,8 @@ function CalendarEventForm({
                     ? 'Create Series'
                     : 'Add Event'}
             </button>
-
           </div>
-
         </form>
-
       </div>
     </div>
   )

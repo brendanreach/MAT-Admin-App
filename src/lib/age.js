@@ -11,17 +11,11 @@ export function getCurrentAge(birthdate) {
 
   const today = new Date()
 
-  let age =
-    today.getFullYear() -
-    birth.getFullYear()
+  let age = today.getFullYear() - birth.getFullYear()
 
   const birthdayPassed =
-    today.getMonth() >
-      birth.getMonth() ||
-    (today.getMonth() ===
-      birth.getMonth() &&
-      today.getDate() >=
-        birth.getDate())
+    today.getMonth() > birth.getMonth() ||
+    (today.getMonth() === birth.getMonth() && today.getDate() >= birth.getDate())
 
   if (!birthdayPassed) {
     age--
@@ -35,20 +29,13 @@ export function getCompetitionAge(birthdate) {
     return '—'
   }
 
-  const birthYear =
-    Number(
-      String(birthdate).slice(0, 4)
-    )
+  const birthYear = Number(String(birthdate).slice(0, 4))
 
-  if (
-    Number.isNaN(birthYear) ||
-    birthYear <= 0
-  ) {
+  if (Number.isNaN(birthYear) || birthYear <= 0) {
     return '—'
   }
 
-  const currentYear =
-    new Date().getFullYear()
+  const currentYear = new Date().getFullYear()
 
   return currentYear - birthYear
 }

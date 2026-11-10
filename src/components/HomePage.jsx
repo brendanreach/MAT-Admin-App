@@ -87,7 +87,11 @@ function HomePage({
   canManageCarousel = true,
 }) {
   const topics = useRecentTopics()
-  const { rows: carouselRows, configured: carouselConfigured, reload: reloadCarousel } = useHomeCarouselRows()
+  const {
+    rows: carouselRows,
+    configured: carouselConfigured,
+    reload: reloadCarousel,
+  } = useHomeCarouselRows()
   const [managingSlides, setManagingSlides] = useState(false)
   const today = useMemo(() => getTodayString(), [])
   const deadlineCutoff = addDays(today, DEADLINE_WINDOW_DAYS)
@@ -95,14 +99,15 @@ function HomePage({
 
   const activeMembers = useMemo(
     () => members.filter((member) => member.is_active !== false),
-    [members]
+    [members],
   )
 
   const upcomingTournaments = useMemo(
-    () => tournaments
-      .filter((tournament) => (tournament.end_date || tournament.event_date || '') >= today)
-      .sort((a, b) => String(a.event_date || '').localeCompare(String(b.event_date || ''))),
-    [tournaments, today]
+    () =>
+      tournaments
+        .filter((tournament) => (tournament.end_date || tournament.event_date || '') >= today)
+        .sort((a, b) => String(a.event_date || '').localeCompare(String(b.event_date || ''))),
+    [tournaments, today],
   )
 
   const nextTournament = upcomingTournaments[0] || null
@@ -116,12 +121,16 @@ function HomePage({
   }, [allTournamentEntries])
 
   const closingSoon = useMemo(
-    () => upcomingTournaments
-      .filter((tournament) => tournament.registration_deadline
-        && tournament.registration_deadline >= today
-        && tournament.registration_deadline <= deadlineCutoff)
-      .sort((a, b) => a.registration_deadline.localeCompare(b.registration_deadline)),
-    [upcomingTournaments, today, deadlineCutoff]
+    () =>
+      upcomingTournaments
+        .filter(
+          (tournament) =>
+            tournament.registration_deadline &&
+            tournament.registration_deadline >= today &&
+            tournament.registration_deadline <= deadlineCutoff,
+        )
+        .sort((a, b) => a.registration_deadline.localeCompare(b.registration_deadline)),
+    [upcomingTournaments, today, deadlineCutoff],
   )
 
   const upcomingItems = useMemo(() => {
@@ -134,7 +143,9 @@ function HomePage({
         id: `calendar-${event.id}-${nextDate}`,
         title: event.title,
         date: nextDate,
-        detail: [event.event_type, event.all_day ? 'All day' : formatTime(event.start_time)].filter(Boolean).join(' · '),
+        detail: [event.event_type, event.all_day ? 'All day' : formatTime(event.start_time)]
+          .filter(Boolean)
+          .join(' · '),
         target: 'calendar',
       })
     })
@@ -214,23 +225,26 @@ function HomePage({
     return items
   }, [closingSoon, activeMembers, entryCountByTournament, carouselConfigured, today, onNavigate])
 
-  const firstName = String(accountName || '').trim().split(/[\s@]/)[0]
+  const firstName = String(accountName || '')
+    .trim()
+    .split(/[\s@]/)[0]
 
   const slides = useMemo(
-    () => buildCarouselSlides(carouselRows, {
-      view,
-      nextTournament,
-      topic: topics[0],
-      welcome: {
-        kicker: 'Michigan Academy of Taekwondo',
-        title: firstName ? `Welcome, ${firstName}` : 'Welcome to MAT',
-        body: 'Here’s what’s happening across the competition team.',
-        meta: `${plural(activeMembers.length, 'active athlete')}`,
-        action: 'View Roster',
-        target: 'roster',
-      },
-    }),
-    [carouselRows, view, nextTournament, topics, firstName, activeMembers.length]
+    () =>
+      buildCarouselSlides(carouselRows, {
+        view,
+        nextTournament,
+        topic: topics[0],
+        welcome: {
+          kicker: 'Michigan Academy of Taekwondo',
+          title: firstName ? `Welcome, ${firstName}` : 'Welcome to MAT',
+          body: 'Here’s what’s happening across the competition team.',
+          meta: `${plural(activeMembers.length, 'active athlete')}`,
+          action: 'View Roster',
+          target: 'roster',
+        },
+      }),
+    [carouselRows, view, nextTournament, topics, firstName, activeMembers.length],
   )
 
   return (
@@ -243,52 +257,85 @@ function HomePage({
 
       <section className="mat-new-home-stats" aria-label="Team overview">
         <button type="button" onClick={() => onNavigate('roster')}>
-          <Users size={25} /><strong>{activeMembers.length}</strong><span>Active Athletes</span>
+          <Users size={25} />
+          <strong>{activeMembers.length}</strong>
+          <span>Active Athletes</span>
         </button>
         <button type="button" onClick={() => onNavigate('tournaments')}>
-          <Trophy size={25} /><strong>{upcomingTournaments.length}</strong><span>Upcoming Tournaments</span>
+          <Trophy size={25} />
+          <strong>{upcomingTournaments.length}</strong>
+          <span>Upcoming Tournaments</span>
         </button>
         <button type="button" onClick={() => onNavigate('tournaments')}>
-          <Clock size={25} /><strong>{closingSoon.length}</strong><span>Deadlines in {DEADLINE_WINDOW_DAYS} Days</span>
+          <Clock size={25} />
+          <strong>{closingSoon.length}</strong>
+          <span>Deadlines in {DEADLINE_WINDOW_DAYS} Days</span>
         </button>
         <button type="button" onClick={() => onNavigate('calendar')}>
-          <CalendarDays size={25} /><strong>{eventsThisWeek}</strong><span>Events This Week</span>
+          <CalendarDays size={25} />
+          <strong>{eventsThisWeek}</strong>
+          <span>Events This Week</span>
         </button>
       </section>
 
       <section className="mat-new-home-grid">
         <article className="mat-new-home-card mat-new-home-up-next">
           <header>
-            <div><Trophy size={20} /><span>Up Next</span></div>
-            <button type="button" onClick={() => onNavigate('tournaments')}>View All <ChevronRight size={15} /></button>
+            <div>
+              <Trophy size={20} />
+              <span>Up Next</span>
+            </div>
+            <button type="button" onClick={() => onNavigate('tournaments')}>
+              View All <ChevronRight size={15} />
+            </button>
           </header>
           {nextTournament ? (
             <div className="mat-new-home-next-content">
               <img src={nextTournament.poster_url || DEFAULT_SLIDE_IMAGES.next_tournament} alt="" />
               <div>
-                <span className={`mat-new-home-status ${entryCountByTournament[nextTournament.id] ? 'registered' : ''}`}>
+                <span
+                  className={`mat-new-home-status ${entryCountByTournament[nextTournament.id] ? 'registered' : ''}`}
+                >
                   {plural(entryCountByTournament[nextTournament.id] || 0, 'athlete')} entered
                 </span>
                 <h2>{nextTournament.name}</h2>
-                <p><Trophy size={15} /> {formatDateRange(nextTournament.event_date, nextTournament.end_date)}</p>
-                {nextTournament.location && <p><MapPin size={15} /> {nextTournament.location}</p>}
+                <p>
+                  <Trophy size={15} />{' '}
+                  {formatDateRange(nextTournament.event_date, nextTournament.end_date)}
+                </p>
+                {nextTournament.location && (
+                  <p>
+                    <MapPin size={15} /> {nextTournament.location}
+                  </p>
+                )}
                 {nextTournament.registration_deadline && (
-                  <p className="deadline">Registration closes {formatDate(nextTournament.registration_deadline)}</p>
+                  <p className="deadline">
+                    Registration closes {formatDate(nextTournament.registration_deadline)}
+                  </p>
                 )}
               </div>
             </div>
           ) : (
-            <div className="mat-new-home-card-empty">No upcoming tournament is currently scheduled.</div>
+            <div className="mat-new-home-card-empty">
+              No upcoming tournament is currently scheduled.
+            </div>
           )}
           <div className="mat-new-home-card-actions">
-            <button type="button" className="primary" onClick={() => onNavigate('tournaments')}>Tournament Details</button>
-            <button type="button" onClick={() => onNavigate('calendar')}><CalendarDays size={16} /> Calendar</button>
+            <button type="button" className="primary" onClick={() => onNavigate('tournaments')}>
+              Tournament Details
+            </button>
+            <button type="button" onClick={() => onNavigate('calendar')}>
+              <CalendarDays size={16} /> Calendar
+            </button>
           </div>
         </article>
 
         <article className="mat-new-home-card">
           <header>
-            <div><AlertTriangle size={20} /><span>Needs Attention</span></div>
+            <div>
+              <AlertTriangle size={20} />
+              <span>Needs Attention</span>
+            </div>
           </header>
           {attentionItems.length === 0 ? (
             <div className="mat-new-home-all-clear">
@@ -301,7 +348,9 @@ function HomePage({
                 const Icon = item.icon
                 return (
                   <button key={item.id} type="button" onClick={item.onClick}>
-                    <span className="mat-new-home-list-icon warning"><Icon size={17} /></span>
+                    <span className="mat-new-home-list-icon warning">
+                      <Icon size={17} />
+                    </span>
                     <span>
                       <strong>{item.title}</strong>
                       <span>{item.detail}</span>
@@ -318,8 +367,13 @@ function HomePage({
 
         <article className="mat-new-home-card">
           <header>
-            <div><CalendarDays size={20} /><span>Coming Up</span></div>
-            <button type="button" onClick={() => onNavigate('calendar')}>View Calendar <ChevronRight size={15} /></button>
+            <div>
+              <CalendarDays size={20} />
+              <span>Coming Up</span>
+            </div>
+            <button type="button" onClick={() => onNavigate('calendar')}>
+              View Calendar <ChevronRight size={15} />
+            </button>
           </header>
           {upcomingItems.length === 0 ? (
             <div className="mat-new-home-card-empty">Nothing is scheduled yet.</div>

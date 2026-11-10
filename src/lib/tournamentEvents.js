@@ -2,15 +2,11 @@
 export const EVENT_GROUPS = [
   {
     label: 'Sparring',
-    events: [
-      'Sparring',
-    ],
+    events: ['Sparring'],
   },
   {
     label: 'Recognized Poomsae',
-    events: [
-      'Recognized Poomsae - Individual',
-    ],
+    events: ['Recognized Poomsae - Individual'],
   },
   {
     label: 'World Class Poomsae',
@@ -22,21 +18,15 @@ export const EVENT_GROUPS = [
   },
   {
     label: 'Traditional Poomsae',
-    events: [
-      'Traditional Poomsae',
-    ],
+    events: ['Traditional Poomsae'],
   },
   {
     label: 'Board Breaking',
-    events: [
-      'Board Breaking',
-    ],
+    events: ['Board Breaking'],
   },
   {
     label: 'Weapons',
-    events: [
-      'Weapons',
-    ],
+    events: ['Weapons'],
   },
 ]
 
@@ -56,12 +46,10 @@ export function getTournamentEvents(tournament) {
 export function getTournamentEventGroups(tournament) {
   const offered = getTournamentEvents(tournament)
 
-  return EVENT_GROUPS
-    .map((group) => ({
-      ...group,
-      events: group.events.filter((eventName) => offered.includes(eventName)),
-    }))
-    .filter((group) => group.events.length > 0)
+  return EVENT_GROUPS.map((group) => ({
+    ...group,
+    events: group.events.filter((eventName) => offered.includes(eventName)),
+  })).filter((group) => group.events.length > 0)
 }
 
 // Short label for a single event inside its group, e.g. "Mixed Pairs".

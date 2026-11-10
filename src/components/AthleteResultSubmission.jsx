@@ -15,7 +15,11 @@ function getEventDisplayName(eventName) {
 
 function formatSubmittedDate(value) {
   if (!value) return ''
-  return new Date(value).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+  return new Date(value).toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  })
 }
 
 function stageLabel(stage) {
@@ -61,7 +65,7 @@ export default function AthleteResultSubmission({
 
   const pending = useMemo(
     () => submissions.filter((item) => item.status === 'pending'),
-    [submissions]
+    [submissions],
   )
 
   // Most recent rejection per event, unless something newer is pending or approved.
@@ -69,7 +73,8 @@ export default function AthleteResultSubmission({
     const latestByEvent = new Map()
     submissions.forEach((item) => {
       const current = latestByEvent.get(item.event_name)
-      if (!current || item.submitted_at > current.submitted_at) latestByEvent.set(item.event_name, item)
+      if (!current || item.submitted_at > current.submitted_at)
+        latestByEvent.set(item.event_name, item)
     })
     return [...latestByEvent.values()].filter((item) => item.status === 'rejected')
   }, [submissions])
@@ -82,17 +87,21 @@ export default function AthleteResultSubmission({
   }
 
   function updateRow(eventName, changes) {
-    setRows((current) => current.map((row) => (row.eventName === eventName ? { ...row, ...changes } : row)))
+    setRows((current) =>
+      current.map((row) => (row.eventName === eventName ? { ...row, ...changes } : row)),
+    )
   }
 
   async function handleSubmit(event) {
     event.preventDefault()
 
-    const changed = rows.filter((row) => row.competed && (
-      !row.onRecord ||
-      row.stage !== row.officialStage ||
-      row.division.trim() !== row.officialDivision
-    ))
+    const changed = rows.filter(
+      (row) =>
+        row.competed &&
+        (!row.onRecord ||
+          row.stage !== row.officialStage ||
+          row.division.trim() !== row.officialDivision),
+    )
 
     if (!changed.length) {
       setMessage({ type: 'error', text: 'Nothing has changed from your current record.' })
@@ -111,10 +120,13 @@ export default function AthleteResultSubmission({
           result_stage: row.stage || null,
           division: row.division.trim() || null,
           notes: note.trim() || null,
-        }))
+        })),
       )
       setEditing(false)
-      setMessage({ type: 'success', text: 'Sent for approval. Your record updates once an admin approves it.' })
+      setMessage({
+        type: 'success',
+        text: 'Sent for approval. Your record updates once an admin approves it.',
+      })
       await onSubmitted?.()
     } catch (error) {
       setMessage({ type: 'error', text: error.message })
@@ -124,7 +136,8 @@ export default function AthleteResultSubmission({
   }
 
   async function handleWithdraw(submission) {
-    if (!window.confirm(`Withdraw your ${getEventDisplayName(submission.event_name)} submission?`)) return
+    if (!window.confirm(`Withdraw your ${getEventDisplayName(submission.event_name)} submission?`))
+      return
 
     setBusy(true)
     setMessage(null)
@@ -142,19 +155,25 @@ export default function AthleteResultSubmission({
       <div className="mat-tournament-section-heading">
         <div>
           <h3>Report My Results</h3>
-          <p>Add or correct your results. An admin reviews every change before it appears on your record.</p>
+          <p>
+            Add or correct your results. An admin reviews every change before it appears on your
+            record.
+          </p>
         </div>
         {!editing && (
-          <button type="button" className="mat-primary-button" onClick={startEditing} disabled={busy}>
+          <button
+            type="button"
+            className="mat-primary-button"
+            onClick={startEditing}
+            disabled={busy}
+          >
             <ClipboardEdit size={17} />
             {entry ? 'Add or Correct Results' : 'Report Results'}
           </button>
         )}
       </div>
 
-      {message && (
-        <div className={`mat-registration-message ${message.type}`}>{message.text}</div>
-      )}
+      {message && <div className={`mat-registration-message ${message.type}`}>{message.text}</div>}
 
       {pending.length > 0 && (
         <ul className="mat-result-submission-list">
@@ -162,13 +181,20 @@ export default function AthleteResultSubmission({
             <li key={item.id}>
               <Clock3 size={17} className="pending" />
               <div>
-                <strong>{getEventDisplayName(item.event_name)}: {stageLabel(item.result_stage)}</strong>
+                <strong>
+                  {getEventDisplayName(item.event_name)}: {stageLabel(item.result_stage)}
+                </strong>
                 <span>
                   Waiting for approval · sent {formatSubmittedDate(item.submitted_at)}
                   {item.division ? ` · ${item.division}` : ''}
                 </span>
               </div>
-              <button type="button" className="mat-registration-undo" onClick={() => handleWithdraw(item)} disabled={busy}>
+              <button
+                type="button"
+                className="mat-registration-undo"
+                onClick={() => handleWithdraw(item)}
+                disabled={busy}
+              >
                 Withdraw
               </button>
             </li>
@@ -182,7 +208,9 @@ export default function AthleteResultSubmission({
             <li key={item.id}>
               <XCircle size={17} className="rejected" />
               <div>
-                <strong>{getEventDisplayName(item.event_name)}: {stageLabel(item.result_stage)}</strong>
+                <strong>
+                  {getEventDisplayName(item.event_name)}: {stageLabel(item.result_stage)}
+                </strong>
                 <span>Not approved{item.review_note ? ` · "${item.review_note}"` : ''}</span>
               </div>
             </li>
@@ -193,7 +221,10 @@ export default function AthleteResultSubmission({
       {editing && (
         <form className="mat-result-submission-form" onSubmit={handleSubmit}>
           {rows.map((row) => (
-            <div key={row.eventName} className={`mat-result-submission-row ${row.competed ? 'selected' : ''}`}>
+            <div
+              key={row.eventName}
+              className={`mat-result-submission-row ${row.competed ? 'selected' : ''}`}
+            >
               <label className="mat-result-submission-event">
                 <input
                   type="checkbox"
@@ -215,7 +246,9 @@ export default function AthleteResultSubmission({
                   >
                     <option value={NO_RESULT}>Competed, no result</option>
                     {RESULT_STAGES.map((stage) => (
-                      <option key={stage} value={stage}>{stage}</option>
+                      <option key={stage} value={stage}>
+                        {stage}
+                      </option>
                     ))}
                   </select>
                   <input
@@ -249,7 +282,12 @@ export default function AthleteResultSubmission({
           </p>
 
           <div className="mat-result-submission-actions">
-            <button type="button" className="mat-secondary-button" onClick={() => setEditing(false)} disabled={busy}>
+            <button
+              type="button"
+              className="mat-secondary-button"
+              onClick={() => setEditing(false)}
+              disabled={busy}
+            >
               <X size={16} />
               Cancel
             </button>

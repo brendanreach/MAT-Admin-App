@@ -4,7 +4,13 @@ import { useId, useMemo, useRef, useState } from 'react'
 const fullName = (member) => `${member.first_name || ''} ${member.last_name || ''}`.trim()
 
 // Type-to-search athlete picker. Matches any part of the first or last name.
-export default function AthletePicker({ members = [], value, onChange, disabledIds = [], disabledLabel = 'Already linked' }) {
+export default function AthletePicker({
+  members = [],
+  value,
+  onChange,
+  disabledIds = [],
+  disabledLabel = 'Already linked',
+}) {
   const listId = useId()
   const inputRef = useRef(null)
   const [query, setQuery] = useState('')
@@ -12,9 +18,11 @@ export default function AthletePicker({ members = [], value, onChange, disabledI
   const [activeIndex, setActiveIndex] = useState(0)
 
   const sorted = useMemo(
-    () => [...members].sort((a, b) =>
-      `${a.last_name} ${a.first_name}`.localeCompare(`${b.last_name} ${b.first_name}`)),
-    [members]
+    () =>
+      [...members].sort((a, b) =>
+        `${a.last_name} ${a.first_name}`.localeCompare(`${b.last_name} ${b.first_name}`),
+      ),
+    [members],
   )
   const selected = members.find((member) => member.id === value)
 
@@ -46,7 +54,9 @@ export default function AthletePicker({ members = [], value, onChange, disabledI
       event.preventDefault()
       setOpen(true)
       const step = event.key === 'ArrowDown' ? 1 : -1
-      setActiveIndex((index) => Math.min(Math.max(index + step, 0), Math.max(matches.length - 1, 0)))
+      setActiveIndex((index) =>
+        Math.min(Math.max(index + step, 0), Math.max(matches.length - 1, 0)),
+      )
     } else if (event.key === 'Enter' && open) {
       event.preventDefault()
       choose(matches[activeIndex])
@@ -83,7 +93,13 @@ export default function AthletePicker({ members = [], value, onChange, disabledI
           autoComplete="off"
         />
         {(selected || query) && (
-          <button type="button" className="mat-athlete-picker-clear" onMouseDown={(event) => event.preventDefault()} onClick={clear} aria-label="Clear athlete">
+          <button
+            type="button"
+            className="mat-athlete-picker-clear"
+            onMouseDown={(event) => event.preventDefault()}
+            onClick={clear}
+            aria-label="Clear athlete"
+          >
             <X size={15} />
           </button>
         )}
@@ -93,25 +109,27 @@ export default function AthletePicker({ members = [], value, onChange, disabledI
         <ul id={listId} role="listbox" className="mat-athlete-picker-list">
           {matches.length === 0 ? (
             <li className="mat-athlete-picker-none">No athletes match "{query.trim()}"</li>
-          ) : matches.map((member, index) => {
-            const disabled = disabledIds.includes(member.id)
-            return (
-              <li
-                key={member.id}
-                id={`${listId}-${member.id}`}
-                role="option"
-                aria-selected={member.id === value}
-                aria-disabled={disabled}
-                className={`${index === activeIndex ? 'active' : ''} ${disabled ? 'disabled' : ''}`}
-                onMouseDown={(event) => event.preventDefault()}
-                onMouseEnter={() => setActiveIndex(index)}
-                onClick={() => choose(member)}
-              >
-                <span>{fullName(member)}</span>
-                {disabled && <small>{disabledLabel}</small>}
-              </li>
-            )
-          })}
+          ) : (
+            matches.map((member, index) => {
+              const disabled = disabledIds.includes(member.id)
+              return (
+                <li
+                  key={member.id}
+                  id={`${listId}-${member.id}`}
+                  role="option"
+                  aria-selected={member.id === value}
+                  aria-disabled={disabled}
+                  className={`${index === activeIndex ? 'active' : ''} ${disabled ? 'disabled' : ''}`}
+                  onMouseDown={(event) => event.preventDefault()}
+                  onMouseEnter={() => setActiveIndex(index)}
+                  onClick={() => choose(member)}
+                >
+                  <span>{fullName(member)}</span>
+                  {disabled && <small>{disabledLabel}</small>}
+                </li>
+              )
+            })
+          )}
         </ul>
       )}
     </div>

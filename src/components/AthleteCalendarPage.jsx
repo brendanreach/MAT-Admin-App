@@ -7,21 +7,8 @@ import CalendarPage from './CalendarPage.jsx'
   private lessons.
 */
 
-function AthleteCalendarPage({
-  calendarEvents = [],
-  tournaments = [],
-}) {
-  return (
-    <CalendarPage
-      calendarEvents={
-        calendarEvents
-      }
-      tournaments={
-        tournaments
-      }
-      readOnly
-    />
-  )
+function AthleteCalendarPage({ calendarEvents = [], tournaments = [] }) {
+  return <CalendarPage calendarEvents={calendarEvents} tournaments={tournaments} readOnly />
 }
 
 export default AthleteCalendarPage

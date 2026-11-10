@@ -1,8 +1,7 @@
 export const guideRuleVersion = {
   label: 'USA Taekwondo rules, 2026',
   verified: 'September 2026',
-  note:
-    'Rules change. Always check the tournament information packet and its designated forms before competing.',
+  note: 'Rules change. Always check the tournament information packet and its designated forms before competing.',
 }
 
 // Registration steps grouped into phases. Keep each step to one or two short sentences.
@@ -98,13 +97,11 @@ export const tournamentDayGroups = [
 export const terminology = [
   {
     term: 'Poomsae',
-    definition:
-      'A predetermined sequence of Taekwondo techniques performed in a specific order.',
+    definition: 'A predetermined sequence of Taekwondo techniques performed in a specific order.',
   },
   {
     term: 'Kyorugi',
-    definition:
-      'The Korean term used for Taekwondo sparring competition.',
+    definition: 'The Korean term used for Taekwondo sparring competition.',
   },
   {
     term: 'Recognized Poomsae',
@@ -128,18 +125,15 @@ export const terminology = [
   },
   {
     term: 'Dan',
-    definition:
-      'An adult black-belt rank designation.',
+    definition: 'An adult black-belt rank designation.',
   },
   {
     term: 'Poom',
-    definition:
-      'A junior black-belt rank designation.',
+    definition: 'A junior black-belt rank designation.',
   },
   {
     term: 'Geup',
-    definition:
-      'A color-belt rank designation before black belt.',
+    definition: 'A color-belt rank designation before black belt.',
   },
   {
     term: 'World Class',
@@ -250,22 +244,12 @@ export const recognizedColorBeltPoomsae = [
   {
     rank: 'Green',
     geup: '5th & 6th Geup',
-    forms: [
-      'Taegeuk 1 Jang',
-      'Taegeuk 2 Jang',
-      'Taegeuk 3 Jang',
-      'Taegeuk 4 Jang',
-    ],
+    forms: ['Taegeuk 1 Jang', 'Taegeuk 2 Jang', 'Taegeuk 3 Jang', 'Taegeuk 4 Jang'],
   },
   {
     rank: 'Blue',
     geup: '3rd & 4th Geup',
-    forms: [
-      'Taegeuk 3 Jang',
-      'Taegeuk 4 Jang',
-      'Taegeuk 5 Jang',
-      'Taegeuk 6 Jang',
-    ],
+    forms: ['Taegeuk 3 Jang', 'Taegeuk 4 Jang', 'Taegeuk 5 Jang', 'Taegeuk 6 Jang'],
   },
   {
     rank: 'Red',
@@ -353,16 +337,7 @@ export const recognizedBlackBeltPoomsae = [
   {
     divisions: ['Under 65', 'Over 65', 'Over 70'],
     ages: '61+',
-    forms: [
-      'Koryo',
-      'Keumgang',
-      'Taebaek',
-      'Pyongwon',
-      'Shipjin',
-      'Jitae',
-      'Chonkwon',
-      'Hansu',
-    ],
+    forms: ['Koryo', 'Keumgang', 'Taebaek', 'Pyongwon', 'Shipjin', 'Jitae', 'Chonkwon', 'Hansu'],
   },
 ]
 
@@ -420,38 +395,14 @@ export const traditionalPoomsae = [
   {
     rank: '4th Dan / Poom & Up',
     detail: 'Under 50 / Over 50',
-    forms: [
-      'Pyongwon',
-      'Shipjin',
-      'Jitae',
-      'Chonkwon',
-      'Hansu',
-    ],
+    forms: ['Pyongwon', 'Shipjin', 'Jitae', 'Chonkwon', 'Hansu'],
   },
 ]
 
 const worldClass = {
   senior: {
-    male: [
-      '-54 kg',
-      '-58 kg',
-      '-63 kg',
-      '-68 kg',
-      '-74 kg',
-      '-80 kg',
-      '-87 kg',
-      '+87 kg',
-    ],
-    female: [
-      '-46 kg',
-      '-49 kg',
-      '-53 kg',
-      '-57 kg',
-      '-62 kg',
-      '-67 kg',
-      '-73 kg',
-      '+73 kg',
-    ],
+    male: ['-54 kg', '-58 kg', '-63 kg', '-68 kg', '-74 kg', '-80 kg', '-87 kg', '+87 kg'],
+    female: ['-46 kg', '-49 kg', '-53 kg', '-57 kg', '-62 kg', '-67 kg', '-73 kg', '+73 kg'],
   },
 
   junior: {
@@ -521,22 +472,8 @@ const aspiring = {
   },
 
   cadet: {
-    male: [
-      '-37 kg',
-      '-45 kg',
-      '-49 kg',
-      '-57 kg',
-      '-65 kg',
-      '+65 kg',
-    ],
-    female: [
-      '-33 kg',
-      '-37 kg',
-      '-44 kg',
-      '-51 kg',
-      '-59 kg',
-      '+59 kg',
-    ],
+    male: ['-37 kg', '-45 kg', '-49 kg', '-57 kg', '-65 kg', '+65 kg'],
+    female: ['-33 kg', '-37 kg', '-44 kg', '-51 kg', '-59 kg', '+59 kg'],
   },
 
   youth: {
@@ -605,11 +542,7 @@ export const sparringDivisions = [
   },
 ]
 
-export function getSparringWeights(
-  division,
-  competitionClass,
-  gender
-) {
+export function getSparringWeights(division, competitionClass, gender) {
   if (competitionClass === 'world') {
     return worldClass[division]?.[gender] || []
   }
@@ -617,26 +550,74 @@ export function getSparringWeights(
   return aspiring[division]?.[gender] || []
 }
 
-
 // WT compulsory poomsae, black belts. Taeback in the WT chart is the same form as Taebaek.
 const taegeuk = (...numbers) => numbers.map((number) => `Taegeuk ${number} Jang`)
-const WT_PALGWE_TO_HANSU = ['Koryo', 'Keumgang', 'Taebaek', 'Pyongwon', 'Shipjin', 'Jitae', 'Chonkwon', 'Hansu']
+const WT_PALGWE_TO_HANSU = [
+  'Koryo',
+  'Keumgang',
+  'Taebaek',
+  'Pyongwon',
+  'Shipjin',
+  'Jitae',
+  'Chonkwon',
+  'Hansu',
+]
 
 const wtIndividualPoomsae = [
-  { title: 'Dragon / Tiger / Youth', detail: 'Ages 6–11', forms: [...taegeuk(2, 3, 4, 5, 6, 7, 8), 'Koryo'] },
-  { title: 'Cadet', detail: 'Ages 12–14', forms: [...taegeuk(4, 5, 6, 7, 8), ...WT_PALGWE_TO_HANSU.slice(0, 3)] },
-  { title: 'Junior', detail: 'Ages 15–17', forms: [...taegeuk(5, 6, 7, 8), ...WT_PALGWE_TO_HANSU.slice(0, 4)] },
-  { title: 'Under 30 / Under 40', detail: 'Ages 18–40', forms: [...taegeuk(7, 8), ...WT_PALGWE_TO_HANSU.slice(0, 6)] },
-  { title: 'Under 50', detail: 'Ages 41–50', forms: [...taegeuk(8), ...WT_PALGWE_TO_HANSU.slice(0, 7)] },
-  { title: 'Under 60 / Under 65 / Over 65 / Over 70', detail: 'Ages 51+', forms: WT_PALGWE_TO_HANSU },
+  {
+    title: 'Dragon / Tiger / Youth',
+    detail: 'Ages 6–11',
+    forms: [...taegeuk(2, 3, 4, 5, 6, 7, 8), 'Koryo'],
+  },
+  {
+    title: 'Cadet',
+    detail: 'Ages 12–14',
+    forms: [...taegeuk(4, 5, 6, 7, 8), ...WT_PALGWE_TO_HANSU.slice(0, 3)],
+  },
+  {
+    title: 'Junior',
+    detail: 'Ages 15–17',
+    forms: [...taegeuk(5, 6, 7, 8), ...WT_PALGWE_TO_HANSU.slice(0, 4)],
+  },
+  {
+    title: 'Under 30 / Under 40',
+    detail: 'Ages 18–40',
+    forms: [...taegeuk(7, 8), ...WT_PALGWE_TO_HANSU.slice(0, 6)],
+  },
+  {
+    title: 'Under 50',
+    detail: 'Ages 41–50',
+    forms: [...taegeuk(8), ...WT_PALGWE_TO_HANSU.slice(0, 7)],
+  },
+  {
+    title: 'Under 60 / Under 65 / Over 65 / Over 70',
+    detail: 'Ages 51+',
+    forms: WT_PALGWE_TO_HANSU,
+  },
 ]
 
 // Pairs and team divisions use identical lists in the WT chart.
 const wtPairsTeamsPoomsae = [
-  { title: 'Cadet', detail: 'Pairs and teams', forms: [...taegeuk(4, 5, 6, 7, 8), ...WT_PALGWE_TO_HANSU.slice(0, 3)] },
-  { title: 'Junior', detail: 'Pairs and teams', forms: [...taegeuk(4, 5, 6, 7, 8), ...WT_PALGWE_TO_HANSU.slice(0, 4)] },
-  { title: 'Under 30', detail: 'Pairs and teams', forms: [...taegeuk(6, 7, 8), ...WT_PALGWE_TO_HANSU.slice(0, 6)] },
-  { title: 'Under 50', detail: 'Pairs and teams', forms: [...taegeuk(8), ...WT_PALGWE_TO_HANSU.slice(0, 7)] },
+  {
+    title: 'Cadet',
+    detail: 'Pairs and teams',
+    forms: [...taegeuk(4, 5, 6, 7, 8), ...WT_PALGWE_TO_HANSU.slice(0, 3)],
+  },
+  {
+    title: 'Junior',
+    detail: 'Pairs and teams',
+    forms: [...taegeuk(4, 5, 6, 7, 8), ...WT_PALGWE_TO_HANSU.slice(0, 4)],
+  },
+  {
+    title: 'Under 30',
+    detail: 'Pairs and teams',
+    forms: [...taegeuk(6, 7, 8), ...WT_PALGWE_TO_HANSU.slice(0, 6)],
+  },
+  {
+    title: 'Under 50',
+    detail: 'Pairs and teams',
+    forms: [...taegeuk(8), ...WT_PALGWE_TO_HANSU.slice(0, 7)],
+  },
   { title: 'Under 60', detail: 'Pairs and teams', forms: WT_PALGWE_TO_HANSU },
   { title: 'Over 60', detail: 'Pairs and teams', forms: WT_PALGWE_TO_HANSU },
 ]
@@ -646,29 +627,73 @@ const AAU_BLACK = WT_PALGWE_TO_HANSU
 
 const aauIndividualPoomsae = [
   { title: 'Minor', detail: 'Ages 9 and under', forms: [...taegeuk(3, 4, 5, 6, 7, 8), 'Koryo'] },
-  { title: 'Youth', detail: 'Ages 10–11', forms: [...taegeuk(4, 5, 6, 7, 8), ...AAU_BLACK.slice(0, 2)] },
-  { title: 'Cadet', detail: 'Ages 12–14', forms: [...taegeuk(4, 5, 6, 7, 8), ...AAU_BLACK.slice(0, 3)] },
-  { title: 'Junior', detail: 'Ages 15–17', forms: [...taegeuk(5, 6, 7, 8), ...AAU_BLACK.slice(0, 4)] },
-  { title: 'Under 30 / Under 40', detail: 'Ages 18–40', forms: [...taegeuk(7, 8), ...AAU_BLACK.slice(0, 6)] },
+  {
+    title: 'Youth',
+    detail: 'Ages 10–11',
+    forms: [...taegeuk(4, 5, 6, 7, 8), ...AAU_BLACK.slice(0, 2)],
+  },
+  {
+    title: 'Cadet',
+    detail: 'Ages 12–14',
+    forms: [...taegeuk(4, 5, 6, 7, 8), ...AAU_BLACK.slice(0, 3)],
+  },
+  {
+    title: 'Junior',
+    detail: 'Ages 15–17',
+    forms: [...taegeuk(5, 6, 7, 8), ...AAU_BLACK.slice(0, 4)],
+  },
+  {
+    title: 'Under 30 / Under 40',
+    detail: 'Ages 18–40',
+    forms: [...taegeuk(7, 8), ...AAU_BLACK.slice(0, 6)],
+  },
   { title: 'Under 50', detail: 'Ages 41–50', forms: [...taegeuk(8), ...AAU_BLACK.slice(0, 7)] },
   { title: 'Under 60 / Under 65 / Over 65', detail: 'Ages 51+', forms: AAU_BLACK },
 ]
 
 // Pair and team divisions use identical lists in the AAU chart.
 const aauPairsTeamsPoomsae = [
-  { title: 'Youth', detail: 'Ages 8–11', forms: [...taegeuk(4, 5, 6, 7, 8), ...AAU_BLACK.slice(0, 2)] },
-  { title: 'Cadet', detail: 'Ages 12–14', forms: [...taegeuk(4, 5, 6, 7, 8), ...AAU_BLACK.slice(0, 3)] },
-  { title: 'Junior', detail: 'Ages 15–17', forms: [...taegeuk(5, 6, 7, 8), ...AAU_BLACK.slice(0, 4)] },
+  {
+    title: 'Youth',
+    detail: 'Ages 8–11',
+    forms: [...taegeuk(4, 5, 6, 7, 8), ...AAU_BLACK.slice(0, 2)],
+  },
+  {
+    title: 'Cadet',
+    detail: 'Ages 12–14',
+    forms: [...taegeuk(4, 5, 6, 7, 8), ...AAU_BLACK.slice(0, 3)],
+  },
+  {
+    title: 'Junior',
+    detail: 'Ages 15–17',
+    forms: [...taegeuk(5, 6, 7, 8), ...AAU_BLACK.slice(0, 4)],
+  },
   { title: 'Under 30', detail: 'Ages 18–30', forms: [...taegeuk(7, 8), ...AAU_BLACK.slice(0, 6)] },
   { title: 'Under 50', detail: 'Ages 31–50', forms: [...taegeuk(8), ...AAU_BLACK.slice(0, 7)] },
   { title: 'Under 60 / Over 60', detail: 'Ages 51+', forms: AAU_BLACK },
 ]
 
 const aauColorBeltPoomsae = [
-  { title: 'Intermediate · Tyke / Minor', detail: 'Green, purple, blue · ages 9 and under', forms: taegeuk(2, 3, 4, 5) },
-  { title: 'Intermediate · Youth and up', detail: 'Green, purple, blue · ages 10+', forms: taegeuk(2, 3, 4, 5, 6) },
-  { title: 'Advanced · Tyke / Minor', detail: 'Brown, red · ages 9 and under', forms: taegeuk(3, 4, 5, 6, 7) },
-  { title: 'Advanced · Youth and up', detail: 'Brown, red · ages 10+', forms: taegeuk(3, 4, 5, 6, 7, 8) },
+  {
+    title: 'Intermediate · Tyke / Minor',
+    detail: 'Green, purple, blue · ages 9 and under',
+    forms: taegeuk(2, 3, 4, 5),
+  },
+  {
+    title: 'Intermediate · Youth and up',
+    detail: 'Green, purple, blue · ages 10+',
+    forms: taegeuk(2, 3, 4, 5, 6),
+  },
+  {
+    title: 'Advanced · Tyke / Minor',
+    detail: 'Brown, red · ages 9 and under',
+    forms: taegeuk(3, 4, 5, 6, 7),
+  },
+  {
+    title: 'Advanced · Youth and up',
+    detail: 'Brown, red · ages 10+',
+    forms: taegeuk(3, 4, 5, 6, 7, 8),
+  },
 ]
 
 // Required forms by organization. Each category lists cards of

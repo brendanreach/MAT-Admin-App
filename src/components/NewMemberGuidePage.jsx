@@ -38,10 +38,26 @@ const TABS = [
 ]
 
 const QUICK_LINKS = [
-  { tab: 'registration', title: 'Sign up for a tournament', text: 'Step-by-step registration, from Sport:80 to the deadline.' },
-  { tab: 'forms', title: 'Which forms do I need?', text: 'Required poomsae by organization, belt and age division.' },
-  { tab: 'sparring', title: 'Find a weight class', text: 'Sparring weight classes by age, level and gender.' },
-  { tab: 'tournament-day', title: 'Get ready for the day', text: 'A checklist for the night before and the venue.' },
+  {
+    tab: 'registration',
+    title: 'Sign up for a tournament',
+    text: 'Step-by-step registration, from Sport:80 to the deadline.',
+  },
+  {
+    tab: 'forms',
+    title: 'Which forms do I need?',
+    text: 'Required poomsae by organization, belt and age division.',
+  },
+  {
+    tab: 'sparring',
+    title: 'Find a weight class',
+    text: 'Sparring weight classes by age, level and gender.',
+  },
+  {
+    tab: 'tournament-day',
+    title: 'Get ready for the day',
+    text: 'A checklist for the night before and the venue.',
+  },
   { tab: 'glossary', title: 'Learn the lingo', text: 'Poomsae, kyorugi, geup, staging and more.' },
 ]
 
@@ -109,8 +125,15 @@ function StartHere({ onOpenTab }) {
           const tab = TABS.find((item) => item.id === link.tab)
           const Icon = tab.icon
           return (
-            <button key={link.tab} type="button" className="mat-guide-quick-card" onClick={() => onOpenTab(link.tab)}>
-              <span className="mat-guide-quick-icon"><Icon size={20} /></span>
+            <button
+              key={link.tab}
+              type="button"
+              className="mat-guide-quick-card"
+              onClick={() => onOpenTab(link.tab)}
+            >
+              <span className="mat-guide-quick-icon">
+                <Icon size={20} />
+              </span>
               <span className="mat-guide-quick-text">
                 <strong>{link.title}</strong>
                 <small>{link.text}</small>
@@ -122,7 +145,8 @@ function StartHere({ onOpenTab }) {
       </div>
 
       <Callout icon={ShieldCheck}>
-        <strong>{guideRuleVersion.label}</strong> · checked {guideRuleVersion.verified}. {guideRuleVersion.note}
+        <strong>{guideRuleVersion.label}</strong> · checked {guideRuleVersion.verified}.{' '}
+        {guideRuleVersion.note}
       </Callout>
     </>
   )
@@ -130,8 +154,11 @@ function StartHere({ onOpenTab }) {
 
 // First step number of each phase, so numbering runs on across phases.
 const PHASE_START_NUMBERS = registrationPhases.reduce(
-  (starts, phase, index) => [...starts, index === 0 ? 1 : starts[index - 1] + registrationPhases[index - 1].steps.length],
-  []
+  (starts, phase, index) => [
+    ...starts,
+    index === 0 ? 1 : starts[index - 1] + registrationPhases[index - 1].steps.length,
+  ],
+  [],
 )
 
 function RegistrationGuide() {
@@ -149,12 +176,19 @@ function RegistrationGuide() {
               {phase.steps.map((step, stepIndex) => {
                 return (
                   <li key={step.title}>
-                    <span className="mat-guide-step-number">{PHASE_START_NUMBERS[phaseIndex] + stepIndex}</span>
+                    <span className="mat-guide-step-number">
+                      {PHASE_START_NUMBERS[phaseIndex] + stepIndex}
+                    </span>
                     <div>
                       <strong>{step.title}</strong>
                       <p>{step.text}</p>
                       {step.linkUrl && (
-                        <a href={step.linkUrl} target="_blank" rel="noopener noreferrer" className="mat-guide-link">
+                        <a
+                          href={step.linkUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="mat-guide-link"
+                        >
                           {step.linkLabel}
                           <ExternalLink size={14} />
                         </a>
@@ -182,8 +216,9 @@ function FormsGuide() {
   const category = org.categories.find((item) => item.id === categoryId) || org.categories[0]
 
   const query = search.trim().toLowerCase()
-  const items = (category?.items || []).filter((item) =>
-    !query || [item.title, item.detail, ...item.forms].join(' ').toLowerCase().includes(query)
+  const items = (category?.items || []).filter(
+    (item) =>
+      !query || [item.title, item.detail, ...item.forms].join(' ').toLowerCase().includes(query),
   )
 
   function changeOrg(nextOrgId) {
@@ -221,7 +256,10 @@ function FormsGuide() {
         <div className="mat-guide-pending">
           <GraduationCap size={28} aria-hidden="true" />
           <strong>{org.label} form lists are being added</strong>
-          <p>Until then, check the tournament information packet or ask a MAT coach which forms you need.</p>
+          <p>
+            Until then, check the tournament information packet or ask a MAT coach which forms you
+            need.
+          </p>
         </div>
       ) : (
         <>
@@ -230,7 +268,10 @@ function FormsGuide() {
               label="Category"
               options={org.categories.map((item) => ({ value: item.id, label: item.label }))}
               value={category.id}
-              onChange={(value) => { setCategoryId(value); setSearch('') }}
+              onChange={(value) => {
+                setCategoryId(value)
+                setSearch('')
+              }}
             />
             <label className="mat-guide-search">
               <Search size={17} aria-hidden="true" />
@@ -248,14 +289,19 @@ function FormsGuide() {
 
           <div className="mat-guide-form-grid">
             {items.map((item, index) => (
-              <article key={`${item.title}-${item.detail}-${index}`} className="mat-guide-form-card">
+              <article
+                key={`${item.title}-${item.detail}-${index}`}
+                className="mat-guide-form-card"
+              >
                 <header>
                   <span>{category.cardLabel}</span>
                   <h3>{item.title}</h3>
                   <small>{item.detail}</small>
                 </header>
                 <ul>
-                  {item.forms.map((form) => <li key={form}>{form}</li>)}
+                  {item.forms.map((form) => (
+                    <li key={form}>{form}</li>
+                  ))}
                 </ul>
               </article>
             ))}
@@ -266,7 +312,8 @@ function FormsGuide() {
           )}
 
           <Callout>
-            These are the full pools a form can be drawn from. Each tournament announces its designated forms separately.
+            These are the full pools a form can be drawn from. Each tournament announces its
+            designated forms separately.
           </Callout>
         </>
       )}
@@ -281,7 +328,9 @@ function SparringGuide() {
 
   const selectedDivision = sparringDivisions.find((item) => item.id === division)
   const availableClasses = selectedDivision?.availableClasses || []
-  const level = availableClasses.includes(competitionClass) ? competitionClass : availableClasses[0] || 'aspiring'
+  const level = availableClasses.includes(competitionClass)
+    ? competitionClass
+    : availableClasses[0] || 'aspiring'
   const weights = getSparringWeights(division, level, gender)
 
   return (
@@ -293,7 +342,10 @@ function SparringGuide() {
       <div className="mat-guide-sparring-controls">
         <PillGroup
           label="Age division"
-          options={sparringDivisions.map((item) => ({ value: item.id, label: `${item.label} · ${item.ages}` }))}
+          options={sparringDivisions.map((item) => ({
+            value: item.id,
+            label: `${item.label} · ${item.ages}`,
+          }))}
           value={division}
           onChange={setDivision}
         />
@@ -301,15 +353,22 @@ function SparringGuide() {
           <PillGroup
             label="Level"
             options={[
-              ...(availableClasses.includes('world') ? [{ value: 'world', label: 'World Class' }] : []),
-              ...(availableClasses.includes('aspiring') ? [{ value: 'aspiring', label: 'Aspiring' }] : []),
+              ...(availableClasses.includes('world')
+                ? [{ value: 'world', label: 'World Class' }]
+                : []),
+              ...(availableClasses.includes('aspiring')
+                ? [{ value: 'aspiring', label: 'Aspiring' }]
+                : []),
             ]}
             value={level}
             onChange={setCompetitionClass}
           />
           <PillGroup
             label="Gender"
-            options={[{ value: 'male', label: 'Male' }, { value: 'female', label: 'Female' }]}
+            options={[
+              { value: 'male', label: 'Male' },
+              { value: 'female', label: 'Female' },
+            ]}
             value={gender}
             onChange={setGender}
           />
@@ -318,16 +377,20 @@ function SparringGuide() {
 
       <section className="mat-guide-weight-panel" aria-live="polite">
         <h3>
-          {selectedDivision?.label} · {level === 'world' ? 'World Class' : 'Aspiring'} · {gender === 'male' ? 'Male' : 'Female'}
+          {selectedDivision?.label} · {level === 'world' ? 'World Class' : 'Aspiring'} ·{' '}
+          {gender === 'male' ? 'Male' : 'Female'}
         </h3>
         <p>Competition age {selectedDivision?.ages}</p>
         <ul>
-          {weights.map((weight) => <li key={weight}>{weight}</li>)}
+          {weights.map((weight) => (
+            <li key={weight}>{weight}</li>
+          ))}
         </ul>
       </section>
 
       <Callout icon={ShieldCheck}>
-        Weight classes are competition divisions, not target body weights. Talk with your MAT coach about the right division.
+        Weight classes are competition divisions, not target body weights. Talk with your MAT coach
+        about the right division.
       </Callout>
     </>
   )
@@ -343,10 +406,16 @@ function TournamentDayGuide() {
       <div className="mat-guide-day-grid">
         {tournamentDayGroups.map((group) => (
           <section key={group.id} className="mat-guide-day-card">
-            <h3><CalendarCheck size={18} aria-hidden="true" />{group.title}</h3>
+            <h3>
+              <CalendarCheck size={18} aria-hidden="true" />
+              {group.title}
+            </h3>
             <ul>
               {group.items.map((item) => (
-                <li key={item}><CheckCircle2 size={18} aria-hidden="true" /><span>{item}</span></li>
+                <li key={item}>
+                  <CheckCircle2 size={18} aria-hidden="true" />
+                  <span>{item}</span>
+                </li>
               ))}
             </ul>
           </section>
@@ -425,7 +494,9 @@ export default function NewMemberGuidePage({ onNavigate }) {
       </button>
 
       <section className="mat-guide-hero">
-        <div className="mat-guide-hero-icon"><GraduationCap size={28} /></div>
+        <div className="mat-guide-hero-icon">
+          <GraduationCap size={28} />
+        </div>
         <div>
           <div className="mat-eyebrow">Michigan Academy of Taekwondo</div>
           <h1>New Member Guide</h1>
@@ -433,7 +504,12 @@ export default function NewMemberGuidePage({ onNavigate }) {
         </div>
       </section>
 
-      <div className="mat-guide-tabs" role="tablist" aria-label="Guide topics" onKeyDown={handleTabKeyDown}>
+      <div
+        className="mat-guide-tabs"
+        role="tablist"
+        aria-label="Guide topics"
+        onKeyDown={handleTabKeyDown}
+      >
         {TABS.map((tab) => {
           const Icon = tab.icon
           const selected = tab.id === activeTab

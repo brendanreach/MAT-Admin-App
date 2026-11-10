@@ -55,17 +55,24 @@ export default function ResultApprovalsPage({
     load()
   }, [load])
 
-  const membersById = useMemo(() => new Map(members.map((member) => [member.id, member])), [members])
-  const tournamentsById = useMemo(() => new Map(tournaments.map((tournament) => [tournament.id, tournament])), [tournaments])
+  const membersById = useMemo(
+    () => new Map(members.map((member) => [member.id, member])),
+    [members],
+  )
+  const tournamentsById = useMemo(
+    () => new Map(tournaments.map((tournament) => [tournament.id, tournament])),
+    [tournaments],
+  )
 
   // What is officially recorded today for this athlete, tournament and event.
   function getOfficialRecord(submission) {
     const entry = allTournamentEntries.find(
-      (item) => item.tournament_id === submission.tournament_id && item.member_id === submission.member_id
+      (item) =>
+        item.tournament_id === submission.tournament_id && item.member_id === submission.member_id,
     )
     if (!entry || !(entry.events || []).includes(submission.event_name)) return null
     const result = tournamentResults.find(
-      (item) => item.tournament_entry_id === entry.id && item.event_name === submission.event_name
+      (item) => item.tournament_entry_id === entry.id && item.event_name === submission.event_name,
     )
     return { stage: result?.result_stage || '', division: result?.division || '' }
   }
@@ -78,12 +85,21 @@ export default function ResultApprovalsPage({
   const groups = useMemo(() => {
     const byTournament = new Map()
     submissions.forEach((submission) => {
-      if (!byTournament.has(submission.tournament_id)) byTournament.set(submission.tournament_id, [])
+      if (!byTournament.has(submission.tournament_id))
+        byTournament.set(submission.tournament_id, [])
       byTournament.get(submission.tournament_id).push(submission)
     })
     return [...byTournament.entries()]
-      .map(([tournamentId, items]) => ({ tournament: tournamentsById.get(tournamentId), tournamentId, items }))
-      .sort((a, b) => String(b.tournament?.event_date || '').localeCompare(String(a.tournament?.event_date || '')))
+      .map(([tournamentId, items]) => ({
+        tournament: tournamentsById.get(tournamentId),
+        tournamentId,
+        items,
+      }))
+      .sort((a, b) =>
+        String(b.tournament?.event_date || '').localeCompare(
+          String(a.tournament?.event_date || ''),
+        ),
+      )
   }, [submissions, tournamentsById])
 
   async function review(items, approve, note) {
@@ -104,9 +120,14 @@ export default function ResultApprovalsPage({
     setRejecting({ id: '', note: '' })
     await Promise.all([load(), onReviewed?.()])
     setBusyIds((current) => current.filter((id) => !ids.includes(id)))
-    setMessage(failed
-      ? { type: 'error', text: failed }
-      : { type: 'success', text: `${items.length} result${items.length === 1 ? '' : 's'} ${approve ? 'approved' : 'rejected'}.` })
+    setMessage(
+      failed
+        ? { type: 'error', text: failed }
+        : {
+            type: 'success',
+            text: `${items.length} result${items.length === 1 ? '' : 's'} ${approve ? 'approved' : 'rejected'}.`,
+          },
+    )
   }
 
   function changeView(nextView) {
@@ -119,9 +140,10 @@ export default function ResultApprovalsPage({
   function renderSubmission(submission) {
     const official = getOfficialRecord(submission)
     const busy = busyIds.includes(submission.id)
-    const unchanged = official
-      && official.stage === (submission.result_stage || '')
-      && (!submission.division || submission.division === official.division)
+    const unchanged =
+      official &&
+      official.stage === (submission.result_stage || '') &&
+      (!submission.division || submission.division === official.division)
 
     return (
       <article key={submission.id} className="mat-approval-card">
@@ -139,7 +161,11 @@ export default function ResultApprovalsPage({
             </div>
             <div>
               <small>On record</small>
-              {official ? <StageBadge stage={official.stage} /> : <span className="mat-approval-none">Not entered</span>}
+              {official ? (
+                <StageBadge stage={official.stage} />
+              ) : (
+                <span className="mat-approval-none">Not entered</span>
+              )}
               {official?.division && <em>{official.division}</em>}
             </div>
           </div>
@@ -153,7 +179,8 @@ export default function ResultApprovalsPage({
               <>
                 {' · '}
                 <span className={`mat-approval-status ${submission.status}`}>
-                  {submission.status === 'approved' ? 'Approved' : 'Rejected'} {formatDate(submission.reviewed_at)}
+                  {submission.status === 'approved' ? 'Approved' : 'Rejected'}{' '}
+                  {formatDate(submission.reviewed_at)}
                 </span>
                 {submission.review_note && ` · “${submission.review_note}”`}
               </>
@@ -161,8 +188,8 @@ export default function ResultApprovalsPage({
           </div>
         </div>
 
-        {view === 'pending' && (
-          rejecting.id === submission.id ? (
+        {view === 'pending' &&
+          (rejecting.id === submission.id ? (
             <div className="mat-approval-reject">
               <input
                 type="text"
@@ -174,10 +201,20 @@ export default function ResultApprovalsPage({
                 autoFocus
               />
               <div>
-                <button type="button" className="mat-secondary-button" onClick={() => setRejecting({ id: '', note: '' })} disabled={busy}>
+                <button
+                  type="button"
+                  className="mat-secondary-button"
+                  onClick={() => setRejecting({ id: '', note: '' })}
+                  disabled={busy}
+                >
                   Cancel
                 </button>
-                <button type="button" className="mat-approval-reject-button" onClick={() => review([submission], false, rejecting.note)} disabled={busy}>
+                <button
+                  type="button"
+                  className="mat-approval-reject-button"
+                  onClick={() => review([submission], false, rejecting.note)}
+                  disabled={busy}
+                >
                   <X size={16} />
                   Reject
                 </button>
@@ -185,17 +222,26 @@ export default function ResultApprovalsPage({
             </div>
           ) : (
             <div className="mat-approval-actions">
-              <button type="button" className="mat-secondary-button" onClick={() => setRejecting({ id: submission.id, note: '' })} disabled={busy}>
+              <button
+                type="button"
+                className="mat-secondary-button"
+                onClick={() => setRejecting({ id: submission.id, note: '' })}
+                disabled={busy}
+              >
                 <X size={16} />
                 Reject
               </button>
-              <button type="button" className="mat-primary-button" onClick={() => review([submission], true)} disabled={busy}>
+              <button
+                type="button"
+                className="mat-primary-button"
+                onClick={() => review([submission], true)}
+                disabled={busy}
+              >
                 <Check size={16} />
                 {busy ? 'Saving...' : 'Approve'}
               </button>
             </div>
-          )
-        )}
+          ))}
       </article>
     )
   }
@@ -207,24 +253,37 @@ export default function ResultApprovalsPage({
           <div className="mat-eyebrow">Admin Review</div>
           <h1 className="mat-section-title">Result Approvals</h1>
           <p className="mat-section-description">
-            Results athletes reported for past tournaments. Approved results update the official tournament record.
+            Results athletes reported for past tournaments. Approved results update the official
+            tournament record.
           </p>
         </div>
       </div>
 
       <div className="mat-tournament-tabs">
-        <button type="button" className={view === 'pending' ? 'active' : ''} onClick={() => changeView('pending')}>
+        <button
+          type="button"
+          className={view === 'pending' ? 'active' : ''}
+          onClick={() => changeView('pending')}
+        >
           <ClipboardCheck size={18} />
           Pending
           {view === 'pending' && !loading && <span>{submissions.length}</span>}
         </button>
-        <button type="button" className={view === 'reviewed' ? 'active' : ''} onClick={() => changeView('reviewed')}>
+        <button
+          type="button"
+          className={view === 'reviewed' ? 'active' : ''}
+          onClick={() => changeView('reviewed')}
+        >
           <History size={18} />
           Reviewed
         </button>
       </div>
 
-      {message && <div className={`mat-registration-message ${message.type} mat-approval-message`}>{message.text}</div>}
+      {message && (
+        <div className={`mat-registration-message ${message.type} mat-approval-message`}>
+          {message.text}
+        </div>
+      )}
 
       {loading ? (
         <div className="mat-approval-empty">Loading...</div>
@@ -249,10 +308,18 @@ export default function ResultApprovalsPage({
                 <header>
                   <div>
                     <h2>{tournament?.name || 'Tournament'}</h2>
-                    <span>{tournament ? formatDate(tournament.event_date) : ''} · {items.length} result{items.length === 1 ? '' : 's'}</span>
+                    <span>
+                      {tournament ? formatDate(tournament.event_date) : ''} · {items.length} result
+                      {items.length === 1 ? '' : 's'}
+                    </span>
                   </div>
                   {view === 'pending' && items.length > 1 && (
-                    <button type="button" className="mat-secondary-button" onClick={() => review(items, true)} disabled={groupBusy}>
+                    <button
+                      type="button"
+                      className="mat-secondary-button"
+                      onClick={() => review(items, true)}
+                      disabled={groupBusy}
+                    >
                       <CheckCheck size={16} />
                       Approve All {items.length}
                     </button>

@@ -104,45 +104,57 @@ function AthleteTournamentsPage({
   }, [selectedTournamentId])
 
   const records = useMemo(
-    () => tournaments.map((tournament) => {
-      const entry = tournamentEntries.find((item) => item.tournament_id === tournament.id) || null
-      const results = entry
-        ? tournamentResults.filter((result) => result.tournament_entry_id === entry.id)
-        : []
-      const medals = { gold: 0, silver: 0, bronze: 0 }
+    () =>
+      tournaments.map((tournament) => {
+        const entry = tournamentEntries.find((item) => item.tournament_id === tournament.id) || null
+        const results = entry
+          ? tournamentResults.filter((result) => result.tournament_entry_id === entry.id)
+          : []
+        const medals = { gold: 0, silver: 0, bronze: 0 }
 
-      results.forEach((result) => {
-        const stage = getResultStage(result)
-        if (MEDAL_STAGES.includes(stage)) medals[stage.toLowerCase()] += 1
-      })
+        results.forEach((result) => {
+          const stage = getResultStage(result)
+          if (MEDAL_STAGES.includes(stage)) medals[stage.toLowerCase()] += 1
+        })
 
-      return { tournament, entry, results, medals }
-    }),
-    [tournaments, tournamentEntries, tournamentResults]
+        return { tournament, entry, results, medals }
+      }),
+    [tournaments, tournamentEntries, tournamentResults],
   )
 
   const upcomingRecords = useMemo(
-    () => records
-      .filter(({ tournament }) => {
-        const finalDate = tournament.end_date || tournament.event_date
-        return !finalDate || finalDate >= todayString
-      })
-      .sort((a, b) => String(a.tournament.event_date || '').localeCompare(String(b.tournament.event_date || ''))),
-    [records, todayString]
+    () =>
+      records
+        .filter(({ tournament }) => {
+          const finalDate = tournament.end_date || tournament.event_date
+          return !finalDate || finalDate >= todayString
+        })
+        .sort((a, b) =>
+          String(a.tournament.event_date || '').localeCompare(
+            String(b.tournament.event_date || ''),
+          ),
+        ),
+    [records, todayString],
   )
 
   const archivedRecords = useMemo(
-    () => records
-      .filter(({ tournament }) => {
-        const finalDate = tournament.end_date || tournament.event_date
-        return finalDate && finalDate < todayString
-      })
-      .sort((a, b) => String(b.tournament.event_date || '').localeCompare(String(a.tournament.event_date || ''))),
-    [records, todayString]
+    () =>
+      records
+        .filter(({ tournament }) => {
+          const finalDate = tournament.end_date || tournament.event_date
+          return finalDate && finalDate < todayString
+        })
+        .sort((a, b) =>
+          String(b.tournament.event_date || '').localeCompare(
+            String(a.tournament.event_date || ''),
+          ),
+        ),
+    [records, todayString],
   )
 
   const visibleRecords = viewMode === 'archive' ? archivedRecords : upcomingRecords
-  const selectedRecord = visibleRecords.find(({ tournament }) => tournament.id === selectedTournamentId) || null
+  const selectedRecord =
+    visibleRecords.find(({ tournament }) => tournament.id === selectedTournamentId) || null
   const isSelectedArchived = viewMode === 'archive'
 
   function handleViewChange(nextView) {
@@ -171,7 +183,9 @@ function AthleteTournamentsPage({
   }
 
   function isRegistrationClosed(tournament) {
-    return Boolean(tournament.registration_deadline && tournament.registration_deadline < todayString)
+    return Boolean(
+      tournament.registration_deadline && tournament.registration_deadline < todayString,
+    )
   }
 
   function getDraftEvents(tournament, entry) {
@@ -215,7 +229,11 @@ function AthleteTournamentsPage({
     } else {
       if (onEntriesChanged) await onEntriesChanged()
       cancelEditingEvents()
-      setRegistrationMessage({ tournamentId: tournament.id, type: 'success', text: 'Your events have been updated.' })
+      setRegistrationMessage({
+        tournamentId: tournament.id,
+        type: 'success',
+        text: 'Your events have been updated.',
+      })
     }
 
     setRegistrationBusy(false)
@@ -244,7 +262,11 @@ function AthleteTournamentsPage({
     } else {
       if (onEntriesChanged) await onEntriesChanged()
       setEventDraft({ tournamentId: '', events: [] })
-      setRegistrationMessage({ tournamentId: tournament.id, type: 'success', text: 'You are marked as registered. Your coaches can now see you on the participant list.' })
+      setRegistrationMessage({
+        tournamentId: tournament.id,
+        type: 'success',
+        text: 'You are marked as registered. Your coaches can now see you on the participant list.',
+      })
     }
 
     setRegistrationBusy(false)
@@ -252,7 +274,12 @@ function AthleteTournamentsPage({
 
   async function undoRegistration(entry) {
     if (registrationBusy) return
-    if (!window.confirm('Remove your registration for this tournament from the MAT app? This does not cancel anything on the tournament organizer\'s site.')) return
+    if (
+      !window.confirm(
+        "Remove your registration for this tournament from the MAT app? This does not cancel anything on the tournament organizer's site.",
+      )
+    )
+      return
     setRegistrationBusy(true)
     setRegistrationMessage(null)
 
@@ -261,10 +288,18 @@ function AthleteTournamentsPage({
     })
 
     if (error) {
-      setRegistrationMessage({ tournamentId: entry.tournament_id, type: 'error', text: error.message })
+      setRegistrationMessage({
+        tournamentId: entry.tournament_id,
+        type: 'error',
+        text: error.message,
+      })
     } else {
       if (onEntriesChanged) await onEntriesChanged()
-      setRegistrationMessage({ tournamentId: entry.tournament_id, type: 'success', text: 'Your registration has been removed from the MAT app.' })
+      setRegistrationMessage({
+        tournamentId: entry.tournament_id,
+        type: 'success',
+        text: 'Your registration has been removed from the MAT app.',
+      })
     }
 
     setRegistrationBusy(false)
@@ -277,7 +312,8 @@ function AthleteTournamentsPage({
     return (
       <fieldset className="mat-registration-events">
         <legend>
-          Which events are you registered for? <span className="mat-registration-required">Required</span>
+          Which events are you registered for?{' '}
+          <span className="mat-registration-required">Required</span>
         </legend>
 
         <div className="mat-registration-event-groups">
@@ -287,7 +323,10 @@ function AthleteTournamentsPage({
               {group.events.map((eventName) => {
                 const checked = selected.includes(eventName)
                 return (
-                  <label key={eventName} className={`mat-tournament-event-option ${checked ? 'selected' : ''}`}>
+                  <label
+                    key={eventName}
+                    className={`mat-tournament-event-option ${checked ? 'selected' : ''}`}
+                  >
                     <input
                       type="checkbox"
                       checked={checked}
@@ -330,11 +369,15 @@ function AthleteTournamentsPage({
     )
 
     return (
-      <div className={`mat-registration-card ${entry ? 'registered' : closed ? 'closed' : ''} ${showPicker ? 'with-picker' : ''}`}>
+      <div
+        className={`mat-registration-card ${entry ? 'registered' : closed ? 'closed' : ''} ${showPicker ? 'with-picker' : ''}`}
+      >
         <div className="mat-registration-card-text">
           {entry ? (
             <>
-              <strong><CheckCircle2 size={18} /> You are registered</strong>
+              <strong>
+                <CheckCircle2 size={18} /> You are registered
+              </strong>
               <span>
                 {entry.self_registered
                   ? 'You marked yourself as registered. Your coaches can see you and your events.'
@@ -351,7 +394,7 @@ function AthleteTournamentsPage({
               <strong>Want to compete?</strong>
               <span>
                 {tournament.registration_url
-                  ? '1. Sign up and pay on the tournament\'s registration page. 2. Come back, tick the events you signed up for, and click Registered.'
+                  ? "1. Sign up and pay on the tournament's registration page. 2. Come back, tick the events you signed up for, and click Registered."
                   : 'Sign up with the tournament organizer, then tick the events you signed up for and click Registered. Ask your coach if you need the sign-up page.'}
               </span>
             </>
@@ -450,7 +493,12 @@ function AthleteTournamentsPage({
         onClick={() => setSelectedTournamentId(tournament.id)}
       >
         {tournament.poster_url && (
-          <img className="mat-tournament-tile-poster" src={tournament.poster_url} alt="" loading="lazy" />
+          <img
+            className="mat-tournament-tile-poster"
+            src={tournament.poster_url}
+            alt=""
+            loading="lazy"
+          />
         )}
 
         <div className="mat-tournament-tile-top">
@@ -487,7 +535,11 @@ function AthleteTournamentsPage({
             </div>
           ) : (
             <div>
-              <strong>{tournament.registration_deadline ? formatDate(tournament.registration_deadline) : '—'}</strong>
+              <strong>
+                {tournament.registration_deadline
+                  ? formatDate(tournament.registration_deadline)
+                  : '—'}
+              </strong>
               <span>Registration Deadline</span>
             </div>
           )}
@@ -509,7 +561,11 @@ function AthleteTournamentsPage({
       <section className="mat-tournament-detail" ref={tournamentDetailRef}>
         <div className="mat-tournament-detail-hero">
           <div>
-            <button type="button" className="mat-tournament-close-detail" onClick={() => setSelectedTournamentId('')}>
+            <button
+              type="button"
+              className="mat-tournament-close-detail"
+              onClick={() => setSelectedTournamentId('')}
+            >
               <X size={16} />
               Close Details
             </button>
@@ -544,7 +600,12 @@ function AthleteTournamentsPage({
               {tournament.poster_url && (
                 <div>
                   <Image size={17} />
-                  <a className="mat-tournament-registration-url" href={tournament.poster_url} target="_blank" rel="noopener noreferrer">
+                  <a
+                    className="mat-tournament-registration-url"
+                    href={tournament.poster_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     View Event Poster
                   </a>
                 </div>
@@ -603,7 +664,9 @@ function AthleteTournamentsPage({
                 <Ticket size={20} />
               </div>
               <div>
-                <div className="mat-historical-stat-value">{formatFee(tournament.spectator_fee)}</div>
+                <div className="mat-historical-stat-value">
+                  {formatFee(tournament.spectator_fee)}
+                </div>
                 <span className="mat-historical-stat-label">Spectator Fee</span>
               </div>
             </div>
@@ -647,7 +710,9 @@ function AthleteTournamentsPage({
           ) : eventCount === 0 ? (
             <div className="mat-tournament-no-athletes">
               <Target size={30} />
-              <div className="mat-historical-stat-value">No events have been recorded for this entry.</div>
+              <div className="mat-historical-stat-value">
+                No events have been recorded for this entry.
+              </div>
             </div>
           ) : (
             <div className="mat-athlete-tournament-events">
@@ -663,7 +728,9 @@ function AthleteTournamentsPage({
                       {result?.division && <span>{result.division}</span>}
                     </div>
                     {stage && (
-                      <span className={`mat-athlete-result-badge ${isMedal ? stage.toLowerCase() : ''}`}>
+                      <span
+                        className={`mat-athlete-result-badge ${isMedal ? stage.toLowerCase() : ''}`}
+                      >
                         {isMedal && <Medal size={13} />}
                         {stage}
                       </span>
@@ -713,7 +780,8 @@ function AthleteTournamentsPage({
         <div className="mat-athlete-link-missing">
           <h2>Athlete Profile Not Linked</h2>
           <p>
-            You can view the team tournament schedule, but registration status cannot be matched to your profile.
+            You can view the team tournament schedule, but registration status cannot be matched to
+            your profile.
           </p>
         </div>
       )}
@@ -744,7 +812,9 @@ function AthleteTournamentsPage({
           <div className="mat-tournament-empty-icon">
             {viewMode === 'archive' ? <Archive size={34} /> : <Trophy size={34} />}
           </div>
-          <h2>{viewMode === 'archive' ? 'No tournament history yet' : 'No upcoming tournaments'}</h2>
+          <h2>
+            {viewMode === 'archive' ? 'No tournament history yet' : 'No upcoming tournaments'}
+          </h2>
           <p>
             {viewMode === 'archive'
               ? 'Completed tournaments will automatically appear here.'
@@ -752,9 +822,7 @@ function AthleteTournamentsPage({
           </p>
         </div>
       ) : (
-        <div className="mat-tournament-grid">
-          {visibleRecords.map(renderTile)}
-        </div>
+        <div className="mat-tournament-grid">{visibleRecords.map(renderTile)}</div>
       )}
 
       {selectedRecord && renderDetail()}

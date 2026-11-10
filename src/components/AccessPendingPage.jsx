@@ -23,15 +23,15 @@ export default function AccessPendingPage({ email, onLogout }) {
         <h1 id="access-pending-title">Access Pending</h1>
 
         <p className="mat-access-pending-summary">
-          Your account was authenticated successfully, but access to the
-          MAT Competition Team Portal has not yet been granted.
+          Your account was authenticated successfully, but access to the MAT Competition Team Portal
+          has not yet been granted.
         </p>
 
         <div className="mat-access-pending-notice">
           <strong>What happens next?</strong>
           <p>
-            A team administrator must approve the account, assign the proper
-            role, and link the account to the appropriate athlete when needed.
+            A team administrator must approve the account, assign the proper role, and link the
+            account to the appropriate athlete when needed.
           </p>
         </div>
 
@@ -41,9 +41,8 @@ export default function AccessPendingPage({ email, onLogout }) {
         </div>
 
         <p className="mat-access-pending-help">
-          Please contact a Mr. Brendan to request
-          access. After approval, sign out and sign back in to refresh the
-          account permissions.
+          Please contact a Mr. Brendan to request access. After approval, sign out and sign back in
+          to refresh the account permissions.
         </p>
 
         <button type="button" className="mat-access-pending-logout" onClick={onLogout}>

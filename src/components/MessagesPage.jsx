@@ -5,7 +5,12 @@ import DiscussionsPage from './DiscussionsPage.jsx'
 import './MessagesPage.css'
 import './DirectMessages.css'
 
-export default function MessagesPage({ accountId, roles = [], unreadMessageCount = 0, onReadStateChanged }) {
+export default function MessagesPage({
+  accountId,
+  roles = [],
+  unreadMessageCount = 0,
+  onReadStateChanged,
+}) {
   // Open straight to Direct Messages when something is waiting to be read.
   const [section, setSection] = useState(unreadMessageCount > 0 ? 'direct' : 'discussions')
 
@@ -42,7 +47,11 @@ export default function MessagesPage({ accountId, roles = [], unreadMessageCount
       {section === 'discussions' ? (
         <DiscussionsPage accountId={accountId} roles={roles} />
       ) : (
-        <DirectMessages accountId={accountId} roles={roles} onReadStateChanged={onReadStateChanged} />
+        <DirectMessages
+          accountId={accountId}
+          roles={roles}
+          onReadStateChanged={onReadStateChanged}
+        />
       )}
     </div>
   )

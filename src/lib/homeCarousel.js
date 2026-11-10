@@ -40,9 +40,27 @@ export const SLIDE_TARGETS = [
 ]
 
 const DEFAULT_ROWS = [
-  { id: 'default-next_tournament', slide_type: 'next_tournament', audience: 'everyone', is_active: true, sort_order: 10 },
-  { id: 'default-latest_discussion', slide_type: 'latest_discussion', audience: 'everyone', is_active: true, sort_order: 20 },
-  { id: 'default-welcome', slide_type: 'welcome', audience: 'everyone', is_active: true, sort_order: 30 },
+  {
+    id: 'default-next_tournament',
+    slide_type: 'next_tournament',
+    audience: 'everyone',
+    is_active: true,
+    sort_order: 10,
+  },
+  {
+    id: 'default-latest_discussion',
+    slide_type: 'latest_discussion',
+    audience: 'everyone',
+    is_active: true,
+    sort_order: 20,
+  },
+  {
+    id: 'default-welcome',
+    slide_type: 'welcome',
+    audience: 'everyone',
+    is_active: true,
+    sort_order: 30,
+  },
 ]
 
 const SIGNED_URL_SECONDS = 60 * 60
@@ -111,7 +129,10 @@ export function buildCarouselSlides(rows, { view, nextTournament, topic, welcome
   const today = getTodayString()
 
   return rows
-    .filter((row) => row.is_active && audienceMatchesView(row.audience, view) && isSlideScheduledNow(row, today))
+    .filter(
+      (row) =>
+        row.is_active && audienceMatchesView(row.audience, view) && isSlideScheduledNow(row, today),
+    )
     .map((row) => {
       const image = getSlideImage(row)
 
@@ -199,7 +220,9 @@ export function useHomeCarouselRows() {
         console.error('Could not load home carousel images:', signError.message)
       } else {
         urlsByPath = Object.fromEntries(
-          (signed || []).filter((item) => item.signedUrl).map((item) => [item.path, item.signedUrl])
+          (signed || [])
+            .filter((item) => item.signedUrl)
+            .map((item) => [item.path, item.signedUrl]),
         )
       }
     }
@@ -232,7 +255,9 @@ export function useRecentTopics(limit = 5) {
       if (active && !error) setTopics(data || [])
     }
     loadTopics()
-    return () => { active = false }
+    return () => {
+      active = false
+    }
   }, [limit])
 
   return topics
@@ -243,7 +268,10 @@ function canvasToBlob(canvas, type, quality) {
 }
 
 // Shrinks a photo in the browser so uploads stay small (usually well under 1 MB).
-export async function compressCarouselImage(file, { maxWidth = 1920, maxHeight = 1080, quality = 0.82 } = {}) {
+export async function compressCarouselImage(
+  file,
+  { maxWidth = 1920, maxHeight = 1080, quality = 0.82 } = {},
+) {
   if (!file || !file.type.startsWith('image/')) {
     throw new Error('Please choose an image file (JPG, PNG or WebP).')
   }

@@ -1,8 +1,4 @@
-import {
-  useEffect,
-  useMemo,
-  useState,
-} from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 import { supabase } from './lib/supabase.js'
 import { attachPosterUrls } from './lib/tournamentPosters.js'
@@ -55,130 +51,65 @@ function normalizeRoles(roles) {
     return []
   }
 
-  return roles
-    .filter(Boolean)
-    .map((role) =>
-      String(role)
-        .trim()
-        .toLowerCase()
-    )
+  return roles.filter(Boolean).map((role) => String(role).trim().toLowerCase())
 }
 
 function App() {
-  const [session, setSession] =
-    useState(null)
+  const [session, setSession] = useState(null)
 
-  const [loading, setLoading] =
-    useState(true)
+  const [loading, setLoading] = useState(true)
 
-  const [
-    accountLoading,
-    setAccountLoading,
-  ] = useState(false)
+  const [accountLoading, setAccountLoading] = useState(false)
 
-  const [
-    accountProfile,
-    setAccountProfile,
-  ] = useState(null)
+  const [accountProfile, setAccountProfile] = useState(null)
 
-  const [
-    accountMemberLinks,
-    setAccountMemberLinks,
-  ] = useState([])
+  const [accountMemberLinks, setAccountMemberLinks] = useState([])
 
   // The athlete picked in this session, tagged with the account that
   // picked it so a different login never inherits the choice.
-  const [
-    athleteSelection,
-    setAthleteSelection,
-  ] = useState(null)
+  const [athleteSelection, setAthleteSelection] = useState(null)
 
-  const [
-    viewMode,
-    setViewMode,
-  ] = useState('admin')
+  const [viewMode, setViewMode] = useState('admin')
 
-  const [
-    activeTab,
-    setActiveTab,
-  ] = useState('home')
+  const [activeTab, setActiveTab] = useState('home')
 
-  const [
-    members,
-    setMembers,
-  ] = useState([])
+  const [members, setMembers] = useState([])
 
-  const [
-    tournaments,
-    setTournaments,
-  ] = useState([])
+  const [tournaments, setTournaments] = useState([])
 
-  const [
-    allTournamentEntries,
-    setAllTournamentEntries,
-  ] = useState([])
+  const [allTournamentEntries, setAllTournamentEntries] = useState([])
 
-  const [
-    tournamentResults,
-    setTournamentResults,
-  ] = useState([])
+  const [tournamentResults, setTournamentResults] = useState([])
 
-  const [
-    calendarEvents,
-    setCalendarEvents,
-  ] = useState([])
+  const [calendarEvents, setCalendarEvents] = useState([])
 
-  const [
-    message,
-    setMessage,
-  ] = useState('')
+  const [message, setMessage] = useState('')
 
-  const userId =
-    session?.user?.id ||
-    null
+  const userId = session?.user?.id || null
 
-  const {
-    count: unreadMessageCount,
-    refresh: refreshUnreadMessages,
-  } = useUnreadDirectMessages(
-    userId
-  )
+  const { count: unreadMessageCount, refresh: refreshUnreadMessages } =
+    useUnreadDirectMessages(userId)
 
   // Show the unread count in the browser tab, e.g. "(2) MAT Competition Team".
   useEffect(() => {
-    const baseTitle =
-      document.title.replace(
-        /^\(\d+\)\s*/,
-        ''
-      )
+    const baseTitle = document.title.replace(/^\(\d+\)\s*/, '')
 
-    document.title =
-      unreadMessageCount > 0
-        ? `(${unreadMessageCount}) ${baseTitle}`
-        : baseTitle
-  }, [
-    unreadMessageCount,
-  ])
+    document.title = unreadMessageCount > 0 ? `(${unreadMessageCount}) ${baseTitle}` : baseTitle
+  }, [unreadMessageCount])
 
   useEffect(() => {
     let mounted = true
 
     async function getInitialSession() {
       const {
-        data: {
-          session:
-            initialSession,
-        },
-      } =
-        await supabase.auth.getSession()
+        data: { session: initialSession },
+      } = await supabase.auth.getSession()
 
       if (!mounted) {
         return
       }
 
-      setSession(
-        initialSession
-      )
+      setSession(initialSession)
 
       setLoading(false)
     }
@@ -186,20 +117,10 @@ function App() {
     getInitialSession()
 
     const {
-      data: {
-        subscription,
-      },
-    } =
-      supabase.auth.onAuthStateChange(
-        (
-          _event,
-          nextSession
-        ) => {
-          setSession(
-            nextSession
-          )
-        }
-      )
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, nextSession) => {
+      setSession(nextSession)
+    })
 
     return () => {
       mounted = false
@@ -223,119 +144,66 @@ function App() {
     setCalendarEvents([])
     setViewMode('admin')
     setActiveTab('home')
-  }, [
-    userId,
-  ])
+  }, [userId])
 
-  const roles =
-    useMemo(
-      () =>
-        normalizeRoles(
-          accountProfile?.roles
-        ),
-      [
-        accountProfile,
-      ]
-    )
+  const roles = useMemo(() => normalizeRoles(accountProfile?.roles), [accountProfile])
 
-  const approvedRoles = [
-    'admin',
-    'coach',
-    'athlete',
-  ]
+  const approvedRoles = ['admin', 'coach', 'athlete']
 
-  const hasApprovedRole =
-    roles.some((role) =>
-      approvedRoles.includes(role)
-    )
+  const hasApprovedRole = roles.some((role) => approvedRoles.includes(role))
 
-  const isAdmin =
-    roles.includes(
-      'admin'
-    )
+  const isAdmin = roles.includes('admin')
 
-  const isCoach =
-    roles.includes(
-      'coach'
-    )
+  const isCoach = roles.includes('coach')
 
-  const isAthlete =
-    roles.includes(
-      'athlete'
-    )
+  const isAthlete = roles.includes('athlete')
 
-  const {
-    count: pendingApprovalCount,
-    refresh: refreshPendingApprovals,
-  } = usePendingResultSubmissionCount(
-    isAdmin
-  )
+  const { count: pendingApprovalCount, refresh: refreshPendingApprovals } =
+    usePendingResultSubmissionCount(isAdmin)
 
   useEffect(() => {
     if (!accountProfile) {
       return
     }
 
-    setViewMode(
-      (
-        currentMode
-      ) => {
-        if (
-          currentMode ===
-            'admin' &&
-          isAdmin
-        ) {
-          return currentMode
-        }
+    setViewMode((currentMode) => {
+      if (currentMode === 'admin' && isAdmin) {
+        return currentMode
+      }
 
-        if (
-          currentMode ===
-            'coach' &&
-          isCoach
-        ) {
-          return currentMode
-        }
+      if (currentMode === 'coach' && isCoach) {
+        return currentMode
+      }
 
-        if (
-          currentMode ===
-            'athlete' &&
-          isAthlete
-        ) {
-          return currentMode
-        }
+      if (currentMode === 'athlete' && isAthlete) {
+        return currentMode
+      }
 
-        if (isAdmin) {
-          return 'admin'
-        }
+      if (isAdmin) {
+        return 'admin'
+      }
 
-        if (isCoach) {
-          return 'coach'
-        }
+      if (isCoach) {
+        return 'coach'
+      }
 
-        if (isAthlete) {
-          return 'athlete'
-        }
-
+      if (isAthlete) {
         return 'athlete'
       }
-    )
-  }, [
-    accountProfile,
-    isAdmin,
-    isCoach,
-    isAthlete,
-  ])
+
+      return 'athlete'
+    })
+  }, [accountProfile, isAdmin, isCoach, isAthlete])
 
   async function initializeSignedInUser() {
     setMessage('')
     setAccountLoading(true)
 
-    const profile =
-      await loadAccountProfile()
+    const profile = await loadAccountProfile()
 
     const approvedRoles = normalizeRoles(profile?.roles)
     const hasApprovedRole = approvedRoles.some((role) =>
-      ['admin', 'coach', 'athlete'].includes(role)
+      ['admin', 'coach', 'athlete'].includes(role),
     )
 
     if (!hasApprovedRole) {
@@ -344,15 +212,13 @@ function App() {
       setAllTournamentEntries([])
       setTournamentResults([])
       setCalendarEvents([])
-        await loadAccountMemberLinks()
+      await loadAccountMemberLinks()
       setAccountLoading(false)
       return
     }
 
     await Promise.all([
-      loadMembers(
-        profile?.roles
-      ),
+      loadMembers(profile?.roles),
       loadTournaments(),
       loadAllTournamentEntries(),
       loadTournamentResults(),
@@ -369,41 +235,23 @@ function App() {
       return null
     }
 
-    const {
-      data,
-      error,
-    } =
-      await supabase
-        .from(
-          'account_profiles'
-        )
-        .select(
-          'id, email, display_name, roles'
-        )
-        .eq(
-          'id',
-          userId
-        )
-        .maybeSingle()
+    const { data, error } = await supabase
+      .from('account_profiles')
+      .select('id, email, display_name, roles')
+      .eq('id', userId)
+      .maybeSingle()
 
     if (error) {
-      console.error(
-        'Could not load account profile:',
-        error.message
-      )
+      console.error('Could not load account profile:', error.message)
 
       setAccountProfile(null)
 
-      setMessage(
-        'Could not load account profile.'
-      )
+      setMessage('Could not load account profile.')
 
       return null
     }
 
-    setAccountProfile(
-      data || null
-    )
+    setAccountProfile(data || null)
 
     return data || null
   }
@@ -414,314 +262,151 @@ function App() {
       return
     }
 
-    const {
-      data,
-      error,
-    } =
-      await supabase
-        .from(
-          'account_member_links'
-        )
-        .select(
-          'id, account_id, member_id, relationship_type'
-        )
-        .eq(
-          'account_id',
-          userId
-        )
+    const { data, error } = await supabase
+      .from('account_member_links')
+      .select('id, account_id, member_id, relationship_type')
+      .eq('account_id', userId)
 
     if (error) {
-      console.error(
-        'Could not load account member links:',
-        error.message
-      )
+      console.error('Could not load account member links:', error.message)
 
       setAccountMemberLinks([])
       return
     }
 
-    setAccountMemberLinks(
-      data || []
-    )
+    setAccountMemberLinks(data || [])
   }
 
-  async function loadMembers(
-    rolesOverride = null
-  ) {
-    let rolesToUse =
-      rolesOverride
+  async function loadMembers(rolesOverride = null) {
+    let rolesToUse = rolesOverride
 
-    if (
-      !Array.isArray(
-        rolesToUse
-      )
-    ) {
-      rolesToUse =
-        accountProfile?.roles ||
-        []
+    if (!Array.isArray(rolesToUse)) {
+      rolesToUse = accountProfile?.roles || []
     }
 
-    const normalizedRoles =
-      normalizeRoles(
-        rolesToUse
-      )
+    const normalizedRoles = normalizeRoles(rolesToUse)
 
     // Admins and coaches see the full roster; athletes see
     // the limited public profiles.
-    const userIsStaff =
-      normalizedRoles.includes(
-        'admin'
-      ) ||
-      normalizedRoles.includes(
-        'coach'
-      )
+    const userIsStaff = normalizedRoles.includes('admin') || normalizedRoles.includes('coach')
 
-    const source =
-      userIsStaff
-        ? 'members'
-        : 'member_public_profiles'
+    const source = userIsStaff ? 'members' : 'member_public_profiles'
 
-    const {
-      data,
-      error,
-    } =
-      await supabase
-        .from(source)
-        .select('*')
-        .order(
-          'last_name',
-          {
-            ascending: true,
-          }
-        )
+    const { data, error } = await supabase.from(source).select('*').order('last_name', {
+      ascending: true,
+    })
 
     if (error) {
-      setMessage(
-        error.message
-      )
+      setMessage(error.message)
       return
     }
 
-    setMembers(
-      data || []
-    )
+    setMembers(data || [])
   }
 
   async function loadTournaments() {
-    const {
-      data,
-      error,
-    } =
-      await supabase
-        .from(
-          'tournaments'
-        )
-        .select('*')
-        .order(
-          'event_date',
-          {
-            ascending: true,
-          }
-        )
+    const { data, error } = await supabase.from('tournaments').select('*').order('event_date', {
+      ascending: true,
+    })
 
     if (error) {
-      setMessage(
-        error.message
-      )
+      setMessage(error.message)
       return
     }
 
-    setTournaments(
-      await attachPosterUrls(
-        data || []
-      )
-    )
+    setTournaments(await attachPosterUrls(data || []))
   }
 
   async function loadAllTournamentEntries() {
-    const {
-      data,
-      error,
-    } =
-      await supabase
-        .from(
-          'tournament_entries'
-        )
-        .select('*')
+    const { data, error } = await supabase.from('tournament_entries').select('*')
 
     if (error) {
-      setMessage(
-        error.message
-      )
+      setMessage(error.message)
       return
     }
 
-    setAllTournamentEntries(
-      data || []
-    )
+    setAllTournamentEntries(data || [])
   }
 
   async function loadTournamentResults() {
-    const {
-      data,
-      error,
-    } =
-      await supabase
-        .from(
-          'tournament_results'
-        )
-        .select('*')
+    const { data, error } = await supabase.from('tournament_results').select('*')
 
     if (error) {
-      setMessage(
-        error.message
-      )
+      setMessage(error.message)
       return
     }
 
-    setTournamentResults(
-      data || []
-    )
+    setTournamentResults(data || [])
   }
 
   async function loadCalendarEvents() {
-    const {
-      data,
-      error,
-    } =
-      await supabase
-        .from(
-          'calendar_events'
-        )
-        .select('*')
-        .order(
-          'event_date',
-          {
-            ascending: true,
-          }
-        )
+    const { data, error } = await supabase.from('calendar_events').select('*').order('event_date', {
+      ascending: true,
+    })
 
     if (error) {
-      setMessage(
-        error.message
-      )
+      setMessage(error.message)
       return
     }
 
-    setCalendarEvents(
-      data || []
-    )
+    setCalendarEvents(data || [])
   }
 
   async function handleLogout() {
     await supabase.auth.signOut()
   }
 
-  function handleViewModeChange(
-    nextMode
-  ) {
-    if (
-      nextMode ===
-        'admin' &&
-      !isAdmin
-    ) {
+  function handleViewModeChange(nextMode) {
+    if (nextMode === 'admin' && !isAdmin) {
       return
     }
 
-    if (
-      nextMode ===
-        'coach' &&
-      !isCoach
-    ) {
+    if (nextMode === 'coach' && !isCoach) {
       return
     }
 
-    if (
-      nextMode ===
-        'athlete' &&
-      !isAthlete
-    ) {
+    if (nextMode === 'athlete' && !isAthlete) {
       return
     }
 
-    setViewMode(
-      nextMode
-    )
+    setViewMode(nextMode)
 
-    setActiveTab(
-      'home'
-    )
+    setActiveTab('home')
   }
 
   // Every athlete this account is linked to, with the account's own
   // athlete record (relationship "self") listed first.
-  const linkedAthletes =
-    useMemo(() => {
-      const orderedLinks = [
-        ...accountMemberLinks.filter(
-          (link) =>
-            link.relationship_type ===
-            'self'
-        ),
-        ...accountMemberLinks.filter(
-          (link) =>
-            link.relationship_type !==
-            'self'
-        ),
-      ]
+  const linkedAthletes = useMemo(() => {
+    const orderedLinks = [
+      ...accountMemberLinks.filter((link) => link.relationship_type === 'self'),
+      ...accountMemberLinks.filter((link) => link.relationship_type !== 'self'),
+    ]
 
-      const seen = new Set()
+    const seen = new Set()
 
-      return orderedLinks
-        .map((link) =>
-          members.find(
-            (member) =>
-              member.id ===
-              link.member_id
-          )
-        )
-        .filter((member) => {
-          if (
-            !member ||
-            seen.has(member.id)
-          ) {
-            return false
-          }
+    return orderedLinks
+      .map((link) => members.find((member) => member.id === link.member_id))
+      .filter((member) => {
+        if (!member || seen.has(member.id)) {
+          return false
+        }
 
-          seen.add(member.id)
-          return true
-        })
-    }, [
-      accountMemberLinks,
-      members,
-    ])
+        seen.add(member.id)
+        return true
+      })
+  }, [accountMemberLinks, members])
 
-  const storedAthleteId =
-    useMemo(
-      () =>
-        userId
-          ? readStoredAthleteId(userId)
-          : null,
-      [userId]
-    )
+  const storedAthleteId = useMemo(() => (userId ? readStoredAthleteId(userId) : null), [userId])
 
   const selectedAthleteId =
-    athleteSelection?.userId === userId
-      ? athleteSelection.memberId
-      : storedAthleteId
+    athleteSelection?.userId === userId ? athleteSelection.memberId : storedAthleteId
 
   const linkedMember =
-    linkedAthletes.find(
-      (member) =>
-        String(member.id) ===
-        String(selectedAthleteId)
-    ) ||
+    linkedAthletes.find((member) => String(member.id) === String(selectedAthleteId)) ||
     linkedAthletes[0] ||
     null
 
-  function handleAthleteChange(
-    memberId
-  ) {
+  function handleAthleteChange(memberId) {
     setAthleteSelection({
       userId,
       memberId,
@@ -729,188 +414,101 @@ function App() {
     storeAthleteId(userId, memberId)
   }
 
-  const linkedTournamentEntries =
-    useMemo(() => {
-      if (!linkedMember) {
-        return []
-      }
+  const linkedTournamentEntries = useMemo(() => {
+    if (!linkedMember) {
+      return []
+    }
 
-      return allTournamentEntries.filter(
-        (entry) =>
-          entry.member_id ===
-          linkedMember.id
-      )
-    }, [
-      linkedMember,
-      allTournamentEntries,
-    ])
+    return allTournamentEntries.filter((entry) => entry.member_id === linkedMember.id)
+  }, [linkedMember, allTournamentEntries])
 
-  const accountName =
-    accountProfile?.display_name ||
-    session?.user?.email ||
-    'Account'
+  const accountName = accountProfile?.display_name || session?.user?.email || 'Account'
 
   if (loading) {
     return (
       <div className="mat-login-page">
-
         <div
           style={{
-            textAlign:
-              'center',
+            textAlign: 'center',
           }}
         >
           <img
             src="/mat-logo.jpg"
             alt="MAT"
             style={{
-              width:
-                '250px',
-              marginBottom:
-                '20px',
+              width: '250px',
+              marginBottom: '20px',
             }}
           />
 
-          <div className="mat-muted">
-            Loading...
-          </div>
+          <div className="mat-muted">Loading...</div>
         </div>
-
       </div>
     )
   }
 
   if (!session) {
-    return (
-      <LoginPage />
-    )
+    return <LoginPage />
   }
 
   if (accountLoading) {
     return (
       <div className="mat-login-page">
         <div style={{ textAlign: 'center' }}>
-          <img
-            src="/mat-logo.jpg"
-            alt="MAT"
-            style={{ width: '250px', marginBottom: '20px' }}
-          />
-          <div className="mat-muted">
-            Checking account access...
-          </div>
+          <img src="/mat-logo.jpg" alt="MAT" style={{ width: '250px', marginBottom: '20px' }} />
+          <div className="mat-muted">Checking account access...</div>
         </div>
       </div>
     )
   }
 
   if (!hasApprovedRole) {
-    return (
-      <AccessPendingPage
-        email={session.user?.email}
-        onLogout={handleLogout}
-      />
-    )
+    return <AccessPendingPage email={session.user?.email} onLogout={handleLogout} />
   }
 
   return (
     <div className="mat-app">
-
       <TopNav
-        activeTab={
-          activeTab
-        }
-        onChangeTab={
-          setActiveTab
-        }
-        accountName={
-          accountName
-        }
-        roles={
-          roles
-        }
-        viewMode={
-          viewMode
-        }
-        onChangeViewMode={
-          handleViewModeChange
-        }
-        onLogout={
-          handleLogout
-        }
+        activeTab={activeTab}
+        onChangeTab={setActiveTab}
+        accountName={accountName}
+        roles={roles}
+        viewMode={viewMode}
+        onChangeViewMode={handleViewModeChange}
+        onLogout={handleLogout}
         badgeCounts={{
-          messages:
-            unreadMessageCount,
-          approvals:
-            pendingApprovalCount,
+          messages: unreadMessageCount,
+          approvals: pendingApprovalCount,
         }}
       />
 
-      {message && (
-        <div className="mat-error">
-          {message}
-        </div>
-      )}
+      {message && <div className="mat-error">{message}</div>}
 
       <main className="mat-content">
-
-        {viewMode ===
-          'admin' && (
+        {viewMode === 'admin' && (
           <>
-            {activeTab ===
-              'home' && (
+            {activeTab === 'home' && (
               <HomePage
-                members={
-                  members
-                }
-                tournaments={
-                  tournaments
-                }
-                allTournamentEntries={
-                  allTournamentEntries
-                }
-                calendarEvents={
-                  calendarEvents
-                }
-                accountName={
-                  accountName
-                }
-                onNavigate={
-                  setActiveTab
-                }
+                members={members}
+                tournaments={tournaments}
+                allTournamentEntries={allTournamentEntries}
+                calendarEvents={calendarEvents}
+                accountName={accountName}
+                onNavigate={setActiveTab}
               />
             )}
 
-            {activeTab ===
-              'new-member-guide' && (
-              <NewMemberGuidePage
-                onNavigate={
-                  setActiveTab
-                }
-              />
-            )}
+            {activeTab === 'new-member-guide' && <NewMemberGuidePage onNavigate={setActiveTab} />}
 
-            {activeTab ===
-              'roster' && (
+            {activeTab === 'roster' && (
               <>
-              <RosterPage
-                members={
-                  members
-                }
-                tournaments={
-                  tournaments
-                }
-                allTournamentEntries={
-                  allTournamentEntries
-                }
-                tournamentResults={
-                  tournamentResults
-                }
-                onMembersChanged={() =>
-                  loadMembers(
-                    accountProfile?.roles
-                  )
-                }
-              />
+                <RosterPage
+                  members={members}
+                  tournaments={tournaments}
+                  allTournamentEntries={allTournamentEntries}
+                  tournamentResults={tournamentResults}
+                  onMembersChanged={() => loadMembers(accountProfile?.roles)}
+                />
                 <AccountAthleteAssignments
                   members={members}
                   onChanged={async () => {
@@ -921,8 +519,7 @@ function App() {
               </>
             )}
 
-            {activeTab ===
-              'coaches' && (
+            {activeTab === 'coaches' && (
               <>
                 <CoachesPage />
 
@@ -930,70 +527,35 @@ function App() {
               </>
             )}
 
-            {activeTab ===
-              'tournaments' && (
+            {activeTab === 'tournaments' && (
               <TournamentsPage
-                members={
-                  members
-                }
-                tournaments={
-                  tournaments
-                }
-                allTournamentEntries={
-                  allTournamentEntries
-                }
-                tournamentResults={
-                  tournamentResults
-                }
-                onTournamentsChanged={
-                  loadTournaments
-                }
-                onEntriesChanged={
-                  loadAllTournamentEntries
-                }
-                onResultsChanged={
-                  loadTournamentResults
-                }
+                members={members}
+                tournaments={tournaments}
+                allTournamentEntries={allTournamentEntries}
+                tournamentResults={tournamentResults}
+                onTournamentsChanged={loadTournaments}
+                onEntriesChanged={loadAllTournamentEntries}
+                onResultsChanged={loadTournamentResults}
               />
             )}
 
-            {activeTab ===
-              'calendar' && (
+            {activeTab === 'calendar' && (
               <CalendarPage
-                calendarEvents={
-                  calendarEvents
-                }
-                tournaments={
-                  tournaments
-                }
-                members={
-                  members
-                }
+                calendarEvents={calendarEvents}
+                tournaments={tournaments}
+                members={members}
                 showPrivateLessons
-                onCalendarEventsChanged={
-                  loadCalendarEvents
-                }
-                onTournamentsChanged={
-                  loadTournaments
-                }
+                onCalendarEventsChanged={loadCalendarEvents}
+                onTournamentsChanged={loadTournaments}
               />
             )}
 
-            {activeTab ===
-              'approvals' && (
+            {activeTab === 'approvals' && (
               <ResultApprovalsPage
-                members={
-                  members
-                }
-                tournaments={
-                  tournaments
-                }
-                allTournamentEntries={
-                  allTournamentEntries
-                }
-                tournamentResults={
-                  tournamentResults
-                }
+                members={members}
+                tournaments={tournaments}
+                allTournamentEntries={allTournamentEntries}
+                tournamentResults={tournamentResults}
                 onReviewed={() =>
                   Promise.all([
                     loadAllTournamentEntries(),
@@ -1004,275 +566,122 @@ function App() {
               />
             )}
 
-            {activeTab ===
-              'financials' && (
-              <FinancialsPage
-                members={
-                  members
-                }
-                tournaments={
-                  tournaments
-                }
-              />
+            {activeTab === 'financials' && (
+              <FinancialsPage members={members} tournaments={tournaments} />
             )}
           </>
         )}
 
-        {viewMode ===
-          'athlete' && (
+        {viewMode === 'athlete' && (
           <>
             <AthleteSwitcher
-              athletes={
-                linkedAthletes
-              }
-              activeAthleteId={
-                linkedMember?.id
-              }
-              onChange={
-                handleAthleteChange
-              }
+              athletes={linkedAthletes}
+              activeAthleteId={linkedMember?.id}
+              onChange={handleAthleteChange}
             />
 
-            {activeTab ===
-              'home' && (
+            {activeTab === 'home' && (
               <AthleteHomePage
-                key={
-                  linkedMember?.id
-                }
-                member={
-                  linkedMember
-                }
-                tournaments={
-                  tournaments
-                }
-                tournamentEntries={
-                  linkedTournamentEntries
-                }
-                tournamentResults={
-                  tournamentResults
-                }
-                onNavigate={
-                  setActiveTab
-                }
+                key={linkedMember?.id}
+                member={linkedMember}
+                tournaments={tournaments}
+                tournamentEntries={linkedTournamentEntries}
+                tournamentResults={tournamentResults}
+                onNavigate={setActiveTab}
               />
             )}
 
-            {activeTab ===
-              'coaches' && (
-              <AthleteCoachesPage
-                key={
-                  linkedMember?.id
-                }
-                accountId={
-                  userId
-                }
-                member={
-                  linkedMember
-                }
-              />
+            {activeTab === 'coaches' && (
+              <AthleteCoachesPage key={linkedMember?.id} accountId={userId} member={linkedMember} />
             )}
 
-            {activeTab ===
-              'tournaments' && (
+            {activeTab === 'tournaments' && (
               <AthleteTournamentsPage
-                key={
-                  linkedMember?.id
-                }
-                member={
-                  linkedMember
-                }
-                tournaments={
-                  tournaments
-                }
-                tournamentEntries={
-                  linkedTournamentEntries
-                }
-                tournamentResults={
-                  tournamentResults
-                }
-                onEntriesChanged={
-                  loadAllTournamentEntries
-                }
+                key={linkedMember?.id}
+                member={linkedMember}
+                tournaments={tournaments}
+                tournamentEntries={linkedTournamentEntries}
+                tournamentResults={tournamentResults}
+                onEntriesChanged={loadAllTournamentEntries}
               />
             )}
 
-            {activeTab ===
-              'calendar' && (
-              <AthleteCalendarPage
-                calendarEvents={
-                  calendarEvents
-                }
-                tournaments={
-                  tournaments
-                }
+            {activeTab === 'calendar' && (
+              <AthleteCalendarPage calendarEvents={calendarEvents} tournaments={tournaments} />
+            )}
+
+            {activeTab === 'my-profile' && linkedMember && (
+              <AthleteProfileModal
+                key={linkedMember.id}
+                member={linkedMember}
+                tournaments={tournaments}
+                allTournamentEntries={allTournamentEntries}
+                tournamentResults={tournamentResults}
+                onMembersChanged={() => loadMembers(accountProfile?.roles)}
+                onClose={() => setActiveTab('home')}
               />
             )}
 
-            {activeTab ===
-              'my-profile' &&
-              linkedMember && (
-                <AthleteProfileModal
-                  key={
-                    linkedMember.id
-                  }
-                  member={
-                    linkedMember
-                  }
-                  tournaments={
-                    tournaments
-                  }
-                  allTournamentEntries={
-                    allTournamentEntries
-                  }
-                  tournamentResults={
-                    tournamentResults
-                  }
-                  onMembersChanged={() =>
-                    loadMembers(
-                      accountProfile?.roles
-                    )
-                  }
-                  onClose={() =>
-                    setActiveTab(
-                      'home'
-                    )
-                  }
-                />
-              )}
+            {activeTab === 'my-profile' && !linkedMember && (
+              <div className="mat-athlete-link-missing">
+                <h2>Athlete Profile Not Linked</h2>
 
-            {activeTab ===
-              'my-profile' &&
-              !linkedMember && (
-                <div className="mat-athlete-link-missing">
-
-                  <h2>
-                    Athlete Profile Not Linked
-                  </h2>
-
-                  <p>
-                    This login has the
-                    Athlete role, but it
-                    is not currently
-                    linked to a member
-                    record.
-                  </p>
-
-                </div>
-              )}
-
-            {activeTab ===
-              'new-member-guide' && (
-              <NewMemberGuidePage
-                onNavigate={
-                  setActiveTab
-                }
-              />
+                <p>
+                  This login has the Athlete role, but it is not currently linked to a member
+                  record.
+                </p>
+              </div>
             )}
+
+            {activeTab === 'new-member-guide' && <NewMemberGuidePage onNavigate={setActiveTab} />}
           </>
         )}
 
-
-        {viewMode ===
-          'coach' && (
+        {viewMode === 'coach' && (
           <>
-            {activeTab ===
-              'home' && (
+            {activeTab === 'home' && (
               <HomePage
-                members={
-                  members
-                }
-                tournaments={
-                  tournaments
-                }
-                allTournamentEntries={
-                  allTournamentEntries
-                }
-                calendarEvents={
-                  calendarEvents
-                }
-                accountName={
-                  accountName
-                }
-                onNavigate={
-                  setActiveTab
-                }
+                members={members}
+                tournaments={tournaments}
+                allTournamentEntries={allTournamentEntries}
+                calendarEvents={calendarEvents}
+                accountName={accountName}
+                onNavigate={setActiveTab}
                 view="coach"
-                canManageCarousel={
-                  false
-                }
+                canManageCarousel={false}
               />
             )}
 
-            {activeTab ===
-              'roster' && (
+            {activeTab === 'roster' && (
               <RosterPage
-                members={
-                  members
-                }
-                tournaments={
-                  tournaments
-                }
-                allTournamentEntries={
-                  allTournamentEntries
-                }
-                tournamentResults={
-                  tournamentResults
-                }
-                onMembersChanged={() =>
-                  loadMembers(
-                    accountProfile?.roles
-                  )
-                }
-                canEdit={
-                  false
-                }
+                members={members}
+                tournaments={tournaments}
+                allTournamentEntries={allTournamentEntries}
+                tournamentResults={tournamentResults}
+                onMembersChanged={() => loadMembers(accountProfile?.roles)}
+                canEdit={false}
               />
             )}
 
-            {activeTab ===
-              'tournaments' && (
+            {activeTab === 'tournaments' && (
               <TournamentsPage
-                members={
-                  members
-                }
-                tournaments={
-                  tournaments
-                }
-                allTournamentEntries={
-                  allTournamentEntries
-                }
-                tournamentResults={
-                  tournamentResults
-                }
-                onTournamentsChanged={
-                  loadTournaments
-                }
-                onEntriesChanged={
-                  loadAllTournamentEntries
-                }
-                onResultsChanged={
-                  loadTournamentResults
-                }
+                members={members}
+                tournaments={tournaments}
+                allTournamentEntries={allTournamentEntries}
+                tournamentResults={tournamentResults}
+                onTournamentsChanged={loadTournaments}
+                onEntriesChanged={loadAllTournamentEntries}
+                onResultsChanged={loadTournamentResults}
               />
             )}
 
-            {activeTab ===
-              'lesson-requests' && (
-              <AdminPrivateLessonRequests />
-            )}
+            {activeTab === 'lesson-requests' && <AdminPrivateLessonRequests />}
 
-            {activeTab ===
-              'calendar' && (
+            {activeTab === 'calendar' && (
               <CalendarPage
-                calendarEvents={
-                  calendarEvents
-                }
-                tournaments={
-                  tournaments
-                }
-                members={
-                  members
-                }
+                calendarEvents={calendarEvents}
+                tournaments={tournaments}
+                members={members}
                 showPrivateLessons
                 readOnly
               />
@@ -1284,32 +693,20 @@ function App() {
           <MessagesPage
             accountId={userId}
             roles={roles}
-            unreadMessageCount={
-              unreadMessageCount
-            }
-            onReadStateChanged={
-              refreshUnreadMessages
-            }
+            unreadMessageCount={unreadMessageCount}
+            onReadStateChanged={refreshUnreadMessages}
           />
         )}
       </main>
 
       <footer className="mat-footer">
-
-        <div>
-          Michigan Academy of Taekwondo
-        </div>
+        <div>Michigan Academy of Taekwondo</div>
 
         <div className="mat-footer-values">
-          Courtesy &nbsp; | &nbsp;
-          Integrity &nbsp; | &nbsp;
-          Perseverance &nbsp; | &nbsp;
-          Self-Control &nbsp; | &nbsp;
-          Indomitable Spirit
+          Courtesy &nbsp; | &nbsp; Integrity &nbsp; | &nbsp; Perseverance &nbsp; | &nbsp;
+          Self-Control &nbsp; | &nbsp; Indomitable Spirit
         </div>
-
       </footer>
-
     </div>
   )
 }

@@ -13,11 +13,7 @@ import {
   User,
 } from 'lucide-react'
 
-import {
-  useEffect,
-  useMemo,
-  useState,
-} from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 import { supabase } from '../lib/supabase.js'
 
@@ -33,54 +29,25 @@ function CalendarPage({
   readOnly = false,
   showPrivateLessons = false,
 }) {
-  const today =
-    new Date()
+  const today = new Date()
 
-  const [
-    visibleMonth,
-    setVisibleMonth,
-  ] = useState(
-    new Date(
-      today.getFullYear(),
-      today.getMonth(),
-      1
-    )
+  const [visibleMonth, setVisibleMonth] = useState(
+    new Date(today.getFullYear(), today.getMonth(), 1),
   )
 
-  const [
-    selectedDate,
-    setSelectedDate,
-  ] = useState(null)
+  const [selectedDate, setSelectedDate] = useState(null)
 
-  const [
-    showForm,
-    setShowForm,
-  ] = useState(false)
+  const [showForm, setShowForm] = useState(false)
 
-  const [
-    editingEvent,
-    setEditingEvent,
-  ] = useState(null)
+  const [editingEvent, setEditingEvent] = useState(null)
 
-  const [
-    editingTournament,
-    setEditingTournament,
-  ] = useState(null)
+  const [editingTournament, setEditingTournament] = useState(null)
 
-  const [
-    message,
-    setMessage,
-  ] = useState('')
+  const [message, setMessage] = useState('')
 
-  const [
-    privateLessons,
-    setPrivateLessons,
-  ] = useState([])
+  const [privateLessons, setPrivateLessons] = useState([])
 
-  const [
-    lessonCoaches,
-    setLessonCoaches,
-  ] = useState([])
+  const [lessonCoaches, setLessonCoaches] = useState([])
 
   /*
     Private lessons only appear on the
@@ -96,53 +63,27 @@ function CalendarPage({
     let cancelled = false
 
     async function loadPrivateLessons() {
-      const [
-        lessonsResult,
-        coachesResult,
-      ] =
-        await Promise.all([
-          supabase
-            .from(
-              'private_lesson_requests'
-            )
-            .select('*')
-            .in(
-              'status',
-              [
-                'approved',
-                'completed',
-              ]
-            ),
+      const [lessonsResult, coachesResult] = await Promise.all([
+        supabase
+          .from('private_lesson_requests')
+          .select('*')
+          .in('status', ['approved', 'completed']),
 
-          supabase
-            .from('coaches')
-            .select(
-              'id, display_name'
-            ),
-        ])
+        supabase.from('coaches').select('id, display_name'),
+      ])
 
       if (cancelled) {
         return
       }
 
-      if (
-        lessonsResult.error
-      ) {
-        setMessage(
-          lessonsResult.error.message
-        )
+      if (lessonsResult.error) {
+        setMessage(lessonsResult.error.message)
         return
       }
 
-      setPrivateLessons(
-        lessonsResult.data ||
-          []
-      )
+      setPrivateLessons(lessonsResult.data || [])
 
-      setLessonCoaches(
-        coachesResult.data ||
-          []
-      )
+      setLessonCoaches(coachesResult.data || [])
     }
 
     loadPrivateLessons()
@@ -150,250 +91,129 @@ function CalendarPage({
     return () => {
       cancelled = true
     }
-  }, [
-    showPrivateLessons,
-  ])
+  }, [showPrivateLessons])
 
-  function dateToString(
-    date
-  ) {
-    const year =
-      date.getFullYear()
+  function dateToString(date) {
+    const year = date.getFullYear()
 
-    const month =
-      String(
-        date.getMonth() + 1
-      ).padStart(
-        2,
-        '0'
-      )
+    const month = String(date.getMonth() + 1).padStart(2, '0')
 
-    const day =
-      String(
-        date.getDate()
-      ).padStart(
-        2,
-        '0'
-      )
+    const day = String(date.getDate()).padStart(2, '0')
 
     return `${year}-${month}-${day}`
   }
 
-  function stringToDate(
-    dateString
-  ) {
+  function stringToDate(dateString) {
     if (!dateString) {
       return null
     }
 
-    const date =
-      new Date(
-        `${dateString}T00:00:00`
-      )
+    const date = new Date(`${dateString}T00:00:00`)
 
-    if (
-      Number.isNaN(
-        date.getTime()
-      )
-    ) {
+    if (Number.isNaN(date.getTime())) {
       return null
     }
 
     return date
   }
 
-  function addDays(
-    date,
-    numberOfDays
-  ) {
-    const result =
-      new Date(date)
+  function addDays(date, numberOfDays) {
+    const result = new Date(date)
 
-    result.setDate(
-      result.getDate() +
-        numberOfDays
-    )
+    result.setDate(result.getDate() + numberOfDays)
 
     return result
   }
 
-  function daysBetween(
-    startDate,
-    endDate
-  ) {
-    const start =
-      stringToDate(
-        startDate
-      )
+  function daysBetween(startDate, endDate) {
+    const start = stringToDate(startDate)
 
-    const end =
-      stringToDate(
-        endDate
-      )
+    const end = stringToDate(endDate)
 
-    if (
-      !start ||
-      !end
-    ) {
+    if (!start || !end) {
       return 0
     }
 
-    const difference =
-      end.getTime() -
-      start.getTime()
+    const difference = end.getTime() - start.getTime()
 
-    return Math.max(
-      0,
-      Math.round(
-        difference /
-          86400000
-      )
-    )
+    return Math.max(0, Math.round(difference / 86400000))
   }
 
-  function getDateRange(
-    startDate,
-    endDate
-  ) {
-    const start =
-      stringToDate(
-        startDate
-      )
+  function getDateRange(startDate, endDate) {
+    const start = stringToDate(startDate)
 
-    const end =
-      stringToDate(
-        endDate ||
-          startDate
-      )
+    const end = stringToDate(endDate || startDate)
 
-    if (
-      !start ||
-      !end
-    ) {
+    if (!start || !end) {
       return []
     }
 
     const dates = []
 
-    const current =
-      new Date(start)
+    const current = new Date(start)
 
-    while (
-      current <= end
-    ) {
-      dates.push(
-        dateToString(
-          current
-        )
-      )
+    while (current <= end) {
+      dates.push(dateToString(current))
 
-      current.setDate(
-        current.getDate() + 1
-      )
+      current.setDate(current.getDate() + 1)
     }
 
     return dates
   }
 
-  function formatDate(
-    dateString
-  ) {
-    const date =
-      stringToDate(
-        dateString
-      )
+  function formatDate(dateString) {
+    const date = stringToDate(dateString)
 
     if (!date) {
       return 'Date unavailable'
     }
 
-    return date.toLocaleDateString(
-      undefined,
-      {
-        month: 'short',
-        day: 'numeric',
-        year: 'numeric',
-      }
-    )
+    return date.toLocaleDateString(undefined, {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+    })
   }
 
-  function formatDateRange(
-    startDate,
-    endDate
-  ) {
+  function formatDateRange(startDate, endDate) {
     if (!startDate) {
       return 'Date unavailable'
     }
 
-    if (
-      !endDate ||
-      endDate === startDate
-    ) {
-      return formatDate(
-        startDate
-      )
+    if (!endDate || endDate === startDate) {
+      return formatDate(startDate)
     }
 
-    return `${formatDate(
-      startDate
-    )} – ${formatDate(
-      endDate
-    )}`
+    return `${formatDate(startDate)} – ${formatDate(endDate)}`
   }
 
-  function formatTime(
-    timeString
-  ) {
+  function formatTime(timeString) {
     if (!timeString) {
       return ''
     }
 
-    const [
-      hours,
-      minutes,
-    ] =
-      timeString
-        .slice(0, 5)
-        .split(':')
-        .map(Number)
+    const [hours, minutes] = timeString.slice(0, 5).split(':').map(Number)
 
-    const date =
-      new Date()
+    const date = new Date()
 
-    date.setHours(
-      hours,
-      minutes,
-      0,
-      0
-    )
+    date.setHours(hours, minutes, 0, 0)
 
-    return date.toLocaleTimeString(
-      undefined,
-      {
-        hour: 'numeric',
-        minute: '2-digit',
-      }
-    )
+    return date.toLocaleTimeString(undefined, {
+      hour: 'numeric',
+      minute: '2-digit',
+    })
   }
 
-  function getWeekdayName(
-    dateString
-  ) {
-    const date =
-      stringToDate(
-        dateString
-      )
+  function getWeekdayName(dateString) {
+    const date = stringToDate(dateString)
 
     if (!date) {
       return ''
     }
 
-    return date.toLocaleDateString(
-      undefined,
-      {
-        weekday: 'long',
-      }
-    )
+    return date.toLocaleDateString(undefined, {
+      weekday: 'long',
+    })
   }
 
   /*
@@ -407,937 +227,504 @@ function CalendarPage({
     Upcoming Events panel.
   */
 
-  const recurrenceHorizon =
-    useMemo(() => {
-      const oneYearFromToday =
-        new Date(
-          today.getFullYear() +
-            1,
-          today.getMonth(),
-          today.getDate()
-        )
+  const recurrenceHorizon = useMemo(() => {
+    const oneYearFromToday = new Date(today.getFullYear() + 1, today.getMonth(), today.getDate())
 
-      const oneYearFromVisibleMonth =
-        new Date(
-          visibleMonth.getFullYear() +
-            1,
-          visibleMonth.getMonth(),
-          1
-        )
+    const oneYearFromVisibleMonth = new Date(
+      visibleMonth.getFullYear() + 1,
+      visibleMonth.getMonth(),
+      1,
+    )
 
-      return oneYearFromToday >
-        oneYearFromVisibleMonth
-        ? oneYearFromToday
-        : oneYearFromVisibleMonth
-    }, [
-      visibleMonth,
-    ])
+    return oneYearFromToday > oneYearFromVisibleMonth ? oneYearFromToday : oneYearFromVisibleMonth
+  }, [visibleMonth])
 
-  const combinedEvents =
-    useMemo(() => {
-      const manualEvents = []
+  const combinedEvents = useMemo(() => {
+    const manualEvents = []
 
-      for (const event of
-        calendarEvents || []) {
-        if (
-          !event.event_date
-        ) {
-          continue
-        }
+    for (const event of calendarEvents || []) {
+      if (!event.event_date) {
+        continue
+      }
 
-        const durationDays =
-          daysBetween(
-            event.event_date,
-            event.end_date
-          )
+      const durationDays = daysBetween(event.event_date, event.end_date)
 
-        const isRecurring =
-          event.recurrence_type ===
-          'weekly'
+      const isRecurring = event.recurrence_type === 'weekly'
 
-        /*
+      /*
           Non-recurring event
         */
 
-        if (!isRecurring) {
-          const eventDates =
-            getDateRange(
-              event.event_date,
-              event.end_date
-            )
+      if (!isRecurring) {
+        const eventDates = getDateRange(event.event_date, event.end_date)
 
-          eventDates.forEach(
-            (
-              date,
-              index
-            ) => {
-              manualEvents.push({
-                id:
-                  `${event.id}-${date}`,
+        eventDates.forEach((date, index) => {
+          manualEvents.push({
+            id: `${event.id}-${date}`,
 
-                source:
-                  'calendar',
+            source: 'calendar',
 
-                title:
-                  event.title,
+            title: event.title,
 
-                eventType:
-                  event.event_type,
+            eventType: event.event_type,
 
-                date,
+            date,
 
-                startDate:
-                  event.event_date,
+            startDate: event.event_date,
 
-                endDate:
-                  event.end_date,
+            endDate: event.end_date,
 
-                occurrenceStart:
-                  event.event_date,
+            occurrenceStart: event.event_date,
 
-                occurrenceEnd:
-                  event.end_date ||
-                  event.event_date,
+            occurrenceEnd: event.end_date || event.event_date,
 
-                startTime:
-                  event.start_time,
+            startTime: event.start_time,
 
-                endTime:
-                  event.end_time,
+            endTime: event.end_time,
 
-                allDay:
-                  event.all_day,
+            allDay: event.all_day,
 
-                location:
-                  event.location,
+            location: event.location,
 
-                notes:
-                  event.notes,
+            notes: event.notes,
 
-                original:
-                  event,
+            original: event,
 
-                isFirstDay:
-                  index === 0,
+            isFirstDay: index === 0,
 
-                isLastDay:
-                  index ===
-                  eventDates.length -
-                    1,
+            isLastDay: index === eventDates.length - 1,
 
-                isMultiDay:
-                  eventDates.length >
-                  1,
+            isMultiDay: eventDates.length > 1,
 
-                isRecurring:
-                  false,
-              })
-            }
-          )
+            isRecurring: false,
+          })
+        })
 
-          continue
-        }
+        continue
+      }
 
-        /*
+      /*
           Weekly recurring event
         */
 
-        const seriesStart =
-          stringToDate(
-            event.event_date
-          )
+      const seriesStart = stringToDate(event.event_date)
 
-        if (!seriesStart) {
-          continue
-        }
-
-        const recurrenceEnd =
-          event.recurrence_end_date
-            ? stringToDate(
-                event.recurrence_end_date
-              )
-            : recurrenceHorizon
-
-        if (!recurrenceEnd) {
-          continue
-        }
-
-        const effectiveEnd =
-          recurrenceEnd <
-          recurrenceHorizon
-            ? recurrenceEnd
-            : recurrenceHorizon
-
-        let occurrenceStart =
-          new Date(
-            seriesStart
-          )
-
-        while (
-          occurrenceStart <=
-          effectiveEnd
-        ) {
-          const occurrenceEnd =
-            addDays(
-              occurrenceStart,
-              durationDays
-            )
-
-          const occurrenceStartString =
-            dateToString(
-              occurrenceStart
-            )
-
-          const occurrenceEndString =
-            dateToString(
-              occurrenceEnd
-            )
-
-          const occurrenceDates =
-            getDateRange(
-              occurrenceStartString,
-              occurrenceEndString
-            )
-
-          occurrenceDates.forEach(
-            (
-              date,
-              index
-            ) => {
-              manualEvents.push({
-                id:
-                  `${event.id}-${occurrenceStartString}-${date}`,
-
-                source:
-                  'calendar',
-
-                title:
-                  event.title,
-
-                eventType:
-                  event.event_type,
-
-                date,
-
-                startDate:
-                  event.event_date,
-
-                endDate:
-                  event.end_date,
-
-                occurrenceStart:
-                  occurrenceStartString,
-
-                occurrenceEnd:
-                  occurrenceEndString,
-
-                startTime:
-                  event.start_time,
-
-                endTime:
-                  event.end_time,
-
-                allDay:
-                  event.all_day,
-
-                location:
-                  event.location,
-
-                notes:
-                  event.notes,
-
-                original:
-                  event,
-
-                isFirstDay:
-                  index === 0,
-
-                isLastDay:
-                  index ===
-                  occurrenceDates.length -
-                    1,
-
-                isMultiDay:
-                  occurrenceDates.length >
-                  1,
-
-                isRecurring:
-                  true,
-              })
-            }
-          )
-
-          occurrenceStart =
-            addDays(
-              occurrenceStart,
-              7
-            )
-        }
+      if (!seriesStart) {
+        continue
       }
 
-      const tournamentEvents = []
+      const recurrenceEnd = event.recurrence_end_date
+        ? stringToDate(event.recurrence_end_date)
+        : recurrenceHorizon
 
-      for (const tournament of
-        tournaments || []) {
-        if (
-          tournament.event_date
-        ) {
-          const tournamentDates =
-            getDateRange(
-              tournament.event_date,
-              tournament.end_date
-            )
+      if (!recurrenceEnd) {
+        continue
+      }
 
-          tournamentDates.forEach(
-            (
-              date,
-              index
-            ) => {
-              tournamentEvents.push({
-                id:
-                  `tournament-${tournament.id}-${date}`,
+      const effectiveEnd = recurrenceEnd < recurrenceHorizon ? recurrenceEnd : recurrenceHorizon
 
-                source:
-                  'tournament',
+      let occurrenceStart = new Date(seriesStart)
 
-                title:
-                  tournament.name,
+      while (occurrenceStart <= effectiveEnd) {
+        const occurrenceEnd = addDays(occurrenceStart, durationDays)
 
-                eventType:
-                  'Tournament',
+        const occurrenceStartString = dateToString(occurrenceStart)
 
-                date,
+        const occurrenceEndString = dateToString(occurrenceEnd)
 
-                startDate:
-                  tournament.event_date,
+        const occurrenceDates = getDateRange(occurrenceStartString, occurrenceEndString)
 
-                endDate:
-                  tournament.end_date,
+        occurrenceDates.forEach((date, index) => {
+          manualEvents.push({
+            id: `${event.id}-${occurrenceStartString}-${date}`,
 
-                occurrenceStart:
-                  tournament.event_date,
+            source: 'calendar',
 
-                occurrenceEnd:
-                  tournament.end_date ||
-                  tournament.event_date,
+            title: event.title,
 
-                startTime:
-                  null,
+            eventType: event.event_type,
 
-                endTime:
-                  null,
+            date,
 
-                allDay:
-                  true,
+            startDate: event.event_date,
 
-                location:
-                  tournament.location,
+            endDate: event.end_date,
 
-                notes:
-                  null,
+            occurrenceStart: occurrenceStartString,
 
-                original:
-                  tournament,
+            occurrenceEnd: occurrenceEndString,
 
-                isFirstDay:
-                  index === 0,
+            startTime: event.start_time,
 
-                isLastDay:
-                  index ===
-                  tournamentDates.length -
-                    1,
+            endTime: event.end_time,
 
-                isMultiDay:
-                  tournamentDates.length >
-                  1,
+            allDay: event.all_day,
 
-                isRecurring:
-                  false,
-              })
-            }
-          )
-        }
+            location: event.location,
 
-        if (
-          tournament.registration_deadline
-        ) {
-          tournamentEvents.push({
-            id:
-              `deadline-${tournament.id}`,
+            notes: event.notes,
 
-            source:
-              'tournament-deadline',
+            original: event,
 
-            title:
-              `${tournament.name} Registration Deadline`,
+            isFirstDay: index === 0,
 
-            eventType:
-              'Deadline',
+            isLastDay: index === occurrenceDates.length - 1,
 
-            date:
-              tournament.registration_deadline,
+            isMultiDay: occurrenceDates.length > 1,
 
-            startDate:
-              tournament.registration_deadline,
-
-            endDate:
-              null,
-
-            occurrenceStart:
-              tournament.registration_deadline,
-
-            occurrenceEnd:
-              tournament.registration_deadline,
-
-            startTime:
-              null,
-
-            endTime:
-              null,
-
-            allDay:
-              true,
-
-            location:
-              null,
-
-            notes:
-              null,
-
-            original:
-              tournament,
-
-            isFirstDay:
-              true,
-
-            isLastDay:
-              true,
-
-            isMultiDay:
-              false,
-
-            isRecurring:
-              false,
+            isRecurring: true,
           })
-        }
+        })
+
+        occurrenceStart = addDays(occurrenceStart, 7)
       }
+    }
 
-      const lessonEvents = []
+    const tournamentEvents = []
 
-      for (const lesson of
-        privateLessons) {
-        if (
-          !lesson.requested_date
-        ) {
-          continue
-        }
+    for (const tournament of tournaments || []) {
+      if (tournament.event_date) {
+        const tournamentDates = getDateRange(tournament.event_date, tournament.end_date)
 
-        const athlete =
-          members.find(
-            (member) =>
-              member.id ===
-              lesson.member_id
-          )
+        tournamentDates.forEach((date, index) => {
+          tournamentEvents.push({
+            id: `tournament-${tournament.id}-${date}`,
 
-        const coach =
-          lessonCoaches.find(
-            (item) =>
-              item.id ===
-              lesson.coach_id
-          )
+            source: 'tournament',
 
-        const athleteName =
-          athlete
-            ? `${athlete.first_name} ${athlete.last_name}`
-            : 'Athlete'
+            title: tournament.name,
 
-        lessonEvents.push({
-          id:
-            `lesson-${lesson.id}`,
+            eventType: 'Tournament',
 
-          source:
-            'lesson',
+            date,
 
-          title:
-            `Private Lesson: ${athleteName}`,
+            startDate: tournament.event_date,
 
-          eventType:
-            'Private Lesson',
+            endDate: tournament.end_date,
 
-          date:
-            lesson.requested_date,
+            occurrenceStart: tournament.event_date,
 
-          startDate:
-            lesson.requested_date,
+            occurrenceEnd: tournament.end_date || tournament.event_date,
 
-          endDate:
-            null,
+            startTime: null,
 
-          occurrenceStart:
-            lesson.requested_date,
+            endTime: null,
 
-          occurrenceEnd:
-            lesson.requested_date,
+            allDay: true,
 
-          startTime:
-            lesson.requested_time,
+            location: tournament.location,
 
-          endTime:
-            null,
+            notes: null,
 
-          allDay:
-            false,
+            original: tournament,
 
-          location:
-            null,
+            isFirstDay: index === 0,
 
-          notes:
-            lesson.lesson_focus,
+            isLastDay: index === tournamentDates.length - 1,
 
-          coachName:
-            coach?.display_name ||
-            null,
+            isMultiDay: tournamentDates.length > 1,
 
-          lessonStatus:
-            lesson.status,
-
-          original:
-            lesson,
-
-          isFirstDay:
-            true,
-
-          isLastDay:
-            true,
-
-          isMultiDay:
-            false,
-
-          isRecurring:
-            false,
+            isRecurring: false,
+          })
         })
       }
 
-      return [
-        ...manualEvents,
-        ...tournamentEvents,
-        ...lessonEvents,
-      ].sort(
-        (a, b) => {
-          const dateCompare =
-            a.date.localeCompare(
-              b.date
-            )
+      if (tournament.registration_deadline) {
+        tournamentEvents.push({
+          id: `deadline-${tournament.id}`,
 
-          if (
-            dateCompare !== 0
-          ) {
-            return dateCompare
-          }
+          source: 'tournament-deadline',
 
-          if (
-            a.eventType ===
-              'Tournament' &&
-            b.eventType !==
-              'Tournament'
-          ) {
-            return -1
-          }
+          title: `${tournament.name} Registration Deadline`,
 
-          if (
-            b.eventType ===
-              'Tournament' &&
-            a.eventType !==
-              'Tournament'
-          ) {
-            return 1
-          }
+          eventType: 'Deadline',
 
-          return a.title.localeCompare(
-            b.title
-          )
-        }
-      )
-    }, [
-      calendarEvents,
-      tournaments,
-      privateLessons,
-      lessonCoaches,
-      members,
-      recurrenceHorizon,
-    ])
+          date: tournament.registration_deadline,
 
-  const eventsByDate =
-    useMemo(() => {
-      const grouped = {}
+          startDate: tournament.registration_deadline,
 
-      for (const event of
-        combinedEvents) {
-        if (
-          !grouped[
-            event.date
-          ]
-        ) {
-          grouped[
-            event.date
-          ] = []
-        }
+          endDate: null,
 
-        grouped[
-          event.date
-        ].push(
-          event
-        )
+          occurrenceStart: tournament.registration_deadline,
+
+          occurrenceEnd: tournament.registration_deadline,
+
+          startTime: null,
+
+          endTime: null,
+
+          allDay: true,
+
+          location: null,
+
+          notes: null,
+
+          original: tournament,
+
+          isFirstDay: true,
+
+          isLastDay: true,
+
+          isMultiDay: false,
+
+          isRecurring: false,
+        })
+      }
+    }
+
+    const lessonEvents = []
+
+    for (const lesson of privateLessons) {
+      if (!lesson.requested_date) {
+        continue
       }
 
-      return grouped
-    }, [
-      combinedEvents,
-    ])
+      const athlete = members.find((member) => member.id === lesson.member_id)
 
-  const calendarDays =
-    useMemo(() => {
-      const year =
-        visibleMonth.getFullYear()
+      const coach = lessonCoaches.find((item) => item.id === lesson.coach_id)
 
-      const month =
-        visibleMonth.getMonth()
+      const athleteName = athlete ? `${athlete.first_name} ${athlete.last_name}` : 'Athlete'
 
-      const firstDay =
-        new Date(
-          year,
-          month,
-          1
-        )
+      lessonEvents.push({
+        id: `lesson-${lesson.id}`,
 
-      const lastDay =
-        new Date(
-          year,
-          month + 1,
-          0
-        )
+        source: 'lesson',
 
-      const cells = []
+        title: `Private Lesson: ${athleteName}`,
 
-      for (
-        let index = 0;
-        index <
-        firstDay.getDay();
-        index++
-      ) {
-        cells.push(null)
+        eventType: 'Private Lesson',
+
+        date: lesson.requested_date,
+
+        startDate: lesson.requested_date,
+
+        endDate: null,
+
+        occurrenceStart: lesson.requested_date,
+
+        occurrenceEnd: lesson.requested_date,
+
+        startTime: lesson.requested_time,
+
+        endTime: null,
+
+        allDay: false,
+
+        location: null,
+
+        notes: lesson.lesson_focus,
+
+        coachName: coach?.display_name || null,
+
+        lessonStatus: lesson.status,
+
+        original: lesson,
+
+        isFirstDay: true,
+
+        isLastDay: true,
+
+        isMultiDay: false,
+
+        isRecurring: false,
+      })
+    }
+
+    return [...manualEvents, ...tournamentEvents, ...lessonEvents].sort((a, b) => {
+      const dateCompare = a.date.localeCompare(b.date)
+
+      if (dateCompare !== 0) {
+        return dateCompare
       }
 
-      for (
-        let day = 1;
-        day <=
-        lastDay.getDate();
-        day++
-      ) {
-        cells.push(
-          new Date(
-            year,
-            month,
-            day
-          )
-        )
+      if (a.eventType === 'Tournament' && b.eventType !== 'Tournament') {
+        return -1
       }
 
-      while (
-        cells.length %
-          7 !==
-        0
-      ) {
-        cells.push(null)
+      if (b.eventType === 'Tournament' && a.eventType !== 'Tournament') {
+        return 1
       }
 
-      return cells
-    }, [
-      visibleMonth,
-    ])
+      return a.title.localeCompare(b.title)
+    })
+  }, [calendarEvents, tournaments, privateLessons, lessonCoaches, members, recurrenceHorizon])
 
-  const upcomingEvents =
-    useMemo(() => {
-      const todayString =
-        dateToString(
-          new Date()
-        )
+  const eventsByDate = useMemo(() => {
+    const grouped = {}
 
-      const uniqueEvents =
-        new Map()
+    for (const event of combinedEvents) {
+      if (!grouped[event.date]) {
+        grouped[event.date] = []
+      }
 
-      for (const event of
-        combinedEvents) {
-        const occurrenceEnd =
-          event.occurrenceEnd ||
-          event.date
+      grouped[event.date].push(event)
+    }
 
-        if (
-          occurrenceEnd <
-          todayString
-        ) {
-          continue
-        }
+    return grouped
+  }, [combinedEvents])
 
-        let key
+  const calendarDays = useMemo(() => {
+    const year = visibleMonth.getFullYear()
 
-        /*
+    const month = visibleMonth.getMonth()
+
+    const firstDay = new Date(year, month, 1)
+
+    const lastDay = new Date(year, month + 1, 0)
+
+    const cells = []
+
+    for (let index = 0; index < firstDay.getDay(); index++) {
+      cells.push(null)
+    }
+
+    for (let day = 1; day <= lastDay.getDate(); day++) {
+      cells.push(new Date(year, month, day))
+    }
+
+    while (cells.length % 7 !== 0) {
+      cells.push(null)
+    }
+
+    return cells
+  }, [visibleMonth])
+
+  const upcomingEvents = useMemo(() => {
+    const todayString = dateToString(new Date())
+
+    const uniqueEvents = new Map()
+
+    for (const event of combinedEvents) {
+      const occurrenceEnd = event.occurrenceEnd || event.date
+
+      if (occurrenceEnd < todayString) {
+        continue
+      }
+
+      let key
+
+      /*
           Each occurrence of a recurring
           series should appear separately
           in Upcoming Events.
         */
 
-        if (
-          event.source ===
-            'calendar' &&
-          event.isRecurring
-        ) {
-          key =
-            `calendar-${event.original.id}-${event.occurrenceStart}`
-        } else if (
-          event.source ===
-          'calendar'
-        ) {
-          key =
-            `calendar-${event.original.id}`
-        } else if (
-          event.source ===
-          'tournament'
-        ) {
-          key =
-            `tournament-${event.original.id}`
-        } else if (
-          event.source ===
-          'lesson'
-        ) {
-          key =
-            `lesson-${event.original.id}`
-        } else {
-          key =
-            `deadline-${event.original.id}`
-        }
-
-        if (
-          uniqueEvents.has(
-            key
-          )
-        ) {
-          continue
-        }
-
-        const displayDate =
-          event.occurrenceStart <
-            todayString &&
-          occurrenceEnd >=
-            todayString
-            ? todayString
-            : event.occurrenceStart
-
-        uniqueEvents.set(
-          key,
-          {
-            ...event,
-            date:
-              displayDate ||
-              event.date,
-          }
-        )
+      if (event.source === 'calendar' && event.isRecurring) {
+        key = `calendar-${event.original.id}-${event.occurrenceStart}`
+      } else if (event.source === 'calendar') {
+        key = `calendar-${event.original.id}`
+      } else if (event.source === 'tournament') {
+        key = `tournament-${event.original.id}`
+      } else if (event.source === 'lesson') {
+        key = `lesson-${event.original.id}`
+      } else {
+        key = `deadline-${event.original.id}`
       }
 
-      return Array.from(
-        uniqueEvents.values()
-      )
-        .sort(
-          (a, b) =>
-            a.date.localeCompare(
-              b.date
-            )
-        )
-        .slice(
-          0,
-          8
-        )
-    }, [
-      combinedEvents,
-    ])
+      if (uniqueEvents.has(key)) {
+        continue
+      }
 
-  const selectedEvents =
-    selectedDate
-      ? eventsByDate[
-          selectedDate
-        ] || []
-      : []
+      const displayDate =
+        event.occurrenceStart < todayString && occurrenceEnd >= todayString
+          ? todayString
+          : event.occurrenceStart
+
+      uniqueEvents.set(key, {
+        ...event,
+        date: displayDate || event.date,
+      })
+    }
+
+    return Array.from(uniqueEvents.values())
+      .sort((a, b) => a.date.localeCompare(b.date))
+      .slice(0, 8)
+  }, [combinedEvents])
+
+  const selectedEvents = selectedDate ? eventsByDate[selectedDate] || [] : []
 
   function goPreviousMonth() {
-    setVisibleMonth(
-      (current) =>
-        new Date(
-          current.getFullYear(),
-          current.getMonth() -
-            1,
-          1
-        )
-    )
+    setVisibleMonth((current) => new Date(current.getFullYear(), current.getMonth() - 1, 1))
   }
 
   function goNextMonth() {
-    setVisibleMonth(
-      (current) =>
-        new Date(
-          current.getFullYear(),
-          current.getMonth() +
-            1,
-          1
-        )
-    )
+    setVisibleMonth((current) => new Date(current.getFullYear(), current.getMonth() + 1, 1))
   }
 
   function goToday() {
-    const now =
-      new Date()
+    const now = new Date()
 
-    setVisibleMonth(
-      new Date(
-        now.getFullYear(),
-        now.getMonth(),
-        1
-      )
-    )
+    setVisibleMonth(new Date(now.getFullYear(), now.getMonth(), 1))
 
-    setSelectedDate(
-      dateToString(
-        now
-      )
-    )
+    setSelectedDate(dateToString(now))
   }
 
-  function openAddEvent(
-    dateString = null
-  ) {
-    setEditingEvent(
-      null
-    )
+  function openAddEvent(dateString = null) {
+    setEditingEvent(null)
 
     if (dateString) {
-      setSelectedDate(
-        dateString
-      )
+      setSelectedDate(dateString)
     }
 
-    setShowForm(
-      true
-    )
+    setShowForm(true)
   }
 
-  function openEditEvent(
-    event
-  ) {
-    if (
-      event.source !==
-      'calendar'
-    ) {
+  function openEditEvent(event) {
+    if (event.source !== 'calendar') {
       return
     }
 
-    setEditingEvent(
-      event.original
-    )
+    setEditingEvent(event.original)
 
-    setShowForm(
-      true
-    )
+    setShowForm(true)
   }
 
   function closeForm() {
-    setShowForm(
-      false
-    )
+    setShowForm(false)
 
-    setEditingEvent(
-      null
-    )
+    setEditingEvent(null)
   }
 
-  function openTournamentEditor(
-    event
-  ) {
-    if (
-      event.source !==
-        'tournament' &&
-      event.source !==
-        'tournament-deadline'
-    ) {
+  function openTournamentEditor(event) {
+    if (event.source !== 'tournament' && event.source !== 'tournament-deadline') {
       return
     }
 
-    setEditingTournament(
-      event.original
-    )
+    setEditingTournament(event.original)
   }
 
   function closeTournamentEditor() {
-    setEditingTournament(
-      null
-    )
+    setEditingTournament(null)
   }
 
-  async function handleTournamentSaved(
-    tournament
-  ) {
-    if (
-      onTournamentsChanged
-    ) {
+  async function handleTournamentSaved(tournament) {
+    if (onTournamentsChanged) {
       await onTournamentsChanged()
     }
 
-    if (
-      tournament?.event_date
-    ) {
-      const date =
-        stringToDate(
-          tournament.event_date
-        )
+    if (tournament?.event_date) {
+      const date = stringToDate(tournament.event_date)
 
       if (date) {
-        setVisibleMonth(
-          new Date(
-            date.getFullYear(),
-            date.getMonth(),
-            1
-          )
-        )
+        setVisibleMonth(new Date(date.getFullYear(), date.getMonth(), 1))
 
-        setSelectedDate(
-          tournament.event_date
-        )
+        setSelectedDate(tournament.event_date)
       }
     }
   }
 
-  async function deleteEvent(
-    event
-  ) {
-    if (
-      event.source !==
-      'calendar'
-    ) {
+  async function deleteEvent(event) {
+    if (event.source !== 'calendar') {
       return
     }
 
-    const recurring =
-      event.original
-        .recurrence_type ===
-      'weekly'
+    const recurring = event.original.recurrence_type === 'weekly'
 
-    const confirmationMessage =
-      recurring
-        ? `Delete the entire recurring series "${event.title}"?`
-        : `Delete "${event.title}" from the calendar?`
+    const confirmationMessage = recurring
+      ? `Delete the entire recurring series "${event.title}"?`
+      : `Delete "${event.title}" from the calendar?`
 
-    const confirmed =
-      window.confirm(
-        confirmationMessage
-      )
+    const confirmed = window.confirm(confirmationMessage)
 
     if (!confirmed) {
       return
@@ -1345,105 +732,54 @@ function CalendarPage({
 
     setMessage('')
 
-    const {
-      error,
-    } =
-      await supabase
-        .from(
-          'calendar_events'
-        )
-        .delete()
-        .eq(
-          'id',
-          event.original.id
-        )
+    const { error } = await supabase.from('calendar_events').delete().eq('id', event.original.id)
 
     if (error) {
-      setMessage(
-        error.message
-      )
+      setMessage(error.message)
       return
     }
 
-    if (
-      onCalendarEventsChanged
-    ) {
+    if (onCalendarEventsChanged) {
       await onCalendarEventsChanged()
     }
   }
 
-  function handleCalendarChipClick(
-    event,
-    dateString,
-    clickEvent
-  ) {
+  function handleCalendarChipClick(event, dateString, clickEvent) {
     clickEvent.stopPropagation()
 
-    setSelectedDate(
-      dateString
-    )
+    setSelectedDate(dateString)
 
     if (readOnly) {
       return
     }
 
-    if (
-      event.source ===
-      'calendar'
-    ) {
-      openEditEvent(
-        event
-      )
+    if (event.source === 'calendar') {
+      openEditEvent(event)
 
       return
     }
 
-    if (
-      event.source ===
-        'tournament' ||
-      event.source ===
-        'tournament-deadline'
-    ) {
-      openTournamentEditor(
-        event
-      )
+    if (event.source === 'tournament' || event.source === 'tournament-deadline') {
+      openTournamentEditor(event)
     }
   }
 
-  function handleUpcomingClick(
-    event
-  ) {
-    const targetDate =
-      event.date
+  function handleUpcomingClick(event) {
+    const targetDate = event.date
 
-    setSelectedDate(
-      targetDate
-    )
+    setSelectedDate(targetDate)
 
-    const date =
-      stringToDate(
-        targetDate
-      )
+    const date = stringToDate(targetDate)
 
     if (!date) {
       return
     }
 
-    setVisibleMonth(
-      new Date(
-        date.getFullYear(),
-        date.getMonth(),
-        1
-      )
-    )
+    setVisibleMonth(new Date(date.getFullYear(), date.getMonth(), 1))
   }
 
-  function getEventClass(
-    eventType
-  ) {
-    switch (
-      eventType
-    ) {
+  function getEventClass(eventType) {
+    switch (eventType) {
       case 'Training':
         return 'training'
 
@@ -1475,17 +811,11 @@ function CalendarPage({
 
   return (
     <div className="mat-page">
-
       <section className="mat-hero">
-
         <div>
-          <div className="mat-eyebrow">
-            Team Schedule
-          </div>
+          <div className="mat-eyebrow">Team Schedule</div>
 
-          <h1 className="mat-page-title">
-            Calendar
-          </h1>
+          <h1 className="mat-page-title">Calendar</h1>
 
           <p className="mat-page-description">
             {showPrivateLessons
@@ -1498,85 +828,51 @@ function CalendarPage({
           <button
             type="button"
             className="mat-primary-button"
-            onClick={() =>
-              openAddEvent(
-                selectedDate
-              )
-            }
+            onClick={() => openAddEvent(selectedDate)}
           >
             <Plus size={19} />
             Add Event
           </button>
         )}
-
       </section>
 
-      {message && (
-        <div className="mat-error">
-          {message}
-        </div>
-      )}
+      {message && <div className="mat-error">{message}</div>}
 
       <div className="mat-calendar-layout">
-
         <section className="mat-calendar-panel">
-
           <div className="mat-calendar-toolbar">
-
             <div>
               <h2>
-                {visibleMonth.toLocaleDateString(
-                  undefined,
-                  {
-                    month:
-                      'long',
-                    year:
-                      'numeric',
-                  }
-                )}
+                {visibleMonth.toLocaleDateString(undefined, {
+                  month: 'long',
+                  year: 'numeric',
+                })}
               </h2>
             </div>
 
             <div className="mat-calendar-navigation">
-
               <button
                 type="button"
                 className="mat-secondary-button"
-                onClick={
-                  goPreviousMonth
-                }
+                onClick={goPreviousMonth}
                 aria-label="Previous month"
               >
-                <ChevronLeft
-                  size={17}
-                />
+                <ChevronLeft size={17} />
               </button>
 
-              <button
-                type="button"
-                className="mat-secondary-button"
-                onClick={
-                  goToday
-                }
-              >
+              <button type="button" className="mat-secondary-button" onClick={goToday}>
                 Today
               </button>
 
               <button
                 type="button"
                 className="mat-secondary-button"
-                onClick={
-                  goNextMonth
-                }
+                onClick={goNextMonth}
                 aria-label="Next month"
               >
-                <ChevronRight
-                  size={17}
-                />
+                <ChevronRight size={17} />
               </button>
-
             </div>
-
           </div>
 
           <div className="mat-calendar-weekdays">
@@ -1590,589 +886,298 @@ function CalendarPage({
           </div>
 
           <div className="mat-calendar-grid">
-
-            {calendarDays.map(
-              (
-                date,
-                index
-              ) => {
-                if (!date) {
-                  return (
-                    <div
-                      key={
-                        `blank-${index}`
-                      }
-                      className="mat-calendar-day empty"
-                    />
-                  )
-                }
-
-                const dateString =
-                  dateToString(
-                    date
-                  )
-
-                const dayEvents =
-                  eventsByDate[
-                    dateString
-                  ] || []
-
-                const isToday =
-                  dateString ===
-                  dateToString(
-                    new Date()
-                  )
-
-                const isSelected =
-                  dateString ===
-                  selectedDate
-
-                return (
-                  <button
-                    type="button"
-                    key={
-                      dateString
-                    }
-                    className={`mat-calendar-day ${
-                      isToday
-                        ? 'today'
-                        : ''
-                    } ${
-                      isSelected
-                        ? 'selected'
-                        : ''
-                    }`}
-                    onClick={() =>
-                      setSelectedDate(
-                        dateString
-                      )
-                    }
-                  >
-
-                    <div className="mat-calendar-day-number">
-                      {
-                        date.getDate()
-                      }
-                    </div>
-
-                    <div className="mat-calendar-day-events">
-
-                      {dayEvents
-                        .slice(
-                          0,
-                          3
-                        )
-                        .map(
-                          (
-                            event
-                          ) => (
-                            <div
-                              key={
-                                event.id
-                              }
-                              className={`mat-calendar-chip ${getEventClass(
-                                event.eventType
-                              )} ${
-                                event.isMultiDay
-                                  ? 'multi-day'
-                                  : ''
-                              } ${
-                                event.isFirstDay
-                                  ? 'first-day'
-                                  : ''
-                              } ${
-                                event.isLastDay
-                                  ? 'last-day'
-                                  : ''
-                              }`}
-                              onClick={(
-                                clickEvent
-                              ) =>
-                                handleCalendarChipClick(
-                                  event,
-                                  dateString,
-                                  clickEvent
-                                )
-                              }
-                              title={
-                                readOnly ||
-                                event.source ===
-                                  'lesson'
-                                  ? event.title
-                                  : `Edit ${event.title}`
-                              }
-                            >
-                              {event.isRecurring && (
-                                <Repeat2
-                                  size={10}
-                                />
-                              )}
-
-                              <span>
-                                {
-                                  event.title
-                                }
-                              </span>
-                            </div>
-                          )
-                        )}
-
-                      {dayEvents.length >
-                        3 && (
-                        <div className="mat-calendar-more">
-                          +
-                          {dayEvents.length -
-                            3}{' '}
-                          more
-                        </div>
-                      )}
-
-                    </div>
-
-                  </button>
-                )
+            {calendarDays.map((date, index) => {
+              if (!date) {
+                return <div key={`blank-${index}`} className="mat-calendar-day empty" />
               }
-            )}
 
+              const dateString = dateToString(date)
+
+              const dayEvents = eventsByDate[dateString] || []
+
+              const isToday = dateString === dateToString(new Date())
+
+              const isSelected = dateString === selectedDate
+
+              return (
+                <button
+                  type="button"
+                  key={dateString}
+                  className={`mat-calendar-day ${isToday ? 'today' : ''} ${
+                    isSelected ? 'selected' : ''
+                  }`}
+                  onClick={() => setSelectedDate(dateString)}
+                >
+                  <div className="mat-calendar-day-number">{date.getDate()}</div>
+
+                  <div className="mat-calendar-day-events">
+                    {dayEvents.slice(0, 3).map((event) => (
+                      <div
+                        key={event.id}
+                        className={`mat-calendar-chip ${getEventClass(event.eventType)} ${
+                          event.isMultiDay ? 'multi-day' : ''
+                        } ${event.isFirstDay ? 'first-day' : ''} ${
+                          event.isLastDay ? 'last-day' : ''
+                        }`}
+                        onClick={(clickEvent) =>
+                          handleCalendarChipClick(event, dateString, clickEvent)
+                        }
+                        title={
+                          readOnly || event.source === 'lesson'
+                            ? event.title
+                            : `Edit ${event.title}`
+                        }
+                      >
+                        {event.isRecurring && <Repeat2 size={10} />}
+
+                        <span>{event.title}</span>
+                      </div>
+                    ))}
+
+                    {dayEvents.length > 3 && (
+                      <div className="mat-calendar-more">+{dayEvents.length - 3} more</div>
+                    )}
+                  </div>
+                </button>
+              )
+            })}
           </div>
-
         </section>
 
         <aside className="mat-calendar-sidebar">
-
           {selectedDate && (
             <section className="mat-calendar-side-card">
-
               <div className="mat-calendar-side-header">
-
                 <div>
-                  <span>
-                    Selected Date
-                  </span>
+                  <span>Selected Date</span>
 
-                  <strong>
-                    {formatDate(
-                      selectedDate
-                    )}
-                  </strong>
+                  <strong>{formatDate(selectedDate)}</strong>
                 </div>
 
                 {!readOnly && (
                   <button
                     type="button"
                     className="mat-primary-button"
-                    onClick={() =>
-                      openAddEvent(
-                        selectedDate
-                      )
-                    }
+                    onClick={() => openAddEvent(selectedDate)}
                     aria-label="Add event on selected date"
                   >
-                    <Plus
-                      size={16}
-                    />
+                    <Plus size={16} />
                   </button>
                 )}
-
               </div>
 
-              {selectedEvents.length ===
-              0 ? (
-                <div className="mat-calendar-empty">
-                  No events
-                  scheduled.
-                </div>
+              {selectedEvents.length === 0 ? (
+                <div className="mat-calendar-empty">No events scheduled.</div>
               ) : (
                 <div className="mat-calendar-event-list">
-
-                  {selectedEvents.map(
-                    (event) => (
-                      <div
-                        key={
-                          event.id
-                        }
-                        className="mat-calendar-event-card"
-                      >
-
-                        <div className="mat-calendar-event-card-top">
-
-                          <span
-                            className={`mat-calendar-event-type ${getEventClass(
-                              event.eventType
-                            )}`}
-                          >
-                            {
-                              event.eventType
-                            }
-                          </span>
-
-                          {event.isRecurring && (
-                            <span className="mat-calendar-recurring-badge">
-                              <Repeat2
-                                size={12}
-                              />
-                              Weekly
-                            </span>
-                          )}
-
-                        </div>
-
-                        <strong>
-                          {
-                            event.title
-                          }
-                        </strong>
+                  {selectedEvents.map((event) => (
+                    <div key={event.id} className="mat-calendar-event-card">
+                      <div className="mat-calendar-event-card-top">
+                        <span
+                          className={`mat-calendar-event-type ${getEventClass(event.eventType)}`}
+                        >
+                          {event.eventType}
+                        </span>
 
                         {event.isRecurring && (
-                          <span>
-                            <Repeat2
-                              size={13}
-                            />
-
-                            Every{' '}
-                            {getWeekdayName(
-                              event.original
-                                .event_date
-                            )}
-
-                            {event.original
-                              .recurrence_end_date
-                              ? ` until ${formatDate(
-                                  event.original
-                                    .recurrence_end_date
-                                )}`
-                              : ''}
+                          <span className="mat-calendar-recurring-badge">
+                            <Repeat2 size={12} />
+                            Weekly
                           </span>
                         )}
+                      </div>
 
-                        {event.isMultiDay ? (
-                          <span>
-                            <CalendarDays
-                              size={13}
-                            />
+                      <strong>{event.title}</strong>
 
-                            {formatDateRange(
-                              event.occurrenceStart,
-                              event.occurrenceEnd
-                            )}
-                          </span>
-                        ) : event.allDay ? (
-                          <span>
-                            <CalendarDays
-                              size={13}
-                            />
+                      {event.isRecurring && (
+                        <span>
+                          <Repeat2 size={13} />
+                          Every {getWeekdayName(event.original.event_date)}
+                          {event.original.recurrence_end_date
+                            ? ` until ${formatDate(event.original.recurrence_end_date)}`
+                            : ''}
+                        </span>
+                      )}
 
-                            All Day
-                          </span>
-                        ) : null}
+                      {event.isMultiDay ? (
+                        <span>
+                          <CalendarDays size={13} />
 
-                        {event.source ===
-                          'lesson' &&
-                          !event.startTime && (
-                            <span>
-                              <Clock3
-                                size={13}
-                              />
+                          {formatDateRange(event.occurrenceStart, event.occurrenceEnd)}
+                        </span>
+                      ) : event.allDay ? (
+                        <span>
+                          <CalendarDays size={13} />
+                          All Day
+                        </span>
+                      ) : null}
 
-                              Flexible time
-                            </span>
-                          )}
+                      {event.source === 'lesson' && !event.startTime && (
+                        <span>
+                          <Clock3 size={13} />
+                          Flexible time
+                        </span>
+                      )}
 
-                        {!event.allDay &&
-                          event.startTime && (
-                            <span>
-                              <Clock3
-                                size={13}
-                              />
+                      {!event.allDay && event.startTime && (
+                        <span>
+                          <Clock3 size={13} />
 
-                              {formatTime(
-                                event.startTime
-                              )}
+                          {formatTime(event.startTime)}
 
-                              {event.endTime
-                                ? ` – ${formatTime(
-                                    event.endTime
-                                  )}`
-                                : ''}
-                            </span>
-                          )}
+                          {event.endTime ? ` – ${formatTime(event.endTime)}` : ''}
+                        </span>
+                      )}
 
-                        {event.source ===
-                          'lesson' &&
-                          event.coachName && (
-                            <span>
-                              <User
-                                size={13}
-                              />
+                      {event.source === 'lesson' && event.coachName && (
+                        <span>
+                          <User size={13} />
 
-                              {
-                                event.coachName
-                              }
-                            </span>
-                          )}
+                          {event.coachName}
+                        </span>
+                      )}
 
-                        {event.location && (
-                          <span>
-                            <MapPin
-                              size={13}
-                            />
+                      {event.location && (
+                        <span>
+                          <MapPin size={13} />
 
-                            {
-                              event.location
-                            }
-                          </span>
-                        )}
+                          {event.location}
+                        </span>
+                      )}
 
-                        {event.notes && (
-                          <p>
-                            {
-                              event.notes
-                            }
-                          </p>
-                        )}
+                      {event.notes && <p>{event.notes}</p>}
 
-                        {!readOnly && (
+                      {!readOnly && (
                         <div className="mat-calendar-event-actions">
-
-                          {event.source ===
-                            'calendar' && (
+                          {event.source === 'calendar' && (
                             <>
                               <button
                                 type="button"
                                 className="mat-calendar-edit-button"
-                                onClick={() =>
-                                  openEditEvent(
-                                    event
-                                  )
-                                }
+                                onClick={() => openEditEvent(event)}
                               >
-                                <Pencil
-                                  size={14}
-                                />
+                                <Pencil size={14} />
 
-                                {event.isRecurring
-                                  ? 'Edit Series'
-                                  : 'Edit Event'}
+                                {event.isRecurring ? 'Edit Series' : 'Edit Event'}
                               </button>
 
                               <button
                                 type="button"
                                 className="mat-calendar-delete-button"
-                                onClick={() =>
-                                  deleteEvent(
-                                    event
-                                  )
-                                }
+                                onClick={() => deleteEvent(event)}
                               >
-                                <Trash2
-                                  size={14}
-                                />
+                                <Trash2 size={14} />
 
-                                {event.isRecurring
-                                  ? 'Delete Series'
-                                  : 'Delete'}
+                                {event.isRecurring ? 'Delete Series' : 'Delete'}
                               </button>
                             </>
                           )}
 
-                          {(event.source ===
-                              'tournament' ||
-                            event.source ===
-                              'tournament-deadline') && (
+                          {(event.source === 'tournament' ||
+                            event.source === 'tournament-deadline') && (
                             <button
                               type="button"
                               className="mat-calendar-edit-button"
-                              onClick={() =>
-                                openTournamentEditor(
-                                  event
-                                )
-                              }
+                              onClick={() => openTournamentEditor(event)}
                             >
-                              <Pencil
-                                size={14}
-                              />
-
+                              <Pencil size={14} />
                               Edit Tournament
                             </button>
                           )}
-
                         </div>
-                        )}
-
-                      </div>
-                    )
-                  )}
-
+                      )}
+                    </div>
+                  ))}
                 </div>
               )}
-
             </section>
           )}
 
           <section className="mat-calendar-side-card">
-
             <div className="mat-calendar-side-header">
-
               <div>
-                <span>
-                  Coming Up
-                </span>
+                <span>Coming Up</span>
 
-                <strong>
-                  Upcoming Events
-                </strong>
+                <strong>Upcoming Events</strong>
               </div>
 
-              <CalendarDays
-                size={19}
-              />
-
+              <CalendarDays size={19} />
             </div>
 
-            {upcomingEvents.length ===
-            0 ? (
-              <div className="mat-calendar-empty">
-                Nothing
-                scheduled yet.
-              </div>
+            {upcomingEvents.length === 0 ? (
+              <div className="mat-calendar-empty">Nothing scheduled yet.</div>
             ) : (
               <div className="mat-calendar-upcoming-list">
+                {upcomingEvents.map((event) => (
+                  <button
+                    type="button"
+                    key={
+                      event.isRecurring
+                        ? `${event.original.id}-${event.occurrenceStart}`
+                        : `${event.source}-${event.original.id}`
+                    }
+                    className="mat-calendar-upcoming"
+                    onClick={() => handleUpcomingClick(event)}
+                  >
+                    <div className="mat-calendar-upcoming-date">
+                      <strong>
+                        {stringToDate(event.date)?.toLocaleDateString(undefined, {
+                          day: 'numeric',
+                        })}
+                      </strong>
 
-                {upcomingEvents.map(
-                  (event) => (
-                    <button
-                      type="button"
-                      key={
-                        event.isRecurring
-                          ? `${event.original.id}-${event.occurrenceStart}`
-                          : `${event.source}-${event.original.id}`
-                      }
-                      className="mat-calendar-upcoming"
-                      onClick={() =>
-                        handleUpcomingClick(
-                          event
-                        )
-                      }
-                    >
+                      <span>
+                        {stringToDate(event.date)?.toLocaleDateString(undefined, {
+                          month: 'short',
+                        })}
+                      </span>
+                    </div>
 
-                      <div className="mat-calendar-upcoming-date">
+                    <div>
+                      <strong>{event.title}</strong>
 
-                        <strong>
-                          {stringToDate(
-                            event.date
-                          )?.toLocaleDateString(
-                            undefined,
-                            {
-                              day:
-                                'numeric',
-                            }
-                          )}
-                        </strong>
+                      <span>
+                        {event.eventType}
 
-                        <span>
-                          {stringToDate(
-                            event.date
-                          )?.toLocaleDateString(
-                            undefined,
-                            {
-                              month:
-                                'short',
-                            }
-                          )}
-                        </span>
+                        {event.isRecurring
+                          ? ` • Every ${getWeekdayName(event.original.event_date)}`
+                          : event.isMultiDay
+                            ? ` • ${formatDateRange(event.occurrenceStart, event.occurrenceEnd)}`
+                            : ''}
+                      </span>
+                    </div>
 
-                      </div>
-
-                      <div>
-
-                        <strong>
-                          {
-                            event.title
-                          }
-                        </strong>
-
-                        <span>
-                          {
-                            event.eventType
-                          }
-
-                          {event.isRecurring
-                            ? ` • Every ${getWeekdayName(
-                                event.original
-                                  .event_date
-                              )}`
-                            : event.isMultiDay
-                              ? ` • ${formatDateRange(
-                                  event.occurrenceStart,
-                                  event.occurrenceEnd
-                                )}`
-                              : ''}
-                        </span>
-
-                      </div>
-
-                      {event.isRecurring ? (
-                        <Repeat2
-                          size={16}
-                        />
-                      ) : event.eventType ===
-                        'Tournament' ? (
-                        <Trophy
-                          size={16}
-                        />
-                      ) : event.source ===
-                        'lesson' ? (
-                        <User
-                          size={16}
-                        />
-                      ) : null}
-
-                    </button>
-                  )
-                )}
-
+                    {event.isRecurring ? (
+                      <Repeat2 size={16} />
+                    ) : event.eventType === 'Tournament' ? (
+                      <Trophy size={16} />
+                    ) : event.source === 'lesson' ? (
+                      <User size={16} />
+                    ) : null}
+                  </button>
+                ))}
               </div>
             )}
-
           </section>
-
         </aside>
-
       </div>
 
-      {showForm &&
-        !readOnly && (
+      {showForm && !readOnly && (
         <CalendarEventForm
-          editingEvent={
-            editingEvent
-          }
-          defaultDate={
-            selectedDate
-          }
-          onClose={
-            closeForm
-          }
-          onSaved={
-            onCalendarEventsChanged
-          }
+          editingEvent={editingEvent}
+          defaultDate={selectedDate}
+          onClose={closeForm}
+          onSaved={onCalendarEventsChanged}
         />
       )}
 
-      {editingTournament &&
-        !readOnly && (
+      {editingTournament && !readOnly && (
         <TournamentForm
-          editingTournament={
-            editingTournament
-          }
-          onClose={
-            closeTournamentEditor
-          }
-          onSaved={
-            handleTournamentSaved
-          }
+          editingTournament={editingTournament}
+          onClose={closeTournamentEditor}
+          onSaved={handleTournamentSaved}
         />
       )}
-
     </div>
   )
 }

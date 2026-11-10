@@ -4,7 +4,9 @@ import { DEFAULT_SLIDE_IMAGES } from '../lib/homeCarousel.js'
 
 function usePrefersReducedMotion() {
   const [reduced, setReduced] = useState(
-    () => typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+    () =>
+      typeof window !== 'undefined' &&
+      window.matchMedia?.('(prefers-reduced-motion: reduce)').matches,
   )
 
   useEffect(() => {

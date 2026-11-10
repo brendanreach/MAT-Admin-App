@@ -19,7 +19,7 @@ export async function attachPosterUrls(tournaments) {
   if (error) console.error('Could not load tournament posters:', error.message)
 
   const urlsByPath = Object.fromEntries(
-    (data || []).filter((item) => item.signedUrl).map((item) => [item.path, item.signedUrl])
+    (data || []).filter((item) => item.signedUrl).map((item) => [item.path, item.signedUrl]),
   )
 
   return tournaments.map((tournament) => ({

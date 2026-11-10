@@ -53,52 +53,25 @@ const NAV_ITEMS = {
 }
 
 const MOBILE_PRIMARY_IDS = {
-  admin: [
-    'home',
-    'roster',
-    'tournaments',
-    'calendar',
-  ],
-  athlete: [
-    'home',
-    'coaches',
-    'tournaments',
-    'calendar',
-  ],
-  coach: [
-    'home',
-    'roster',
-    'tournaments',
-    'calendar',
-  ],
+  admin: ['home', 'roster', 'tournaments', 'calendar'],
+  athlete: ['home', 'coaches', 'tournaments', 'calendar'],
+  coach: ['home', 'roster', 'tournaments', 'calendar'],
 }
 
 function normalizeRoles(roles) {
   return Array.isArray(roles)
-    ? roles
-        .filter(Boolean)
-        .map((role) =>
-          String(role).trim().toLowerCase(),
-        )
+    ? roles.filter(Boolean).map((role) => String(role).trim().toLowerCase())
     : []
 }
 
 function initialTheme() {
-  const saved =
-    localStorage.getItem('mat-theme')
+  const saved = localStorage.getItem('mat-theme')
 
-  if (
-    saved === 'light' ||
-    saved === 'dark'
-  ) {
+  if (saved === 'light' || saved === 'dark') {
     return saved
   }
 
-  return window.matchMedia?.(
-    '(prefers-color-scheme: dark)',
-  ).matches
-    ? 'dark'
-    : 'light'
+  return window.matchMedia?.('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
 }
 
 export default function TopNav({
@@ -111,73 +84,36 @@ export default function TopNav({
   onLogout,
   badgeCounts = {},
 }) {
-  const [accountOpen, setAccountOpen] =
-    useState(false)
+  const [accountOpen, setAccountOpen] = useState(false)
 
-  const [mobileOpen, setMobileOpen] =
-    useState(false)
+  const [mobileOpen, setMobileOpen] = useState(false)
 
-  const [theme, setTheme] =
-    useState(initialTheme)
+  const [theme, setTheme] = useState(initialTheme)
 
   const accountRef = useRef(null)
 
-  const normalizedRoles = useMemo(
-    () => normalizeRoles(roles),
-    [roles],
-  )
+  const normalizedRoles = useMemo(() => normalizeRoles(roles), [roles])
 
   const views = useMemo(
-    () =>
-      ['admin', 'coach', 'athlete'].filter(
-        (role) =>
-          normalizedRoles.includes(role),
-      ),
+    () => ['admin', 'coach', 'athlete'].filter((role) => normalizedRoles.includes(role)),
     [normalizedRoles],
   )
 
-  const items =
-    NAV_ITEMS[viewMode] ||
-    NAV_ITEMS.athlete
+  const items = NAV_ITEMS[viewMode] || NAV_ITEMS.athlete
 
-  const mobilePrimaryItems =
-    useMemo(() => {
-      const primaryIds =
-        MOBILE_PRIMARY_IDS[viewMode] ||
-        MOBILE_PRIMARY_IDS.athlete
+  const mobilePrimaryItems = useMemo(() => {
+    const primaryIds = MOBILE_PRIMARY_IDS[viewMode] || MOBILE_PRIMARY_IDS.athlete
 
-      return primaryIds
-        .map((id) =>
-          items.find(
-            ([itemId]) =>
-              itemId === id,
-          ),
-        )
-        .filter(Boolean)
-    }, [items, viewMode])
+    return primaryIds.map((id) => items.find(([itemId]) => itemId === id)).filter(Boolean)
+  }, [items, viewMode])
 
-  const mobileMoreItems =
-    useMemo(() => {
-      const primaryIds =
-        new Set(
-          mobilePrimaryItems.map(
-            ([id]) => id,
-          ),
-        )
+  const mobileMoreItems = useMemo(() => {
+    const primaryIds = new Set(mobilePrimaryItems.map(([id]) => id))
 
-      return items.filter(
-        ([id]) =>
-          !primaryIds.has(id),
-      )
-    }, [
-      items,
-      mobilePrimaryItems,
-    ])
+    return items.filter(([id]) => !primaryIds.has(id))
+  }, [items, mobilePrimaryItems])
 
-  const moreIsActive =
-    mobileMoreItems.some(
-      ([id]) => id === activeTab,
-    )
+  const moreIsActive = mobileMoreItems.some(([id]) => id === activeTab)
 
   // Tabs that show a count badge, and how the count is read aloud.
   const BADGE_LABELS = {
@@ -185,53 +121,31 @@ export default function TopNav({
     approvals: 'results waiting for approval',
   }
 
-  const getBadgeCount = (id) =>
-    BADGE_LABELS[id]
-      ? Number(badgeCounts[id]) || 0
-      : 0
+  const getBadgeCount = (id) => (BADGE_LABELS[id] ? Number(badgeCounts[id]) || 0 : 0)
 
-  const moreHasBadge =
-    mobileMoreItems.some(
-      ([id]) => getBadgeCount(id) > 0,
-    )
+  const moreHasBadge = mobileMoreItems.some(([id]) => getBadgeCount(id) > 0)
 
   const renderUnreadBadge = (id) => {
-    const count =
-      getBadgeCount(id)
+    const count = getBadgeCount(id)
 
     return count > 0 ? (
-      <span
-        className="mat-unread-badge"
-        aria-label={`${count} ${BADGE_LABELS[id]}`}
-      >
-        {count > 99
-          ? '99+'
-          : count}
+      <span className="mat-unread-badge" aria-label={`${count} ${BADGE_LABELS[id]}`}>
+        {count > 99 ? '99+' : count}
       </span>
     ) : null
   }
 
   useEffect(() => {
-    document.documentElement.dataset.theme =
-      theme
+    document.documentElement.dataset.theme = theme
 
-    document.documentElement.style.colorScheme =
-      theme
+    document.documentElement.style.colorScheme = theme
 
-    localStorage.setItem(
-      'mat-theme',
-      theme,
-    )
+    localStorage.setItem('mat-theme', theme)
   }, [theme])
 
   useEffect(() => {
     const closeOutside = (event) => {
-      if (
-        accountRef.current &&
-        !accountRef.current.contains(
-          event.target,
-        )
-      ) {
+      if (accountRef.current && !accountRef.current.contains(event.target)) {
         setAccountOpen(false)
       }
     }
@@ -243,26 +157,14 @@ export default function TopNav({
       }
     }
 
-    document.addEventListener(
-      'mousedown',
-      closeOutside,
-    )
+    document.addEventListener('mousedown', closeOutside)
 
-    document.addEventListener(
-      'keydown',
-      closeOnEscape,
-    )
+    document.addEventListener('keydown', closeOnEscape)
 
     return () => {
-      document.removeEventListener(
-        'mousedown',
-        closeOutside,
-      )
+      document.removeEventListener('mousedown', closeOutside)
 
-      document.removeEventListener(
-        'keydown',
-        closeOnEscape,
-      )
+      document.removeEventListener('keydown', closeOnEscape)
     }
   }, [])
 
@@ -283,31 +185,15 @@ export default function TopNav({
   }
 
   const roleLabel = views.length
-    ? views
-        .map(
-          (view) =>
-            view[0].toUpperCase() +
-            view.slice(1),
-        )
-        .join(' + ')
+    ? views.map((view) => view[0].toUpperCase() + view.slice(1)).join(' + ')
     : 'Account'
 
-  const renderDesktopItem = (
-    [id, label, Icon],
-  ) => (
+  const renderDesktopItem = ([id, label, Icon]) => (
     <button
       key={id}
       type="button"
-      className={`mat-nav-button${
-        activeTab === id
-          ? ' active'
-          : ''
-      }`}
-      aria-current={
-        activeTab === id
-          ? 'page'
-          : undefined
-      }
+      className={`mat-nav-button${activeTab === id ? ' active' : ''}`}
+      aria-current={activeTab === id ? 'page' : undefined}
       onClick={() => goTo(id)}
     >
       <Icon className="mat-nav-icon" />
@@ -316,22 +202,12 @@ export default function TopNav({
     </button>
   )
 
-  const renderDrawerItem = (
-    [id, label, Icon],
-  ) => (
+  const renderDrawerItem = ([id, label, Icon]) => (
     <button
       key={id}
       type="button"
-      className={`mat-mobile-nav-button${
-        activeTab === id
-          ? ' active'
-          : ''
-      }`}
-      aria-current={
-        activeTab === id
-          ? 'page'
-          : undefined
-      }
+      className={`mat-mobile-nav-button${activeTab === id ? ' active' : ''}`}
+      aria-current={activeTab === id ? 'page' : undefined}
       onClick={() => goTo(id)}
     >
       <Icon className="mat-mobile-nav-icon" />
@@ -340,22 +216,12 @@ export default function TopNav({
     </button>
   )
 
-  const renderBottomItem = (
-    [id, label, Icon],
-  ) => (
+  const renderBottomItem = ([id, label, Icon]) => (
     <button
       key={id}
       type="button"
-      className={`mat-bottom-nav-button${
-        activeTab === id
-          ? ' active'
-          : ''
-      }`}
-      aria-current={
-        activeTab === id
-          ? 'page'
-          : undefined
-      }
+      className={`mat-bottom-nav-button${activeTab === id ? ' active' : ''}`}
+      aria-current={activeTab === id ? 'page' : undefined}
       onClick={() => goTo(id)}
     >
       <Icon className="mat-bottom-nav-icon" />
@@ -368,194 +234,90 @@ export default function TopNav({
     <>
       <header className="mat-navbar">
         <div className="mat-navbar-inner">
-          <button
-            type="button"
-            className="mat-brand"
-            onClick={() =>
-              goTo('home')
-            }
-          >
-            <img
-              className="mat-logo"
-              src="/mat-logo.jpg"
-              alt="Michigan Academy of Taekwondo"
-            />
+          <button type="button" className="mat-brand" onClick={() => goTo('home')}>
+            <img className="mat-logo" src="/mat-logo.jpg" alt="Michigan Academy of Taekwondo" />
           </button>
 
-          <nav
-            className="mat-nav-links"
-            aria-label="Primary navigation"
-          >
-            {items.map(
-              renderDesktopItem,
-            )}
+          <nav className="mat-nav-links" aria-label="Primary navigation">
+            {items.map(renderDesktopItem)}
           </nav>
 
           <div className="mat-navbar-actions">
             <button
               type="button"
               className="mat-theme-toggle"
-              aria-label={`Switch to ${
-                theme === 'dark'
-                  ? 'light'
-                  : 'dark'
-              } mode`}
-              onClick={() =>
-                setTheme(
-                  (current) =>
-                    current === 'dark'
-                      ? 'light'
-                      : 'dark',
-                )
-              }
+              aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+              onClick={() => setTheme((current) => (current === 'dark' ? 'light' : 'dark'))}
             >
-              {theme === 'dark' ? (
-                <Sun size={21} />
-              ) : (
-                <Moon size={21} />
-              )}
+              {theme === 'dark' ? <Sun size={21} /> : <Moon size={21} />}
             </button>
 
             <button
               type="button"
               className="mat-mobile-menu-toggle"
-              aria-label={
-                mobileOpen
-                  ? 'Close navigation menu'
-                  : 'Open navigation menu'
-              }
+              aria-label={mobileOpen ? 'Close navigation menu' : 'Open navigation menu'}
               aria-expanded={mobileOpen}
               aria-controls="mat-mobile-navigation"
-              onClick={() =>
-                setMobileOpen(
-                  (current) =>
-                    !current,
-                )
-              }
+              onClick={() => setMobileOpen((current) => !current)}
             >
-              {mobileOpen ? (
-                <X size={22} />
-              ) : (
-                <Menu size={22} />
-              )}
+              {mobileOpen ? <X size={22} /> : <Menu size={22} />}
             </button>
 
-            <div
-              className="mat-account-menu-wrap"
-              ref={accountRef}
-            >
+            <div className="mat-account-menu-wrap" ref={accountRef}>
               <button
                 type="button"
                 className="mat-account-menu-button"
                 aria-expanded={accountOpen}
-                onClick={() =>
-                  setAccountOpen(
-                    (current) =>
-                      !current,
-                  )
-                }
+                onClick={() => setAccountOpen((current) => !current)}
               >
                 <span className="mat-account-icon">
-                  <UserCircle2
-                    size={25}
-                  />
+                  <UserCircle2 size={25} />
                 </span>
 
                 <span className="mat-account-name-wrap">
-                  <span className="mat-account-email">
-                    {accountName}
-                  </span>
+                  <span className="mat-account-email">{accountName}</span>
 
-                  <span className="mat-account-role-label">
-                    {roleLabel}
-                  </span>
+                  <span className="mat-account-role-label">{roleLabel}</span>
                 </span>
 
-                <ChevronDown
-                  className="mat-account-chevron"
-                  size={16}
-                />
+                <ChevronDown className="mat-account-chevron" size={16} />
               </button>
 
               {accountOpen && (
                 <div className="mat-account-dropdown">
                   <div className="mat-account-dropdown-header">
-                    <strong>
-                      {accountName}
-                    </strong>
-                    <span>
-                      {roleLabel}
-                    </span>
+                    <strong>{accountName}</strong>
+                    <span>{roleLabel}</span>
                   </div>
 
                   {views.length > 1 && (
                     <div className="mat-view-switcher">
-                      <div className="mat-view-switcher-label">
-                        Switch View
-                      </div>
+                      <div className="mat-view-switcher-label">Switch View</div>
 
-                      {views.map(
-                        (view) => (
-                          <button
-                            key={view}
-                            type="button"
-                            className={
-                              viewMode ===
-                              view
-                                ? 'active'
-                                : ''
-                            }
-                            onClick={() =>
-                              switchView(
-                                view,
-                              )
-                            }
-                          >
-                            {view ===
-                            'admin' ? (
-                              <ShieldCheck
-                                size={
-                                  17
-                                }
-                              />
-                            ) : view ===
-                              'coach' ? (
-                              <UserRound
-                                size={
-                                  17
-                                }
-                              />
-                            ) : (
-                              <Award
-                                size={
-                                  17
-                                }
-                              />
-                            )}
+                      {views.map((view) => (
+                        <button
+                          key={view}
+                          type="button"
+                          className={viewMode === view ? 'active' : ''}
+                          onClick={() => switchView(view)}
+                        >
+                          {view === 'admin' ? (
+                            <ShieldCheck size={17} />
+                          ) : view === 'coach' ? (
+                            <UserRound size={17} />
+                          ) : (
+                            <Award size={17} />
+                          )}
 
-                            <span>
-                              {view[0].toUpperCase() +
-                                view.slice(
-                                  1,
-                                )}
-                            </span>
-                          </button>
-                        ),
-                      )}
+                          <span>{view[0].toUpperCase() + view.slice(1)}</span>
+                        </button>
+                      ))}
                     </div>
                   )}
 
-                  <button
-                    type="button"
-                    className="mat-account-dropdown-logout"
-                    onClick={onLogout}
-                  >
-                    <LogOut
-                      size={17}
-                    />
-                    <span>
-                      Log Out
-                    </span>
+                  <button type="button" className="mat-account-dropdown-logout" onClick={onLogout}>
+                    <LogOut size={17} />
+                    <span>Log Out</span>
                   </button>
                 </div>
               )}
@@ -565,67 +327,32 @@ export default function TopNav({
 
         <div
           id="mat-mobile-navigation"
-          className={`mat-mobile-navigation${
-            mobileOpen
-              ? ' open'
-              : ''
-          }`}
+          className={`mat-mobile-navigation${mobileOpen ? ' open' : ''}`}
         >
           <div className="mat-mobile-navigation-heading">
-            <span>
-              Navigation
-            </span>
-            <strong>
-              {viewMode[0].toUpperCase() +
-                viewMode.slice(1)}{' '}
-              View
-            </strong>
+            <span>Navigation</span>
+            <strong>{viewMode[0].toUpperCase() + viewMode.slice(1)} View</strong>
           </div>
 
-          <nav
-            className="mat-mobile-navigation-grid"
-            aria-label="Mobile navigation"
-          >
-            {mobileMoreItems.map(
-              renderDrawerItem,
-            )}
+          <nav className="mat-mobile-navigation-grid" aria-label="Mobile navigation">
+            {mobileMoreItems.map(renderDrawerItem)}
           </nav>
         </div>
       </header>
 
-      <nav
-        className="mat-bottom-navigation"
-        aria-label="App navigation"
-      >
-        {mobilePrimaryItems.map(
-          renderBottomItem,
-        )}
+      <nav className="mat-bottom-navigation" aria-label="App navigation">
+        {mobilePrimaryItems.map(renderBottomItem)}
 
         <button
           type="button"
-          className={`mat-bottom-nav-button${
-            moreIsActive ||
-            mobileOpen
-              ? ' active'
-              : ''
-          }`}
+          className={`mat-bottom-nav-button${moreIsActive || mobileOpen ? ' active' : ''}`}
           aria-label="More navigation options"
           aria-expanded={mobileOpen}
-          onClick={() =>
-            setMobileOpen(
-              (current) =>
-                !current,
-            )
-          }
+          onClick={() => setMobileOpen((current) => !current)}
         >
           <MoreHorizontal className="mat-bottom-nav-icon" />
           <span>More</span>
-          {moreHasBadge && (
-            <span
-              className="mat-unread-dot"
-              aria-label="New items under More"
-            />
-          )}
+          {moreHasBadge && <span className="mat-unread-dot" aria-label="New items under More" />}
         </button>
       </nav>
     </>

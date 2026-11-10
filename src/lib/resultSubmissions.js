@@ -22,8 +22,9 @@ const REFRESH_INTERVAL_MS = 60 * 1000
 
 export function friendlySubmissionError(error) {
   const message = error?.message || 'Something went wrong.'
-  return /tournament_result_submissions|submit_tournament_results|review_result_submission|withdraw_result_submission/.test(message)
-    && /does not exist|could not find|schema cache/i.test(message)
+  return /tournament_result_submissions|submit_tournament_results|review_result_submission|withdraw_result_submission/.test(
+    message,
+  ) && /does not exist|could not find|schema cache/i.test(message)
     ? SETUP_MESSAGE
     : message
 }
@@ -43,11 +44,12 @@ export async function loadSubmissionsForReview(status) {
   let query = supabase
     .from('tournament_result_submissions')
     .select('*')
-    .order(status === 'pending' ? 'submitted_at' : 'reviewed_at', { ascending: status === 'pending' })
+    .order(status === 'pending' ? 'submitted_at' : 'reviewed_at', {
+      ascending: status === 'pending',
+    })
 
-  query = status === 'pending'
-    ? query.eq('status', 'pending')
-    : query.neq('status', 'pending').limit(100)
+  query =
+    status === 'pending' ? query.eq('status', 'pending') : query.neq('status', 'pending').limit(100)
 
   const { data, error } = await query
   if (error) throw new Error(friendlySubmissionError(error))
@@ -66,7 +68,9 @@ export async function submitTournamentResults(tournamentId, memberId, results) {
 }
 
 export async function withdrawResultSubmission(submissionId) {
-  const { error } = await supabase.rpc('withdraw_result_submission', { submission_id: submissionId })
+  const { error } = await supabase.rpc('withdraw_result_submission', {
+    submission_id: submissionId,
+  })
   if (error) throw new Error(friendlySubmissionError(error))
 }
 
