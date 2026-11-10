@@ -1,30 +1,39 @@
-import { useEffect, useMemo, useState } from 'react'
+import { lazy, startTransition, Suspense, useEffect, useMemo, useState } from 'react'
 
 import { supabase } from './lib/supabase.js'
 import { attachPosterUrls } from './lib/tournamentPosters.js'
 import { useUnreadDirectMessages } from './lib/unreadDirectMessages.js'
 import { usePendingResultSubmissionCount } from './lib/resultSubmissions.js'
 
+// The app shell loads up front; each page is split into its own chunk and
+// downloaded the first time it is opened, so sign-in stays fast on phones.
 import LoginPage from './components/LoginPage.jsx'
 import AccessPendingPage from './components/AccessPendingPage.jsx'
 import TopNav from './components/TopNav.jsx'
-import HomePage from './components/HomePage.jsx'
-import NewMemberGuidePage from './components/NewMemberGuidePage.jsx'
-import AthleteHomePage from './components/AthleteHomePage.jsx'
-import AthleteProfileModal from './components/AthleteProfileModal.jsx'
-import AthleteCalendarPage from './components/AthleteCalendarPage.jsx'
-import AthleteTournamentsPage from './components/AthleteTournamentsPage.jsx'
-import AthleteCoachesPage from './components/AthleteCoachesPage.jsx'
-import RosterPage from './components/RosterPage.jsx'
-import AccountAthleteAssignments from './components/AccountAthleteAssignments.jsx'
-import CoachesPage from './components/CoachesPage.jsx'
-import AdminPrivateLessonRequests from './components/AdminPrivateLessonRequests.jsx'
-import TournamentsPage from './components/TournamentsPage.jsx'
-import CalendarPage from './components/CalendarPage.jsx'
-import FinancialsPage from './components/FinancialsPage.jsx'
-import MessagesPage from './components/MessagesPage.jsx'
 import AthleteSwitcher from './components/AthleteSwitcher.jsx'
-import ResultApprovalsPage from './components/ResultApprovalsPage.jsx'
+
+const HomePage = lazy(() => import('./components/HomePage.jsx'))
+const NewMemberGuidePage = lazy(() => import('./components/NewMemberGuidePage.jsx'))
+const AthleteHomePage = lazy(() => import('./components/AthleteHomePage.jsx'))
+const AthleteProfileModal = lazy(() => import('./components/AthleteProfileModal.jsx'))
+const AthleteCalendarPage = lazy(() => import('./components/AthleteCalendarPage.jsx'))
+const AthleteTournamentsPage = lazy(() => import('./components/AthleteTournamentsPage.jsx'))
+const AthleteCoachesPage = lazy(() => import('./components/AthleteCoachesPage.jsx'))
+const RosterPage = lazy(() => import('./components/RosterPage.jsx'))
+const AccountAthleteAssignments = lazy(() => import('./components/AccountAthleteAssignments.jsx'))
+const CoachesPage = lazy(() => import('./components/CoachesPage.jsx'))
+const AdminPrivateLessonRequests = lazy(() => import('./components/AdminPrivateLessonRequests.jsx'))
+const TournamentsPage = lazy(() => import('./components/TournamentsPage.jsx'))
+const CalendarPage = lazy(() => import('./components/CalendarPage.jsx'))
+const FinancialsPage = lazy(() => import('./components/FinancialsPage.jsx'))
+const MessagesPage = lazy(() => import('./components/MessagesPage.jsx'))
+const ResultApprovalsPage = lazy(() => import('./components/ResultApprovalsPage.jsx'))
+
+const pageFallback = (
+  <div className="mat-muted" style={{ padding: '24px', textAlign: 'center' }}>
+    Loading...
+  </div>
+)
 
 function activeAthleteStorageKey(userId) {
   return `mat-active-athlete-${userId}`
@@ -369,9 +378,19 @@ function App() {
       return
     }
 
-    setViewMode(nextMode)
+    startTransition(() => {
+      setViewMode(nextMode)
 
-    setActiveTab('home')
+      setActiveTab('home')
+    })
+  }
+
+  // Tab changes run as a transition so the current page stays on screen
+  // while a not-yet-loaded page downloads, instead of flashing "Loading...".
+  function navigateTo(nextTab) {
+    startTransition(() => {
+      setActiveTab(nextTab)
+    })
   }
 
   // Every athlete this account is linked to, with the account's own
@@ -470,7 +489,7 @@ function App() {
     <div className="mat-app">
       <TopNav
         activeTab={activeTab}
-        onChangeTab={setActiveTab}
+        onChangeTab={navigateTo}
         accountName={accountName}
         roles={roles}
         viewMode={viewMode}
@@ -485,218 +504,226 @@ function App() {
       {message && <div className="mat-error">{message}</div>}
 
       <main className="mat-content">
-        {viewMode === 'admin' && (
-          <>
-            {activeTab === 'home' && (
-              <HomePage
-                members={members}
-                tournaments={tournaments}
-                allTournamentEntries={allTournamentEntries}
-                calendarEvents={calendarEvents}
-                accountName={accountName}
-                onNavigate={setActiveTab}
-              />
-            )}
+        {viewMode === 'athlete' && (
+          <AthleteSwitcher
+            athletes={linkedAthletes}
+            activeAthleteId={linkedMember?.id}
+            onChange={handleAthleteChange}
+          />
+        )}
 
-            {activeTab === 'new-member-guide' && <NewMemberGuidePage onNavigate={setActiveTab} />}
+        <Suspense fallback={pageFallback}>
+          {viewMode === 'admin' && (
+            <>
+              {activeTab === 'home' && (
+                <HomePage
+                  members={members}
+                  tournaments={tournaments}
+                  allTournamentEntries={allTournamentEntries}
+                  calendarEvents={calendarEvents}
+                  accountName={accountName}
+                  onNavigate={navigateTo}
+                />
+              )}
 
-            {activeTab === 'roster' && (
-              <>
+              {activeTab === 'new-member-guide' && <NewMemberGuidePage onNavigate={navigateTo} />}
+
+              {activeTab === 'roster' && (
+                <>
+                  <RosterPage
+                    members={members}
+                    tournaments={tournaments}
+                    allTournamentEntries={allTournamentEntries}
+                    tournamentResults={tournamentResults}
+                    onMembersChanged={() => loadMembers(accountProfile?.roles)}
+                  />
+                  <AccountAthleteAssignments
+                    members={members}
+                    onChanged={async () => {
+                      await loadAccountMemberLinks()
+                      await loadAccountProfile()
+                    }}
+                  />
+                </>
+              )}
+
+              {activeTab === 'coaches' && (
+                <>
+                  <CoachesPage />
+
+                  <AdminPrivateLessonRequests />
+                </>
+              )}
+
+              {activeTab === 'tournaments' && (
+                <TournamentsPage
+                  members={members}
+                  tournaments={tournaments}
+                  allTournamentEntries={allTournamentEntries}
+                  tournamentResults={tournamentResults}
+                  onTournamentsChanged={loadTournaments}
+                  onEntriesChanged={loadAllTournamentEntries}
+                  onResultsChanged={loadTournamentResults}
+                />
+              )}
+
+              {activeTab === 'calendar' && (
+                <CalendarPage
+                  calendarEvents={calendarEvents}
+                  tournaments={tournaments}
+                  members={members}
+                  showPrivateLessons
+                  onCalendarEventsChanged={loadCalendarEvents}
+                  onTournamentsChanged={loadTournaments}
+                />
+              )}
+
+              {activeTab === 'approvals' && (
+                <ResultApprovalsPage
+                  members={members}
+                  tournaments={tournaments}
+                  allTournamentEntries={allTournamentEntries}
+                  tournamentResults={tournamentResults}
+                  onReviewed={() =>
+                    Promise.all([
+                      loadAllTournamentEntries(),
+                      loadTournamentResults(),
+                      refreshPendingApprovals(),
+                    ])
+                  }
+                />
+              )}
+
+              {activeTab === 'financials' && (
+                <FinancialsPage members={members} tournaments={tournaments} />
+              )}
+            </>
+          )}
+
+          {viewMode === 'athlete' && (
+            <>
+              {activeTab === 'home' && (
+                <AthleteHomePage
+                  key={linkedMember?.id}
+                  member={linkedMember}
+                  tournaments={tournaments}
+                  tournamentEntries={linkedTournamentEntries}
+                  tournamentResults={tournamentResults}
+                  onNavigate={navigateTo}
+                />
+              )}
+
+              {activeTab === 'coaches' && (
+                <AthleteCoachesPage
+                  key={linkedMember?.id}
+                  accountId={userId}
+                  member={linkedMember}
+                />
+              )}
+
+              {activeTab === 'tournaments' && (
+                <AthleteTournamentsPage
+                  key={linkedMember?.id}
+                  member={linkedMember}
+                  tournaments={tournaments}
+                  tournamentEntries={linkedTournamentEntries}
+                  tournamentResults={tournamentResults}
+                  onEntriesChanged={loadAllTournamentEntries}
+                />
+              )}
+
+              {activeTab === 'calendar' && (
+                <AthleteCalendarPage calendarEvents={calendarEvents} tournaments={tournaments} />
+              )}
+
+              {activeTab === 'my-profile' && linkedMember && (
+                <AthleteProfileModal
+                  key={linkedMember.id}
+                  member={linkedMember}
+                  tournaments={tournaments}
+                  allTournamentEntries={allTournamentEntries}
+                  tournamentResults={tournamentResults}
+                  onMembersChanged={() => loadMembers(accountProfile?.roles)}
+                  onClose={() => setActiveTab('home')}
+                />
+              )}
+
+              {activeTab === 'my-profile' && !linkedMember && (
+                <div className="mat-athlete-link-missing">
+                  <h2>Athlete Profile Not Linked</h2>
+
+                  <p>
+                    This login has the Athlete role, but it is not currently linked to a member
+                    record.
+                  </p>
+                </div>
+              )}
+
+              {activeTab === 'new-member-guide' && <NewMemberGuidePage onNavigate={navigateTo} />}
+            </>
+          )}
+
+          {viewMode === 'coach' && (
+            <>
+              {activeTab === 'home' && (
+                <HomePage
+                  members={members}
+                  tournaments={tournaments}
+                  allTournamentEntries={allTournamentEntries}
+                  calendarEvents={calendarEvents}
+                  accountName={accountName}
+                  onNavigate={navigateTo}
+                  view="coach"
+                  canManageCarousel={false}
+                />
+              )}
+
+              {activeTab === 'roster' && (
                 <RosterPage
                   members={members}
                   tournaments={tournaments}
                   allTournamentEntries={allTournamentEntries}
                   tournamentResults={tournamentResults}
                   onMembersChanged={() => loadMembers(accountProfile?.roles)}
+                  canEdit={false}
                 />
-                <AccountAthleteAssignments
+              )}
+
+              {activeTab === 'tournaments' && (
+                <TournamentsPage
                   members={members}
-                  onChanged={async () => {
-                    await loadAccountMemberLinks()
-                    await loadAccountProfile()
-                  }}
+                  tournaments={tournaments}
+                  allTournamentEntries={allTournamentEntries}
+                  tournamentResults={tournamentResults}
+                  onTournamentsChanged={loadTournaments}
+                  onEntriesChanged={loadAllTournamentEntries}
+                  onResultsChanged={loadTournamentResults}
                 />
-              </>
-            )}
+              )}
 
-            {activeTab === 'coaches' && (
-              <>
-                <CoachesPage />
+              {activeTab === 'lesson-requests' && <AdminPrivateLessonRequests />}
 
-                <AdminPrivateLessonRequests />
-              </>
-            )}
+              {activeTab === 'calendar' && (
+                <CalendarPage
+                  calendarEvents={calendarEvents}
+                  tournaments={tournaments}
+                  members={members}
+                  showPrivateLessons
+                  readOnly
+                />
+              )}
+            </>
+          )}
 
-            {activeTab === 'tournaments' && (
-              <TournamentsPage
-                members={members}
-                tournaments={tournaments}
-                allTournamentEntries={allTournamentEntries}
-                tournamentResults={tournamentResults}
-                onTournamentsChanged={loadTournaments}
-                onEntriesChanged={loadAllTournamentEntries}
-                onResultsChanged={loadTournamentResults}
-              />
-            )}
-
-            {activeTab === 'calendar' && (
-              <CalendarPage
-                calendarEvents={calendarEvents}
-                tournaments={tournaments}
-                members={members}
-                showPrivateLessons
-                onCalendarEventsChanged={loadCalendarEvents}
-                onTournamentsChanged={loadTournaments}
-              />
-            )}
-
-            {activeTab === 'approvals' && (
-              <ResultApprovalsPage
-                members={members}
-                tournaments={tournaments}
-                allTournamentEntries={allTournamentEntries}
-                tournamentResults={tournamentResults}
-                onReviewed={() =>
-                  Promise.all([
-                    loadAllTournamentEntries(),
-                    loadTournamentResults(),
-                    refreshPendingApprovals(),
-                  ])
-                }
-              />
-            )}
-
-            {activeTab === 'financials' && (
-              <FinancialsPage members={members} tournaments={tournaments} />
-            )}
-          </>
-        )}
-
-        {viewMode === 'athlete' && (
-          <>
-            <AthleteSwitcher
-              athletes={linkedAthletes}
-              activeAthleteId={linkedMember?.id}
-              onChange={handleAthleteChange}
+          {activeTab === 'messages' && (
+            <MessagesPage
+              accountId={userId}
+              roles={roles}
+              unreadMessageCount={unreadMessageCount}
+              onReadStateChanged={refreshUnreadMessages}
             />
-
-            {activeTab === 'home' && (
-              <AthleteHomePage
-                key={linkedMember?.id}
-                member={linkedMember}
-                tournaments={tournaments}
-                tournamentEntries={linkedTournamentEntries}
-                tournamentResults={tournamentResults}
-                onNavigate={setActiveTab}
-              />
-            )}
-
-            {activeTab === 'coaches' && (
-              <AthleteCoachesPage key={linkedMember?.id} accountId={userId} member={linkedMember} />
-            )}
-
-            {activeTab === 'tournaments' && (
-              <AthleteTournamentsPage
-                key={linkedMember?.id}
-                member={linkedMember}
-                tournaments={tournaments}
-                tournamentEntries={linkedTournamentEntries}
-                tournamentResults={tournamentResults}
-                onEntriesChanged={loadAllTournamentEntries}
-              />
-            )}
-
-            {activeTab === 'calendar' && (
-              <AthleteCalendarPage calendarEvents={calendarEvents} tournaments={tournaments} />
-            )}
-
-            {activeTab === 'my-profile' && linkedMember && (
-              <AthleteProfileModal
-                key={linkedMember.id}
-                member={linkedMember}
-                tournaments={tournaments}
-                allTournamentEntries={allTournamentEntries}
-                tournamentResults={tournamentResults}
-                onMembersChanged={() => loadMembers(accountProfile?.roles)}
-                onClose={() => setActiveTab('home')}
-              />
-            )}
-
-            {activeTab === 'my-profile' && !linkedMember && (
-              <div className="mat-athlete-link-missing">
-                <h2>Athlete Profile Not Linked</h2>
-
-                <p>
-                  This login has the Athlete role, but it is not currently linked to a member
-                  record.
-                </p>
-              </div>
-            )}
-
-            {activeTab === 'new-member-guide' && <NewMemberGuidePage onNavigate={setActiveTab} />}
-          </>
-        )}
-
-        {viewMode === 'coach' && (
-          <>
-            {activeTab === 'home' && (
-              <HomePage
-                members={members}
-                tournaments={tournaments}
-                allTournamentEntries={allTournamentEntries}
-                calendarEvents={calendarEvents}
-                accountName={accountName}
-                onNavigate={setActiveTab}
-                view="coach"
-                canManageCarousel={false}
-              />
-            )}
-
-            {activeTab === 'roster' && (
-              <RosterPage
-                members={members}
-                tournaments={tournaments}
-                allTournamentEntries={allTournamentEntries}
-                tournamentResults={tournamentResults}
-                onMembersChanged={() => loadMembers(accountProfile?.roles)}
-                canEdit={false}
-              />
-            )}
-
-            {activeTab === 'tournaments' && (
-              <TournamentsPage
-                members={members}
-                tournaments={tournaments}
-                allTournamentEntries={allTournamentEntries}
-                tournamentResults={tournamentResults}
-                onTournamentsChanged={loadTournaments}
-                onEntriesChanged={loadAllTournamentEntries}
-                onResultsChanged={loadTournamentResults}
-              />
-            )}
-
-            {activeTab === 'lesson-requests' && <AdminPrivateLessonRequests />}
-
-            {activeTab === 'calendar' && (
-              <CalendarPage
-                calendarEvents={calendarEvents}
-                tournaments={tournaments}
-                members={members}
-                showPrivateLessons
-                readOnly
-              />
-            )}
-          </>
-        )}
-
-        {activeTab === 'messages' && (
-          <MessagesPage
-            accountId={userId}
-            roles={roles}
-            unreadMessageCount={unreadMessageCount}
-            onReadStateChanged={refreshUnreadMessages}
-          />
-        )}
+          )}
+        </Suspense>
       </main>
 
       <footer className="mat-footer">
